@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Food Signal</string>
+    <string name="app_version_name">1.0.0</string>
+    <string name="app_version_text">Version:</string>
+
+    <!-- Activity Title -->
+    <string name="title_activity_login">Welcome</string>
+    <string name="title_activity_home">Home</string>
+    <string name="title_activity_add_location">Add Location</string>
+
+    <!-- Toast message -->
+    <string name="toast_could_not_retrieve_info">Could not retrieve info</string>
+    <string name="toast_network_error">You have no internet connection!\nPlease connect to internet.</string>
+    <string name="toast_no_info_found">No info found</string>
+    <string name="toast_empty_email_field">Please fill email address</string>
+    <string name="toast_empty_password_field">Please fill password</string>
+    <string name="toast_empty_address_field">Please fill address</string>
+
+    <!-- Message -->
+    <string name="txt_loading_message">Loading, please wait.</string>
+    <string name="txt_no_data_found">No data found.</string>
+    <string name="txt_loading">Loading...</string>
+
+    <!-- Google map key -->
+    <string name="google_maps_api_key">AIzaSyAxLN8Fj9BuW8Tep-chDcZGa-5jeMkMVcc</string>
+
+</resources>

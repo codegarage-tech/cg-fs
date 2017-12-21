@@ -1,0 +1,60 @@
+apply plugin: 'com.android.application'
+
+repositories {
+    maven {
+        url "https://raw.github.com/reversecoder/rc-permission-androidstudio/snapshots"
+    }
+    maven {
+        url "https://raw.github.com/reversecoder/rc-librarydemo-androidstudio/snapshots"
+    }
+    maven {
+        url "https://raw.github.com/reversecoder/rc-logger-demo/snapshots"
+    }
+}
+
+android {
+    compileSdkVersion appCompileSdkVersion
+    buildToolsVersion appBuildToolsVersion
+
+    defaultConfig {
+        applicationId "com.rc.foodsignal"
+        minSdkVersion appMinSdkVersion
+        targetSdkVersion appTargetSdkVersion
+        versionCode appVersionCode
+        versionName appVersionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+    compile "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
+    compile "com.android.support:appcompat-v7:$supportlibraryVersion"
+    compile "com.android.support:support-v4:$supportlibraryVersion"
+    implementation 'com.google.android.gms:play-services-location:11.6.0'
+
+    //library projects
+    compile project(":ribblemenu")
+    compile project(":placesautocomplete")
+    compile project(":easyrecyclerview")
+
+    compile 'com.reversecoder.permission:rc-permission:1.0.1-SNAPSHOT'
+    compile 'com.reversecoder.library:rc-library:1.0.1-SNAPSHOT'
+    compile 'com.reversecoder.logger:rc-logger:1.0.1-SNAPSHOT'
+
+    //Image loading
+    compile "com.github.bumptech.glide:glide:$glideVersion"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glideVersion"
+
+    testImplementation 'junit:junit:4.12'
+}
