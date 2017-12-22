@@ -12,7 +12,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,6 +40,9 @@ import io.armcha.ribble.presentation.widget.navigation_view.NavigationId;
 import io.armcha.ribble.presentation.widget.navigation_view.NavigationItem;
 import io.armcha.ribble.presentation.widget.navigation_view.NavigationItemSelectedListener;
 
+import static com.rc.foodsignal.util.AllConstants.SESSION_IS_LOCATION_ADDED;
+import static com.rc.foodsignal.util.AllConstants.SESSION_IS_USER_LOGGED_IN;
+import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_LOCATION;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_RIBBLE_MENU;
 import static com.rc.foodsignal.util.AllConstants.SESSION_USER_DATA;
 
@@ -127,6 +129,7 @@ public class HomeActivity extends AppCompatActivity {
                             } else if (item.getId().getName().equalsIgnoreCase(NavigationId.ACCOUNT.INSTANCE.getName())) {
                                 handleFragmentChanges(HomeActivity.this, getString(R.string.ribble_menu_item_account), new AccountFragment());
                             } else if (item.getId().getName().equalsIgnoreCase(NavigationId.LOGOUT.INSTANCE.getName())) {
+                                doLogout();
                             }
                         }
                     }, AllConstants.NAVIGATION_DRAWER_CLOSE_DELAY);
@@ -184,6 +187,17 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    public void doLogout() {
+        SessionManager.setBooleanSetting(HomeActivity.this, SESSION_IS_USER_LOGGED_IN, false);
+        SessionManager.setBooleanSetting(HomeActivity.this, SESSION_IS_LOCATION_ADDED, false);
+        SessionManager.removeSetting(HomeActivity.this, SESSION_USER_DATA);
+        SessionManager.removeSetting(HomeActivity.this, SESSION_SELECTED_LOCATION);
+
+        Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     public void handleFragmentChanges(AppCompatActivity activity, String currentTag, Fragment fragment) {
         saveNavigatorState(new NavigationState(currentTag, toolbarTitle.getText().toString(), false));
 
@@ -203,7 +217,7 @@ public class HomeActivity extends AppCompatActivity {
             goScreen(checkPosition, currentTag, fragment);
         } else if (currentTag.equalsIgnoreCase(NavigationId.LOGOUT.INSTANCE.getName())) {
             checkPosition = 2;
-        }  else {
+        } else {
             checkPosition = currentNavigationSelectedItem;
             goScreen(checkPosition, currentTag, fragment);
         }
