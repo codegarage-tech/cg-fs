@@ -22,8 +22,11 @@ import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.HttpRequestManager;
 import com.reversecoder.library.network.NetworkManager;
 import com.reversecoder.library.storage.SessionManager;
+import com.reversecoder.library.util.AllSettingsManager;
 
+import static com.rc.foodsignal.util.AllConstants.SESSION_IS_LOCATION_ADDED;
 import static com.rc.foodsignal.util.AllConstants.SESSION_IS_USER_LOGGED_IN;
+import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_LOCATION;
 import static com.rc.foodsignal.util.AllConstants.SESSION_USER_DATA;
 
 /**
@@ -158,7 +161,19 @@ public class LoginActivity extends AppCompatActivity {
                     SessionManager.setStringSetting(LoginActivity.this, SESSION_USER_DATA, responseData.getData().get(0).toString());
                     SessionManager.setBooleanSetting(LoginActivity.this, SESSION_IS_USER_LOGGED_IN, true);
 
-                    Intent intent = new Intent(LoginActivity.this, AddLocationLocationActivity.class);
+                    //Save location added status
+                    Intent intent;
+                    if (responseData.getData().get(0).getIs_address_added() == 1) {
+                        SessionManager.setBooleanSetting(LoginActivity.this, SESSION_IS_LOCATION_ADDED, true);
+                        if (AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(LoginActivity.this, SESSION_SELECTED_LOCATION))) {
+                            if (responseData.getData().get(0).getSelected_address().size() > 0) {
+                                SessionManager.setStringSetting(LoginActivity.this, SESSION_SELECTED_LOCATION, responseData.getData().get(0).getSelected_address().get(0).toString());
+                            }
+                        }
+                        intent = new Intent(LoginActivity.this, HomeActivity.class);
+                    } else {
+                        intent = new Intent(LoginActivity.this, AddLocationLocationActivity.class);
+                    }
                     startActivity(intent);
                     finish();
                 } else {

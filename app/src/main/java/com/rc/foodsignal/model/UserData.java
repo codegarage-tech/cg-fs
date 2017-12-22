@@ -1,5 +1,7 @@
 package com.rc.foodsignal.model;
 
+import java.util.ArrayList;
+
 /**
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
@@ -18,8 +20,10 @@ public class UserData extends ResponseBase {
     private String is_restaurant = "";
     private String sms_notification = "";
     private String push_notification = "";
+    private int is_address_added = 0;
+    private ArrayList<Location> selected_address = new ArrayList<>();
 
-    public UserData(String id, String name, String image, String lat, String lng, String email, String phone, String address, String password, String is_restaurant, String sms_notification, String push_notification) {
+    public UserData(String id, String name, String image, String lat, String lng, String email, String phone, String address, String password, String is_restaurant, String sms_notification, String push_notification, int is_address_added, ArrayList<Location> selected_address) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -32,74 +36,76 @@ public class UserData extends ResponseBase {
         this.is_restaurant = is_restaurant;
         this.sms_notification = sms_notification;
         this.push_notification = push_notification;
+        this.is_address_added = is_address_added;
+        this.selected_address = selected_address;
     }
 
     public String getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public String getLat() {
-        return lat;
-    }
-
-    public String getLng() {
-        return lng;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
+    public String getImage() {
+        return image;
+    }
+
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getLat() {
+        return lat;
     }
 
     public void setLat(String lat) {
         this.lat = lat;
     }
 
+    public String getLng() {
+        return lng;
+    }
+
     public void setLng(String lng) {
         this.lng = lng;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
     public void setPhone(String phone) {
         this.phone = phone;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void setPassword(String password) {
@@ -130,6 +136,22 @@ public class UserData extends ResponseBase {
         this.push_notification = push_notification;
     }
 
+    public int getIs_address_added() {
+        return is_address_added;
+    }
+
+    public void setIs_address_added(int is_address_added) {
+        this.is_address_added = is_address_added;
+    }
+
+    public ArrayList<Location> getSelected_address() {
+        return selected_address;
+    }
+
+    public void setSelected_address(ArrayList<Location> selected_address) {
+        this.selected_address = selected_address;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -145,6 +167,8 @@ public class UserData extends ResponseBase {
                 ", is_restaurant='" + is_restaurant + '\'' +
                 ", sms_notification='" + sms_notification + '\'' +
                 ", push_notification='" + push_notification + '\'' +
+                ", is_address_added=" + is_address_added +
+                ", selected_address=" + selected_address +
                 '}';
     }
 }
