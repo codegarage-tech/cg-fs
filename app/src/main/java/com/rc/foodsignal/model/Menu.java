@@ -8,10 +8,12 @@ public class Menu extends ResponseBase {
 
     private String id = "";
     private String name = "";
+    private String ingredients = "";
 
-    public Menu(String id, String name) {
+    public Menu(String id, String name, String ingredients) {
         this.id = id;
         this.name = name;
+        this.ingredients = ingredients;
     }
 
     public String getId() {
@@ -30,11 +32,20 @@ public class Menu extends ResponseBase {
         this.name = name;
     }
 
+    public String getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(String ingredients) {
+        this.ingredients = ingredients;
+    }
+
     @Override
     public String toString() {
         return "{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
+                ", ingredients='" + ingredients + '\'' +
                 '}';
     }
 }

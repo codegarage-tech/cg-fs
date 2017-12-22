@@ -18,8 +18,9 @@ public class Food {
     private String lng = "";
     private double distance = 0.0;
     private ArrayList<Restaurant> restaurants_details = new ArrayList<Restaurant>();
+    private ArrayList<Menu> menu_details = new ArrayList<Menu>();
 
-    public Food(String id, String name, String menu_id, String price, String image, String restaurant_id, String lat, String lng, double distance, ArrayList<Restaurant> restaurants_details) {
+    public Food(String id, String name, String menu_id, String price, String image, String restaurant_id, String lat, String lng, double distance, ArrayList<Restaurant> restaurants_details, ArrayList<Menu> menu_details) {
         this.id = id;
         this.name = name;
         this.menu_id = menu_id;
@@ -30,6 +31,7 @@ public class Food {
         this.lng = lng;
         this.distance = distance;
         this.restaurants_details = restaurants_details;
+        this.menu_details = menu_details;
     }
 
     public String getId() {
@@ -112,6 +114,14 @@ public class Food {
         this.restaurants_details = restaurants_details;
     }
 
+    public ArrayList<Menu> getMenu_details() {
+        return menu_details;
+    }
+
+    public void setMenu_details(ArrayList<Menu> menu_details) {
+        this.menu_details = menu_details;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -125,6 +135,7 @@ public class Food {
                 ", lng='" + lng + '\'' +
                 ", distance=" + distance +
                 ", restaurants_details=" + restaurants_details +
+                ", menu_details=" + menu_details +
                 '}';
     }
 }

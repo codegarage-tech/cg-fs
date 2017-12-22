@@ -64,6 +64,9 @@ public class LoginActivity extends AppCompatActivity {
 
         edtEmail.setText("niloy.cste1@gmail.com");
         edtPassword.setText("1234567");
+
+//        edtEmail.setText("rashed.droid@gmail.com");
+//        edtPassword.setText("rashed1234");
     }
 
     private void initLoginAction() {
