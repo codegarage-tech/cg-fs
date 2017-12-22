@@ -23,6 +23,7 @@ import com.rc.foodsignal.R;
 import com.rc.foodsignal.fragment.AccountFragment;
 import com.rc.foodsignal.fragment.HomeFragment;
 import com.rc.foodsignal.interfaces.OnFragmentBackPressedListener;
+import com.rc.foodsignal.model.UserData;
 import com.rc.foodsignal.util.AllConstants;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.FragmentUtilsManager;
@@ -41,6 +42,7 @@ import io.armcha.ribble.presentation.widget.navigation_view.NavigationItem;
 import io.armcha.ribble.presentation.widget.navigation_view.NavigationItemSelectedListener;
 
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_RIBBLE_MENU;
+import static com.rc.foodsignal.util.AllConstants.SESSION_USER_DATA;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -58,6 +60,7 @@ public class HomeActivity extends AppCompatActivity {
     ImageView userAvatar;
     TextView userName;
     TextView userInfo;
+    UserData userData;
 
     private boolean isArcIcon = false;
     private boolean isDrawerOpened = false;
@@ -97,6 +100,11 @@ public class HomeActivity extends AppCompatActivity {
         userAvatar = (ImageView) navDrawerView.getHeader().findViewById(R.id.userAvatar);
         userName = (TextView) navDrawerView.getHeader().findViewById(R.id.userName);
         userInfo = (TextView) navDrawerView.getHeader().findViewById(R.id.userInfo);
+
+        if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(HomeActivity.this, SESSION_USER_DATA))) {
+            Log.d(TAG, "Session data: " + SessionManager.getStringSetting(HomeActivity.this, SESSION_USER_DATA));
+            userData = UserData.getResponseObject(SessionManager.getStringSetting(HomeActivity.this, SESSION_USER_DATA), UserData.class);
+        }
 
         contentHome = (CardView) findViewById(R.id.mainView);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -308,8 +316,8 @@ public class HomeActivity extends AppCompatActivity {
                 .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
                 .apply(new RequestOptions().circleCropTransform())
                 .into(userAvatar);
-        userName.setText(getString(R.string.app_name));
-        userInfo.setText(getString(R.string.app_version_name));
+        userName.setText(userData.getName());
+//        userInfo.setText(getString(R.string.app_version_name));
     }
 
     @Override
