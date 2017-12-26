@@ -19,8 +19,6 @@ public class RestaurantViewHolder extends BaseViewHolder<Restaurant> {
 
     private ImageView ivFoodImage;
     private TextView tvFoodPrice;
-    private TextView tvFoodName;
-    private TextView tvFoodIngredient;
     private TextView tvRestaurantName;
     private TextView tvRestaurantAddress;
 
@@ -29,8 +27,6 @@ public class RestaurantViewHolder extends BaseViewHolder<Restaurant> {
 
         ivFoodImage = $(R.id.iv_food_image);
         tvFoodPrice = $(R.id.tv_food_price);
-        tvFoodName = $(R.id.tv_food_name);
-        tvFoodIngredient = $(R.id.tv_food_ingredient);
         tvRestaurantName = $(R.id.tv_restaurant_name);
         tvRestaurantAddress = $(R.id.tv_restaurant_address);
     }
@@ -40,19 +36,13 @@ public class RestaurantViewHolder extends BaseViewHolder<Restaurant> {
 
         Glide
                 .with(getContext())
-                .load(data.getImage())
+                .load((data.getItem_details().size() > 0) ? data.getItem_details().get(0).getImage() : data.getImage())
                 .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
                 .apply(new RequestOptions().centerInside())
                 .into(ivFoodImage);
 
-//        tvFoodPrice.setText("$" + data.getPrice());
-        tvFoodName.setText(data.getName());
-//        if (data.getFoodCategory_details().size() > 0) {
-//            tvFoodIngredient.setText("Ingredients: " + data.getFoodCategory_details().get(0).getIngredients());
-//        }
-//        if (data.getRestaurants_details().size() > 0) {
-//            tvRestaurantName.setText("Restaurant name: " + data.getRestaurants_details().get(0).getName());
-//            tvRestaurantAddress.setText("Restaurant address: " + data.getRestaurants_details().get(0).getAddress());
-//        }
+        tvFoodPrice.setText((data.getItem_details().size() > 0) ? ("$" + data.getItem_details().get(0).getPrice()) : "");
+        tvRestaurantName.setText(data.getName());
+        tvRestaurantAddress.setText(data.getAddress());
     }
 }
