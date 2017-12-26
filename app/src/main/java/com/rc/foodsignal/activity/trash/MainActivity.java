@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.rc.foodsignal.R;
-import com.rc.foodsignal.activity.LoginActivity;
+//import com.rc.foodsignal.activity.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(loginIntent);
+//                Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+//                startActivity(loginIntent);
             }
         });
 

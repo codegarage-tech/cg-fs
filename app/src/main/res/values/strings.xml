@@ -7,6 +7,7 @@
     <string name="title_activity_login">Welcome</string>
     <string name="title_activity_home">Home</string>
     <string name="title_activity_add_location">Add Location</string>
+    <string name="title_activity_add_info">Add Info</string>
 
     <!-- Toast message -->
     <string name="toast_could_not_retrieve_info">Could not retrieve info</string>
@@ -15,6 +16,8 @@
     <string name="toast_empty_email_field">Please fill email address</string>
     <string name="toast_empty_password_field">Please fill password</string>
     <string name="toast_empty_address_field">Please fill address</string>
+    <string name="toast_empty_name_field">Please fill name</string>
+    <string name="toast_empty_phone_field">Please fill phone</string>
 
     <!-- Message -->
     <string name="txt_loading_message">Loading, please wait.</string>

@@ -12,11 +12,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.rc.foodsignal.R;
+import com.rc.foodsignal.animation.Techniques;
+import com.rc.foodsignal.animation.YoYo;
 import com.reversecoder.library.storage.SessionManager;
 import com.reversecoder.permission.activity.PermissionListActivity;
 
 import static com.rc.foodsignal.util.AllConstants.SESSION_IS_LOCATION_ADDED;
-import static com.rc.foodsignal.util.AllConstants.SESSION_IS_USER_LOGGED_IN;
 
 /**
  * @author Md. Rashadul Alam
@@ -47,6 +48,10 @@ public class SplashActivity extends AppCompatActivity {
 
         tvLoadingMessage = (TextView) findViewById(R.id.tv_loading_message);
         tvLoadingMessage.setText(getString(R.string.txt_loading_message));
+
+        YoYo.with(Techniques.Tada)
+                .duration(1000)
+                .playOn(findViewById(R.id.tv_app_name));
 
         //loading gif
         ivLoading = (ImageView) findViewById(R.id.iv_loading);
@@ -82,14 +87,10 @@ public class SplashActivity extends AppCompatActivity {
 
     private void navigateHomeActivity() {
         Intent intent;
-        if (SessionManager.getBooleanSetting(SplashActivity.this, SESSION_IS_USER_LOGGED_IN, false)) {
-            if (SessionManager.getBooleanSetting(SplashActivity.this, SESSION_IS_LOCATION_ADDED, false)) {
-                intent = new Intent(SplashActivity.this, HomeActivity.class);
-            } else {
-                intent = new Intent(SplashActivity.this, AddLocationLocationActivity.class);
-            }
+        if (SessionManager.getBooleanSetting(SplashActivity.this, SESSION_IS_LOCATION_ADDED, false)) {
+            intent = new Intent(SplashActivity.this, HomeActivity.class);
         } else {
-            intent = new Intent(SplashActivity.this, LoginActivity.class);
+            intent = new Intent(SplashActivity.this, AddUserBasicInfoActivity.class);
         }
         startActivity(intent);
         finish();

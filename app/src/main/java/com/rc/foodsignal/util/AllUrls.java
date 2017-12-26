@@ -148,6 +148,30 @@ public class AllUrls {
         return params;
     }
 
+    public static String getAddUserBasicInfoUrl() {
+        String url = BASE_URL + "signup/add_location";
+        Log.d(TAG, "getAddUserBasicInfoUrl: " + url);
+        return url;
+    }
+
+    public static JSONObject getAddUserBasicInfoParameters(String street, String city, String state, String zip, String country, String latitude, String longitude, String name, String phone, String email) {
+        JSONObject params = HttpRequestManager.HttpParameter.getInstance()
+                .addJSONParam("user_id", "0")
+                .addJSONParam("street", street)
+                .addJSONParam("city", city)
+                .addJSONParam("state", state)
+                .addJSONParam("zip", zip)
+                .addJSONParam("country", country)
+                .addJSONParam("lat", latitude)
+                .addJSONParam("lng", longitude)
+                .addJSONParam("name", name)
+                .addJSONParam("phone", phone)
+                .addJSONParam("email", email)
+                .getJSONParam();
+        Log.d(TAG, "getAddUserBasicInfoParameters: " + params.toString());
+        return params;
+    }
+
     public static String getAddUserLocationUrl() {
         String url = BASE_URL + "signup/add_location";
         Log.d(TAG, "getAddUserLocationUrl: " + url);

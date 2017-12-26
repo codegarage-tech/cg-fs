@@ -6,15 +6,15 @@ import java.util.ArrayList;
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
  */
-public class ResponseAddLocation extends ResponseBase {
+public class ResponseAddUserBasicInfo extends ResponseBase {
 
     private String status = "";
     private ArrayList<Location> data = new ArrayList<Location>();
 
-    public ResponseAddLocation() {
+    public ResponseAddUserBasicInfo() {
     }
 
-    public ResponseAddLocation(String status, ArrayList<Location> data) {
+    public ResponseAddUserBasicInfo(String status, ArrayList<Location> data) {
         this.status = status;
         this.data = data;
     }
@@ -37,7 +37,7 @@ public class ResponseAddLocation extends ResponseBase {
 
     @Override
     public String toString() {
-        return "ResponseAddLocation{" +
+        return "ResponseAddUserBasicInfo{" +
                 "status='" + status + '\'' +
                 ", data=" + data +
                 '}';

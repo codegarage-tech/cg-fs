@@ -15,8 +15,11 @@ public class Location extends ResponseBase {
     private String country = "";
     private String lat = "";
     private String lng = "";
+    private String name = "";
+    private String phone = "";
+    private String email = "";
 
-    public Location(String id, String user_id, String street, String city, String state, String zip, String country, String lat, String lng) {
+    public Location(String id, String user_id, String street, String city, String state, String zip, String country, String lat, String lng, String name, String phone, String email) {
         this.id = id;
         this.user_id = user_id;
         this.street = street;
@@ -26,6 +29,9 @@ public class Location extends ResponseBase {
         this.country = country;
         this.lat = lat;
         this.lng = lng;
+        this.name = name;
+        this.phone = phone;
+        this.email = email;
     }
 
     public String getId() {
@@ -100,6 +106,30 @@ public class Location extends ResponseBase {
         this.lng = lng;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -112,6 +142,9 @@ public class Location extends ResponseBase {
                 ", country='" + country + '\'' +
                 ", lat='" + lat + '\'' +
                 ", lng='" + lng + '\'' +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
                 '}';
     }
 }

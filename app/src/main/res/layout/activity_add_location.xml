@@ -1,170 +1,265 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:segmentedgroup="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
 
     <include layout="@layout/toolbar_add_location" />
 
-    <com.reversecoder.library.segmentradiogroup.SegmentedRadioGroup
-        android:id="@+id/sr_location_type"
+    <LinearLayout
+        android:id="@+id/ll_step_one"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="15dp"
-        android:orientation="horizontal"
-        segmentedgroup:sc_border_width="1dp"
-        segmentedgroup:sc_corner_radius="0dp"
-        segmentedgroup:sc_tint_color="#009688">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
 
-        <RadioButton
-            android:id="@+id/segmented_rbtn_current_location"
-            style="@style/SegmentedRadioButton"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight=".5"
-            android:checked="true"
-            android:text="Current Location" />
-
-        <RadioButton
-            android:id="@+id/segmented_rbtn_search_location"
-            style="@style/SegmentedRadioButton"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight=".5"
-            android:text="Search Location" />
-
-    </com.reversecoder.library.segmentradiogroup.SegmentedRadioGroup>
-
-    <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
-        android:id="@+id/autocomplete"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/sr_location_type"
-        android:layout_margin="15dp"
-        android:enabled="false"
-        android:padding="16dp"
-        app:pacv_adapterClass="com.seatgeek.placesautocomplete.adapter.PlacesAutocompleteAdapter"
-        app:pacv_googleMapsApiKey="@string/google_maps_api_key"
-        app:pacv_languageCode="en"
-        app:pacv_resultType="no_type" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/autocomplete">
-
-        <LinearLayout
-            android:id="@+id/ll_location_detail"
+        <com.reversecoder.library.segmentradiogroup.SegmentedRadioGroup
+            android:id="@+id/sr_location_type"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_margin="15dp"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:orientation="horizontal"
+            segmentedgroup:sc_border_width="1dp"
+            segmentedgroup:sc_corner_radius="0dp"
+            segmentedgroup:sc_tint_color="#009688">
+
+            <RadioButton
+                android:id="@+id/segmented_rbtn_current_location"
+                style="@style/SegmentedRadioButton"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight=".5"
+                android:checked="true"
+                android:text="Current Location" />
+
+            <RadioButton
+                android:id="@+id/segmented_rbtn_search_location"
+                style="@style/SegmentedRadioButton"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight=".5"
+                android:text="Search Location" />
+
+        </com.reversecoder.library.segmentradiogroup.SegmentedRadioGroup>
+
+        <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
+            android:id="@+id/autocomplete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:enabled="false"
+            android:padding="16dp"
+            app:pacv_adapterClass="com.seatgeek.placesautocomplete.adapter.PlacesAutocompleteAdapter"
+            app:pacv_googleMapsApiKey="@string/google_maps_api_key"
+            app:pacv_languageCode="en"
+            app:pacv_resultType="no_type" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <LinearLayout
+                android:id="@+id/ll_location_detail"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:layout_margin="15dp"
+                android:orientation="vertical"
+                android:visibility="gone">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:text="Street:"
-                    android:textSize="@dimen/medium_font_size"
-                    android:textStyle="bold" />
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/street"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="Street:"
+                        android:textSize="@dimen/medium_font_size"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/street"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/medium_font_size" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/medium_font_size" />
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
 
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="City:"
+                        android:textSize="@dimen/medium_font_size"
+                        android:textStyle="bold" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/city"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/medium_font_size" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:text="City:"
-                    android:textSize="@dimen/medium_font_size"
-                    android:textStyle="bold" />
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/city"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/medium_font_size" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="State:"
+                        android:textSize="@dimen/medium_font_size"
+                        android:textStyle="bold" />
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/state"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/medium_font_size" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
+                </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:text="State:"
-                    android:textSize="@dimen/medium_font_size"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/state"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/medium_font_size" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:text="Country:"
-                    android:textSize="@dimen/medium_font_size"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/country"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
-                    android:textSize="@dimen/medium_font_size" />
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="Country:"
+                        android:textSize="@dimen/medium_font_size"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/country"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:textSize="@dimen/medium_font_size" />
+
+                </LinearLayout>
+
 
             </LinearLayout>
 
+        </ScrollView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_step_two"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/edt_name"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@null"
+                android:gravity="bottom"
+                android:hint="Name"
+                android:paddingLeft="10dp"
+                android:textColor="@color/textColorSecondary"
+                android:textColorHint="@color/textColorSecondary" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimaryDark" />
         </LinearLayout>
 
-    </ScrollView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="vertical">
 
-</RelativeLayout>
+            <EditText
+                android:id="@+id/edt_phone"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@null"
+                android:gravity="bottom"
+                android:hint="Phone"
+                android:inputType="phone"
+                android:paddingLeft="10dp"
+                android:textColor="@color/textColorSecondary"
+                android:textColorHint="@color/textColorSecondary" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimaryDark" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/edt_email"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@null"
+                android:gravity="bottom"
+                android:hint="Email(optional)"
+                android:paddingLeft="10dp"
+                android:textColor="@color/textColorSecondary"
+                android:textColorHint="@color/textColorSecondary" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimaryDark" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

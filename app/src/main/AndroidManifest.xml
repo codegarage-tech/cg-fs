@@ -42,7 +42,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name="com.rc.foodsignal.activity.AddLocationLocationActivity"
+            android:name="com.rc.foodsignal.activity.AddUserBasicInfoActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />

@@ -22,7 +22,7 @@ import com.rc.foodsignal.R;
 import com.rc.foodsignal.fragment.AccountFragment;
 import com.rc.foodsignal.fragment.HomeFragment;
 import com.rc.foodsignal.interfaces.OnFragmentBackPressedListener;
-import com.rc.foodsignal.model.UserData;
+import com.rc.foodsignal.model.UserBasicInfo;
 import com.rc.foodsignal.util.AllConstants;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.FragmentUtilsManager;
@@ -40,11 +40,8 @@ import io.armcha.ribble.presentation.widget.navigation_view.NavigationId;
 import io.armcha.ribble.presentation.widget.navigation_view.NavigationItem;
 import io.armcha.ribble.presentation.widget.navigation_view.NavigationItemSelectedListener;
 
-import static com.rc.foodsignal.util.AllConstants.SESSION_IS_LOCATION_ADDED;
-import static com.rc.foodsignal.util.AllConstants.SESSION_IS_USER_LOGGED_IN;
-import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_LOCATION;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_RIBBLE_MENU;
-import static com.rc.foodsignal.util.AllConstants.SESSION_USER_DATA;
+import static com.rc.foodsignal.util.AllConstants.SESSION_USER_BASIC_INFO;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -62,7 +59,7 @@ public class HomeActivity extends AppCompatActivity {
     ImageView userAvatar;
     TextView userName;
     TextView userInfo;
-    UserData userData;
+    UserBasicInfo userBasicInfo;
 
     private boolean isArcIcon = false;
     private boolean isDrawerOpened = false;
@@ -103,9 +100,9 @@ public class HomeActivity extends AppCompatActivity {
         userName = (TextView) navDrawerView.getHeader().findViewById(R.id.userName);
         userInfo = (TextView) navDrawerView.getHeader().findViewById(R.id.userInfo);
 
-        if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(HomeActivity.this, SESSION_USER_DATA))) {
-            Log.d(TAG, "Session data: " + SessionManager.getStringSetting(HomeActivity.this, SESSION_USER_DATA));
-            userData = UserData.getResponseObject(SessionManager.getStringSetting(HomeActivity.this, SESSION_USER_DATA), UserData.class);
+        if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(HomeActivity.this, SESSION_USER_BASIC_INFO))) {
+            Log.d(TAG, "Session data: " + SessionManager.getStringSetting(HomeActivity.this, SESSION_USER_BASIC_INFO));
+            userBasicInfo = UserBasicInfo.getResponseObject(SessionManager.getStringSetting(HomeActivity.this, SESSION_USER_BASIC_INFO), UserBasicInfo.class);
         }
 
         contentHome = (CardView) findViewById(R.id.mainView);
@@ -129,7 +126,7 @@ public class HomeActivity extends AppCompatActivity {
                             } else if (item.getId().getName().equalsIgnoreCase(NavigationId.ACCOUNT.INSTANCE.getName())) {
                                 handleFragmentChanges(HomeActivity.this, getString(R.string.ribble_menu_item_account), new AccountFragment());
                             } else if (item.getId().getName().equalsIgnoreCase(NavigationId.LOGOUT.INSTANCE.getName())) {
-                                doLogout();
+//                                doLogout();
                             }
                         }
                     }, AllConstants.NAVIGATION_DRAWER_CLOSE_DELAY);
@@ -187,16 +184,16 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    public void doLogout() {
-        SessionManager.setBooleanSetting(HomeActivity.this, SESSION_IS_USER_LOGGED_IN, false);
-        SessionManager.setBooleanSetting(HomeActivity.this, SESSION_IS_LOCATION_ADDED, false);
-        SessionManager.removeSetting(HomeActivity.this, SESSION_USER_DATA);
-        SessionManager.removeSetting(HomeActivity.this, SESSION_SELECTED_LOCATION);
-
-        Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-        startActivity(intent);
-        finish();
-    }
+//    public void doLogout() {
+//        SessionManager.setBooleanSetting(HomeActivity.this, SESSION_IS_USER_LOGGED_IN, false);
+//        SessionManager.setBooleanSetting(HomeActivity.this, SESSION_IS_LOCATION_ADDED, false);
+//        SessionManager.removeSetting(HomeActivity.this, SESSION_USER_DATA);
+//        SessionManager.removeSetting(HomeActivity.this, SESSION_SELECTED_LOCATION);
+//
+//        Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+//        startActivity(intent);
+//        finish();
+//    }
 
     public void handleFragmentChanges(AppCompatActivity activity, String currentTag, Fragment fragment) {
         saveNavigatorState(new NavigationState(currentTag, toolbarTitle.getText().toString(), false));
@@ -330,8 +327,8 @@ public class HomeActivity extends AppCompatActivity {
                 .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
                 .apply(new RequestOptions().circleCropTransform())
                 .into(userAvatar);
-        userName.setText(userData.getName());
-//        userInfo.setText(getString(R.string.app_version_name));
+        userName.setText(userBasicInfo.getName());
+        userInfo.setText(userBasicInfo.getPhone());
     }
 
     @Override
