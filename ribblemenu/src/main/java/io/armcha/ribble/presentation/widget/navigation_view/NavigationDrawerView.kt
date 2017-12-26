@@ -25,7 +25,9 @@ class NavigationDrawerView : NavigationView, ItemClickListener {
                     itemIconColor = io.armcha.ribble.R.color.light_green),
             NavigationItem(NavigationId.ACCOUNT, io.armcha.ribble.R.drawable.ic_menu_favourite,
                     itemIconColor = io.armcha.ribble.R.color.colorAccent),
-            NavigationItem(NavigationId.LOGOUT, io.armcha.ribble.R.drawable.ic_menu_about,
+            NavigationItem(NavigationId.FAQ, io.armcha.ribble.R.drawable.ic_menu_about,
+                    itemIconColor = io.armcha.ribble.R.color.cyan),
+            NavigationItem(NavigationId.PRIVACY_POLICY, io.armcha.ribble.R.drawable.ic_menu_about,
                     itemIconColor = io.armcha.ribble.R.color.cyan))
 
     private var currentSelectedItem: Int = 0

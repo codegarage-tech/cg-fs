@@ -11,5 +11,6 @@ sealed class NavigationId(val name: String = emptyString, val fullName: String =
     object HOME : NavigationId("HOME")
 
     object ACCOUNT : NavigationId("ACCOUNT")
-    object LOGOUT : NavigationId("LOGOUT")
+    object FAQ : NavigationId("FAQ")
+    object PRIVACY_POLICY : NavigationId("PRIVACY POLICY")
 }

@@ -13,5 +13,6 @@
     <!-- Navigation drawer menu -->
     <string name="ribble_menu_item_home">HOME</string>
     <string name="ribble_menu_item_account">ACCOUNT</string>
-    <string name="ribble_menu_item_logout">LOGOUT</string>
+    <string name="ribble_menu_item_faq">FAQ</string>
+    <string name="ribble_menu_item_privacy_policy">PRIVACY POLICY</string>
 </resources>

@@ -20,7 +20,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.fragment.AccountFragment;
+import com.rc.foodsignal.fragment.FaqFragment;
 import com.rc.foodsignal.fragment.HomeFragment;
+import com.rc.foodsignal.fragment.PrivacyPolicyFragment;
 import com.rc.foodsignal.interfaces.OnFragmentBackPressedListener;
 import com.rc.foodsignal.model.UserBasicInfo;
 import com.rc.foodsignal.util.AllConstants;
@@ -125,8 +127,10 @@ public class HomeActivity extends AppCompatActivity {
                                 handleFragmentChanges(HomeActivity.this, getString(R.string.ribble_menu_item_home), new HomeFragment());
                             } else if (item.getId().getName().equalsIgnoreCase(NavigationId.ACCOUNT.INSTANCE.getName())) {
                                 handleFragmentChanges(HomeActivity.this, getString(R.string.ribble_menu_item_account), new AccountFragment());
-                            } else if (item.getId().getName().equalsIgnoreCase(NavigationId.LOGOUT.INSTANCE.getName())) {
-//                                doLogout();
+                            } else if (item.getId().getName().equalsIgnoreCase(NavigationId.FAQ.INSTANCE.getName())) {
+                                handleFragmentChanges(HomeActivity.this, getString(R.string.ribble_menu_item_faq), new FaqFragment());
+                            } else if (item.getId().getName().equalsIgnoreCase(NavigationId.PRIVACY_POLICY.INSTANCE.getName())) {
+                                handleFragmentChanges(HomeActivity.this, getString(R.string.ribble_menu_item_privacy_policy), new PrivacyPolicyFragment());
                             }
                         }
                     }, AllConstants.NAVIGATION_DRAWER_CLOSE_DELAY);
@@ -184,17 +188,6 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-//    public void doLogout() {
-//        SessionManager.setBooleanSetting(HomeActivity.this, SESSION_IS_USER_LOGGED_IN, false);
-//        SessionManager.setBooleanSetting(HomeActivity.this, SESSION_IS_LOCATION_ADDED, false);
-//        SessionManager.removeSetting(HomeActivity.this, SESSION_USER_DATA);
-//        SessionManager.removeSetting(HomeActivity.this, SESSION_SELECTED_LOCATION);
-//
-//        Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-//        startActivity(intent);
-//        finish();
-//    }
-
     public void handleFragmentChanges(AppCompatActivity activity, String currentTag, Fragment fragment) {
         saveNavigatorState(new NavigationState(currentTag, toolbarTitle.getText().toString(), false));
 
@@ -212,8 +205,12 @@ public class HomeActivity extends AppCompatActivity {
         } else if (currentTag.equalsIgnoreCase(NavigationId.ACCOUNT.INSTANCE.getName())) {
             checkPosition = 1;
             goScreen(checkPosition, currentTag, fragment);
-        } else if (currentTag.equalsIgnoreCase(NavigationId.LOGOUT.INSTANCE.getName())) {
+        } else if (currentTag.equalsIgnoreCase(NavigationId.FAQ.INSTANCE.getName())) {
             checkPosition = 2;
+            goScreen(checkPosition, currentTag, fragment);
+        } else if (currentTag.equalsIgnoreCase(NavigationId.PRIVACY_POLICY.INSTANCE.getName())) {
+            checkPosition = 3;
+            goScreen(checkPosition, currentTag, fragment);
         } else {
             checkPosition = currentNavigationSelectedItem;
             goScreen(checkPosition, currentTag, fragment);
