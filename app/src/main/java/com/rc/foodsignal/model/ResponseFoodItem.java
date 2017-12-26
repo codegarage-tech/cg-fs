@@ -6,12 +6,15 @@ import java.util.ArrayList;
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
  */
-public class ResponseRegisterDevice extends ResponseBase {
+public class ResponseFoodItem extends ResponseBase {
 
     private String status = "";
-    private ArrayList<Device> data;
+    private ArrayList<Restaurant> data = new ArrayList<Restaurant>();
 
-    public ResponseRegisterDevice(String status, ArrayList<Device> data) {
+    public ResponseFoodItem() {
+    }
+
+    public ResponseFoodItem(String status, ArrayList<Restaurant> data) {
         this.status = status;
         this.data = data;
     }
@@ -24,11 +27,11 @@ public class ResponseRegisterDevice extends ResponseBase {
         this.status = status;
     }
 
-    public ArrayList<Device> getData() {
+    public ArrayList<Restaurant> getData() {
         return data;
     }
 
-    public void setData(ArrayList<Device> data) {
+    public void setData(ArrayList<Restaurant> data) {
         this.data = data;
     }
 

@@ -9,13 +9,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 import com.rc.foodsignal.R;
-import com.rc.foodsignal.model.Food;
+import com.rc.foodsignal.model.Restaurant;
 
 /**
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
  */
-public class FoodViewHolder extends BaseViewHolder<Food> {
+public class RestaurantViewHolder extends BaseViewHolder<Restaurant> {
 
     private ImageView ivFoodImage;
     private TextView tvFoodPrice;
@@ -24,7 +24,7 @@ public class FoodViewHolder extends BaseViewHolder<Food> {
     private TextView tvRestaurantName;
     private TextView tvRestaurantAddress;
 
-    public FoodViewHolder(ViewGroup parent) {
+    public RestaurantViewHolder(ViewGroup parent) {
         super(parent, R.layout.recyclerview_item_food);
 
         ivFoodImage = $(R.id.iv_food_image);
@@ -36,7 +36,7 @@ public class FoodViewHolder extends BaseViewHolder<Food> {
     }
 
     @Override
-    public void setData(final Food data) {
+    public void setData(final Restaurant data) {
 
         Glide
                 .with(getContext())
@@ -45,14 +45,14 @@ public class FoodViewHolder extends BaseViewHolder<Food> {
                 .apply(new RequestOptions().centerInside())
                 .into(ivFoodImage);
 
-        tvFoodPrice.setText("$" + data.getPrice());
+//        tvFoodPrice.setText("$" + data.getPrice());
         tvFoodName.setText(data.getName());
-        if (data.getMenu_details().size() > 0) {
-            tvFoodIngredient.setText("Ingredients: " + data.getMenu_details().get(0).getIngredients());
-        }
-        if (data.getRestaurants_details().size() > 0) {
-            tvRestaurantName.setText("Restaurant name: " + data.getRestaurants_details().get(0).getName());
-            tvRestaurantAddress.setText("Restaurant address: " + data.getRestaurants_details().get(0).getAddress());
-        }
+//        if (data.getFoodCategory_details().size() > 0) {
+//            tvFoodIngredient.setText("Ingredients: " + data.getFoodCategory_details().get(0).getIngredients());
+//        }
+//        if (data.getRestaurants_details().size() > 0) {
+//            tvRestaurantName.setText("Restaurant name: " + data.getRestaurants_details().get(0).getName());
+//            tvRestaurantAddress.setText("Restaurant address: " + data.getRestaurants_details().get(0).getAddress());
+//        }
     }
 }

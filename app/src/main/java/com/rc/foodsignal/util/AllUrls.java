@@ -5,8 +5,8 @@ import android.util.Log;
 import org.json.JSONObject;
 
 /**
- * Author: Abir Ahmed
- * Email: abir.eol@gmail.com
+ * Author: Md. Rashadul Alam
+ * Email: rashed.droid@gmail.com
  */
 public class AllUrls {
 
@@ -190,6 +190,21 @@ public class AllUrls {
                 .addJSONParam("lng", longitude)
                 .getJSONParam();
         Log.d(TAG, "getAddUserLocationParameters: " + params.toString());
+        return params;
+    }
+
+    public static String getAllRestaurantsUrl() {
+        String url = BASE_URL + "restaurants/list_via_lat_lng";
+        Log.d(TAG, "getAllRestaurantUrl: " + url);
+        return url;
+    }
+
+    public static JSONObject getAllRestaurantsParameters(double latitude, double longitude) {
+        JSONObject params = HttpRequestManager.HttpParameter.getInstance()
+                .addJSONParam("lat", latitude)
+                .addJSONParam("lng", longitude)
+                .getJSONParam();
+        Log.d(TAG, "getAllRestaurantsParameters: " + params.toString());
         return params;
     }
 }

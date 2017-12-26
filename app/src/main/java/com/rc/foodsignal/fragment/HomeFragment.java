@@ -13,10 +13,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.rc.foodsignal.R;
-import com.rc.foodsignal.adapter.FoodAdapter;
+import com.rc.foodsignal.adapter.RestaurantAdapter;
 import com.rc.foodsignal.interfaces.OnFragmentBackPressedListener;
 import com.rc.foodsignal.model.Location;
-import com.rc.foodsignal.model.ResponseSearchFood;
+import com.rc.foodsignal.model.ResponseFoodItem;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.HttpRequestManager;
@@ -35,7 +35,7 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
     DoSearchFood doSearchFood;
     Location mLocation;
     RecyclerView recyclerViewFood;
-    FoodAdapter foodAdapter;
+    RestaurantAdapter restaurantAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,15 +48,15 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
 
     private void initHomeFragmentViews() {
         recyclerViewFood = (RecyclerView) parentView.findViewById(R.id.rv_food);
-        foodAdapter = new FoodAdapter(getActivity());
+        restaurantAdapter = new RestaurantAdapter(getActivity());
         recyclerViewFood.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerViewFood.setAdapter(foodAdapter);
+        recyclerViewFood.setAdapter(restaurantAdapter);
 
         if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION))) {
             Log.d(TAG, "Session data: " + SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION));
             mLocation = Location.getResponseObject(SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION), Location.class);
         }
-        doSearchFood = new DoSearchFood(getActivity(), Double.parseDouble(mLocation.getLat()), Double.parseDouble(mLocation.getLng()), "1");
+        doSearchFood = new DoSearchFood(getActivity(), Double.parseDouble(mLocation.getLat()), Double.parseDouble(mLocation.getLng()));
         doSearchFood.execute();
     }
 
@@ -70,13 +70,11 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
         private Context mContext;
         private double mLat = 0.00;
         private double mLng = 0.00;
-        private String mCategoryId = "";
 
-        public DoSearchFood(Context context, double lat, double lng, String categoryId) {
+        public DoSearchFood(Context context, double lat, double lng) {
             this.mContext = context;
             this.mLat = lat;
             this.mLng = lng;
-            this.mCategoryId = categoryId;
         }
 
         @Override
@@ -85,7 +83,7 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
 
         @Override
         protected HttpRequestManager.HttpResponse doInBackground(String... params) {
-            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getSearchFoodUrl(), AllUrls.getSearchFoodParameters(mLat, mLng, mCategoryId), null);
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getAllRestaurantsUrl(), AllUrls.getAllRestaurantsParameters(mLat, mLng), null);
             return response;
         }
 
@@ -94,13 +92,13 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
 
             if (result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
                 Log.d(TAG, "success response from web: " + result.getResult().toString());
-                ResponseSearchFood responseData = ResponseSearchFood.getResponseObject(result.getResult().toString(), ResponseSearchFood.class);
+                ResponseFoodItem responseData = ResponseFoodItem.getResponseObject(result.getResult().toString(), ResponseFoodItem.class);
 
                 if (responseData.getStatus().equalsIgnoreCase("1") && (responseData.getData().size() > 0)) {
                     Log.d(TAG, "success wrapper: " + responseData.toString());
 
-                    foodAdapter.addAll(responseData.getData());
-                    foodAdapter.notifyDataSetChanged();
+                    restaurantAdapter.addAll(responseData.getData());
+                    restaurantAdapter.notifyDataSetChanged();
 
                 } else {
                     Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();

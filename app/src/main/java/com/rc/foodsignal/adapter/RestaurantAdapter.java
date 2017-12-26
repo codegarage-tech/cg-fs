@@ -5,8 +5,8 @@ import android.view.ViewGroup;
 
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
-import com.rc.foodsignal.model.Food;
-import com.rc.foodsignal.viewholder.FoodViewHolder;
+import com.rc.foodsignal.model.Restaurant;
+import com.rc.foodsignal.viewholder.RestaurantViewHolder;
 
 import java.security.InvalidParameterException;
 
@@ -14,11 +14,11 @@ import java.security.InvalidParameterException;
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
  */
-public class FoodAdapter extends RecyclerArrayAdapter<Food> {
+public class RestaurantAdapter extends RecyclerArrayAdapter<Restaurant> {
 
     public static final int TYPE_FOOD = 1;
 
-    public FoodAdapter(Context context) {
+    public RestaurantAdapter(Context context) {
         super(context);
     }
 
@@ -31,7 +31,7 @@ public class FoodAdapter extends RecyclerArrayAdapter<Food> {
     public BaseViewHolder OnCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case TYPE_FOOD:
-                return new FoodViewHolder(parent);
+                return new RestaurantViewHolder(parent);
             default:
                 throw new InvalidParameterException();
         }

@@ -1,5 +1,7 @@
 package com.rc.foodsignal.model;
 
+import java.util.ArrayList;
+
 /**
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
@@ -18,8 +20,10 @@ public class Restaurant {
     private String is_restaurant = "";
     private String sms_notification = "";
     private String push_notification = "";
+    private String distance = "";
+    private ArrayList<FoodItem> item_details = new ArrayList<FoodItem>();
 
-    public Restaurant(String id, String name, String image, String lat, String lng, String email, String phone, String address, String password, String is_restaurant, String sms_notification, String push_notification) {
+    public Restaurant(String id, String name, String image, String lat, String lng, String email, String phone, String address, String password, String is_restaurant, String sms_notification, String push_notification, String distance, ArrayList<FoodItem> item_details) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -32,6 +36,8 @@ public class Restaurant {
         this.is_restaurant = is_restaurant;
         this.sms_notification = sms_notification;
         this.push_notification = push_notification;
+        this.distance = distance;
+        this.item_details = item_details;
     }
 
     public String getId() {
@@ -130,6 +136,22 @@ public class Restaurant {
         this.push_notification = push_notification;
     }
 
+    public String getDistance() {
+        return distance;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
+    }
+
+    public ArrayList<FoodItem> getItem_details() {
+        return item_details;
+    }
+
+    public void setItem_details(ArrayList<FoodItem> item_details) {
+        this.item_details = item_details;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -145,6 +167,8 @@ public class Restaurant {
                 ", is_restaurant='" + is_restaurant + '\'' +
                 ", sms_notification='" + sms_notification + '\'' +
                 ", push_notification='" + push_notification + '\'' +
+                ", distance='" + distance + '\'' +
+                ", item_details=" + item_details +
                 '}';
     }
 }
