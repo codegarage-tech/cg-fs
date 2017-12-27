@@ -6,12 +6,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.model.Location;
+import com.reversecoder.library.storage.SessionManager;
 
 import java.util.ArrayList;
+
+import static com.rc.foodsignal.util.AllConstants.SESSION_IS_LOCATION_ADDED;
+import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_LOCATION;
 
 /**
  * @author Md. Rashadul Alam
@@ -23,11 +28,14 @@ public class AddressListViewAdapter extends BaseAdapter {
     private ArrayList<Location> mData;
     private static LayoutInflater inflater = null;
     private String TAG = AddressListViewAdapter.class.getSimpleName();
+    Location mLocation;
 
     public AddressListViewAdapter(Activity activity) {
         mActivity = activity;
         mData = new ArrayList<Location>();
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        mLocation = Location.getResponseObject(SessionManager.getStringSetting(mActivity, SESSION_SELECTED_LOCATION), Location.class);
     }
 
     public ArrayList<Location> getData() {
@@ -76,12 +84,28 @@ public class AddressListViewAdapter extends BaseAdapter {
         if (convertView == null)
             vi = inflater.inflate(R.layout.list_row_address, null);
 
-        final Location mLocation = getItem(position);
+        final Location location = getItem(position);
 
+        LinearLayout llAddressCheck = (LinearLayout) vi.findViewById(R.id.ll_address_check);
+        if (mLocation.getStreet().equalsIgnoreCase(location.getStreet())) {
+            llAddressCheck.setVisibility(View.VISIBLE);
+        } else {
+            llAddressCheck.setVisibility(View.GONE);
+        }
         TextView tvStreet = (TextView) vi.findViewById(R.id.tv_street);
-        tvStreet.setText(mLocation.getStreet());
+        tvStreet.setText(location.getStreet());
         TextView tvAddress = (TextView) vi.findViewById(R.id.tv_address);
-        tvAddress.setText(String.format("%s, %s, %s", mLocation.getCity(), mLocation.getState(), mLocation.getCountry()));
+        tvAddress.setText(String.format("%s, %s, %s", location.getCity(), location.getState(), location.getCountry()));
+
+        vi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLocation = location;
+                SessionManager.setStringSetting(mActivity, SESSION_SELECTED_LOCATION, mLocation.toString());
+                SessionManager.setBooleanSetting(mActivity, SESSION_IS_LOCATION_ADDED, true);
+                notifyDataSetChanged();
+            }
+        });
 
         return vi;
     }

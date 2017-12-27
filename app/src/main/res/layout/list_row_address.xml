@@ -37,10 +37,12 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_address_check"
         android:layout_width="0dp"
         android:layout_height="80dp"
         android:layout_weight=".15"
-        android:gravity="center">
+        android:gravity="center"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/iv_selected"
