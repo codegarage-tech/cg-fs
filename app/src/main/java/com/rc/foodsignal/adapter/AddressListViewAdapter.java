@@ -73,8 +73,10 @@ public class AddressListViewAdapter extends BaseAdapter {
 
         final Location mLocation = getItem(position);
 
-        TextView itemName = (TextView) vi.findViewById(R.id.tv_item_name);
-        itemName.setText(mLocation.getState());
+        TextView tvStreet = (TextView) vi.findViewById(R.id.tv_street);
+        tvStreet.setText(mLocation.getStreet());
+        TextView tvAddress = (TextView) vi.findViewById(R.id.tv_address);
+        tvAddress.setText(String.format("%s, %s, %s", mLocation.getCity(), mLocation.getState(), mLocation.getCountry()));
 
         return vi;
     }
