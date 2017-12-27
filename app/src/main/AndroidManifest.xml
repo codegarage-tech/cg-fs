@@ -47,6 +47,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name="com.rc.foodsignal.activity.AddressListActivity"
+            android:label="@string/title_activity_address_list"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <!--<activity
             android:name=".activity.FoodMenuActivity"
             android:label="@string/title_activity_login"

@@ -8,6 +8,7 @@
     <string name="title_activity_home">Home</string>
     <string name="title_activity_add_location">Add Location</string>
     <string name="title_activity_add_info">Add Info</string>
+    <string name="title_activity_address_list">Addresses</string>
 
     <!-- Toast message -->
     <string name="toast_could_not_retrieve_info">Could not retrieve info</string>

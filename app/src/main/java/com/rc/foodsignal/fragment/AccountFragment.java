@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.rc.foodsignal.R;
+import com.rc.foodsignal.activity.AddressListActivity;
 import com.rc.foodsignal.activity.LoginActivity;
 import com.rc.foodsignal.interfaces.OnFragmentBackPressedListener;
 import com.rc.foodsignal.model.Location;
@@ -33,7 +34,7 @@ import static com.rc.foodsignal.util.AllConstants.SESSION_USER_DATA;
 public class AccountFragment extends Fragment implements OnFragmentBackPressedListener {
 
     private View parentView;
-    private LinearLayout llAddRestaurant, llRestaurantOwner, llLogout;
+    private LinearLayout llProfile, llAddress, llNotification, llPaymentCard, llAddRestaurant, llMenu, llAboutRestaurant, llLogout, llRestaurantOwner;
     private static String TAG = AccountFragment.class.getSimpleName();
     UserBasicInfo userBasicInfo;
     Location location;
@@ -61,7 +62,13 @@ public class AccountFragment extends Fragment implements OnFragmentBackPressedLi
             location = Location.getResponseObject(SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION), Location.class);
         }
 
+        llProfile = (LinearLayout) parentView.findViewById(R.id.ll_profile);
+        llAddress = (LinearLayout) parentView.findViewById(R.id.ll_address);
+        llNotification = (LinearLayout) parentView.findViewById(R.id.ll_notification);
+        llPaymentCard = (LinearLayout) parentView.findViewById(R.id.ll_payment_card);
         llAddRestaurant = (LinearLayout) parentView.findViewById(R.id.ll_add_restaurant);
+        llMenu = (LinearLayout) parentView.findViewById(R.id.ll_menu);
+        llAboutRestaurant = (LinearLayout) parentView.findViewById(R.id.ll_about_restaurant);
         llLogout = (LinearLayout) parentView.findViewById(R.id.ll_logout);
         llRestaurantOwner = (LinearLayout) parentView.findViewById(R.id.ll_restaurant_owner);
         tvProfile = (TextView) parentView.findViewById(R.id.tv_profile_txt);
@@ -92,6 +99,13 @@ public class AccountFragment extends Fragment implements OnFragmentBackPressedLi
     }
 
     private void setUpActions() {
+        llAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentAddress = new Intent(getActivity(), AddressListActivity.class);
+                startActivity(intentAddress);
+            }
+        });
         llAddRestaurant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

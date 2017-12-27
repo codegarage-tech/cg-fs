@@ -207,4 +207,10 @@ public class AllUrls {
         Log.d(TAG, "getAllRestaurantsParameters: " + params.toString());
         return params;
     }
+
+    public static String getAllUserLocationsUrl(String userId) {
+        String url = BASE_URL + "signup/all_user_location/" + userId;
+        Log.d(TAG, "getAllUserLocationsUrl: " + url);
+        return url;
+    }
 }
