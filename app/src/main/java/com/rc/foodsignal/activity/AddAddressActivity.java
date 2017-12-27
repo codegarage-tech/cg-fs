@@ -11,7 +11,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -20,9 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rc.foodsignal.R;
-import com.rc.foodsignal.model.ResponseAddUserBasicInfo;
+import com.rc.foodsignal.model.ResponseAddAddress;
 import com.rc.foodsignal.model.UserBasicInfo;
-import com.rc.foodsignal.model.UserData;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
 import com.reversecoder.library.httprequest.HttpRequestManager;
@@ -41,6 +39,7 @@ import com.seatgeek.placesautocomplete.model.Place;
 import com.seatgeek.placesautocomplete.model.PlaceDetails;
 import com.seatgeek.placesautocomplete.model.PlaceLocation;
 
+import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_ADDRESS_LIST;
 import static com.rc.foodsignal.util.AllConstants.SESSION_IS_LOCATION_ADDED;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_LOCATION;
 import static com.rc.foodsignal.util.AllConstants.SESSION_USER_BASIC_INFO;
@@ -49,17 +48,14 @@ import static com.rc.foodsignal.util.AllConstants.SESSION_USER_BASIC_INFO;
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
  */
-public class AddUserBasicInfoActivity extends BaseLocationActivity {
+public class AddAddressActivity extends BaseLocationActivity {
 
-    String TAG = AppUtils.getTagName(AddUserBasicInfoActivity.class);
+    String TAG = AppUtils.getTagName(AddAddressActivity.class);
     TextView tvTitle;
     ImageView ivBack;
-    LinearLayout llAddLocation, llLocationDetail, llStepOne, llStepTwo;
-    UserData userData;
-
-    //User info
-    boolean isStepOneSelected = true;
-    EditText edtName, edtPhone, edtEmail;
+    LinearLayout llDone, llLocationDetail;
+    UserBasicInfo userBasicInfo;
+    DoAddAddress doAddAddress;
 
     //Place search
     PlacesAutocompleteTextView acPlace;
@@ -78,13 +74,13 @@ public class AddUserBasicInfoActivity extends BaseLocationActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_user_basic_info);
+        setContentView(R.layout.activity_add_address);
 
         initAddLocationUI();
         initAddLocationActions();
 
-        if (!NetworkManager.isConnected(AddUserBasicInfoActivity.this)) {
-            Toast.makeText(AddUserBasicInfoActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
+        if (!NetworkManager.isConnected(AddAddressActivity.this)) {
+            Toast.makeText(AddAddressActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
             return;
         }
     }
@@ -97,22 +93,22 @@ public class AddUserBasicInfoActivity extends BaseLocationActivity {
     }
 
     private void initAddLocationUI() {
+        if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(AddAddressActivity.this, SESSION_USER_BASIC_INFO))) {
+            Log.d(TAG, "Session data: " + SessionManager.getStringSetting(AddAddressActivity.this, SESSION_USER_BASIC_INFO));
+            userBasicInfo = UserBasicInfo.getResponseObject(SessionManager.getStringSetting(AddAddressActivity.this, SESSION_USER_BASIC_INFO), UserBasicInfo.class);
+        }
+
         ivBack = (ImageView) findViewById(R.id.iv_back);
         tvTitle = (TextView) findViewById(R.id.text_title);
         tvTitle.setText(getString(R.string.title_activity_add_address));
-        llAddLocation = (LinearLayout) findViewById(R.id.ll_done);
+        llDone = (LinearLayout) findViewById(R.id.ll_done);
         llLocationDetail = (LinearLayout) findViewById(R.id.ll_location_detail);
-        llStepOne = (LinearLayout) findViewById(R.id.ll_step_one);
-        llStepTwo = (LinearLayout) findViewById(R.id.ll_step_two);
         acPlace = (PlacesAutocompleteTextView) findViewById(R.id.autocomplete);
         acPlace.dismissDropDown();
         tvStreet = (TextView) findViewById(R.id.street);
         tvCity = (TextView) findViewById(R.id.city);
         tvState = (TextView) findViewById(R.id.state);
         tvCountry = (TextView) findViewById(R.id.country);
-        edtName = (EditText) findViewById(R.id.edt_name);
-        edtPhone = (EditText) findViewById(R.id.edt_phone);
-        edtEmail = (EditText) findViewById(R.id.edt_email);
         segmentedRadioGroup = (SegmentedRadioGroup) findViewById(R.id.sr_location_type);
         segmentedRadioButtonCurrentLocation = (RadioButton) findViewById(R.id.segmented_rbtn_current_location);
         segmentedRadioButtonSearchLocation = (RadioButton) findViewById(R.id.segmented_rbtn_search_location);
@@ -160,58 +156,30 @@ public class AddUserBasicInfoActivity extends BaseLocationActivity {
 
         );
 
-        llAddLocation.setOnClickListener(new View.OnClickListener() {
+        llDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String street = "";
-                String city = "";
-                String state = "";
-                String zip = "";
-                String country = "";
-                String latitude = "";
-                String longitude = "";
-                String name = "";
-                String phone = "";
-                String email = "";
-
-                if (isStepOneSelected) {
-                    if (!NetworkManager.isConnected(AddUserBasicInfoActivity.this)) {
-                        Toast.makeText(AddUserBasicInfoActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    if (acPlace.getText().toString().equalsIgnoreCase("")) {
-                        Toast.makeText(AddUserBasicInfoActivity.this, getResources().getString(R.string.toast_empty_address_field), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    setUserInfoPage();
-                } else {
-                    if (edtName.getText().toString().equalsIgnoreCase("")) {
-                        Toast.makeText(AddUserBasicInfoActivity.this, getResources().getString(R.string.toast_empty_name_field), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if (edtPhone.getText().toString().equalsIgnoreCase("")) {
-                        Toast.makeText(AddUserBasicInfoActivity.this, getResources().getString(R.string.toast_empty_phone_field), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-
-                    street = (!tvStreet.getText().toString().equalsIgnoreCase("___")) ? tvStreet.getText().toString() : "";
-                    city = (!tvCity.getText().toString().equalsIgnoreCase("___")) ? tvCity.getText().toString() : "";
-                    state = (!tvState.getText().toString().equalsIgnoreCase("___")) ? tvState.getText().toString() : "";
-                    zip = "";
-                    country = (!tvCountry.getText().toString().equalsIgnoreCase("___")) ? tvCountry.getText().toString() : "";
-                    latitude = (segmentedRadioButtonCurrentLocation.isChecked()) ? mCurrentLocation.getLatitude() + "" : selectedPlaceAutocomplete.lat + "";
-                    longitude = (segmentedRadioButtonCurrentLocation.isChecked()) ? mCurrentLocation.getLongitude() + "" : selectedPlaceAutocomplete.lng + "";
-
-                    name = edtName.getText().toString();
-                    phone = edtPhone.getText().toString();
-                    email = (!edtEmail.getText().toString().equalsIgnoreCase("")) ? edtEmail.getText().toString() : "";
-
-                    new DoAddAddUserBasicInfo(AddUserBasicInfoActivity.this, street, city, state, zip, country, latitude, longitude, name, phone, email).execute();
+                if (!NetworkManager.isConnected(AddAddressActivity.this)) {
+                    Toast.makeText(AddAddressActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
+                    return;
                 }
+
+                if (acPlace.getText().toString().equalsIgnoreCase("")) {
+                    Toast.makeText(AddAddressActivity.this, getResources().getString(R.string.toast_empty_address_field), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                String street = (!tvStreet.getText().toString().equalsIgnoreCase("___")) ? tvStreet.getText().toString() : "";
+                String city = (!tvCity.getText().toString().equalsIgnoreCase("___")) ? tvCity.getText().toString() : "";
+                String state = (!tvState.getText().toString().equalsIgnoreCase("___")) ? tvState.getText().toString() : "";
+                String zip = "";
+                String country = (!tvCountry.getText().toString().equalsIgnoreCase("___")) ? tvCountry.getText().toString() : "";
+                String latitude = (segmentedRadioButtonCurrentLocation.isChecked()) ? mCurrentLocation.getLatitude() + "" : selectedPlaceAutocomplete.lat + "";
+                String longitude = (segmentedRadioButtonCurrentLocation.isChecked()) ? mCurrentLocation.getLongitude() + "" : selectedPlaceAutocomplete.lng + "";
+
+                doAddAddress = new DoAddAddress(AddAddressActivity.this, userBasicInfo.getUser_id(), street, city, state, zip, country, latitude, longitude);
+                doAddAddress.execute();
             }
         });
 
@@ -228,7 +196,7 @@ public class AddUserBasicInfoActivity extends BaseLocationActivity {
             public void afterTextChanged(Editable s) {
                 if (s.length() == 0) {
                     clearPreviousData();
-                    llAddLocation.setVisibility(View.GONE);
+                    llDone.setVisibility(View.GONE);
                     llLocationDetail.setVisibility(View.GONE);
                 }
             }
@@ -244,27 +212,13 @@ public class AddUserBasicInfoActivity extends BaseLocationActivity {
         });
     }
 
-    private void setUserInfoPage() {
-        tvTitle.setText(getString(R.string.title_activity_add_info));
-        llStepOne.setVisibility(View.GONE);
-        llStepTwo.setVisibility(View.VISIBLE);
-        isStepOneSelected = false;
-    }
-
-    private void setLocationPage() {
-        tvTitle.setText(getString(R.string.title_activity_add_address));
-        llStepTwo.setVisibility(View.GONE);
-        llStepOne.setVisibility(View.VISIBLE);
-        isStepOneSelected = true;
-    }
-
     private void setPlaceSearchDetail(Place place) {
         acPlace.getDetailsFor(place, new DetailsCallback() {
             @Override
             public void onSuccess(final PlaceDetails details) {
 
                 clearPreviousData();
-                llAddLocation.setVisibility(View.VISIBLE);
+                llDone.setVisibility(View.VISIBLE);
                 llLocationDetail.setVisibility(View.VISIBLE);
 
                 Log.d(TAG, "details: " + details);
@@ -318,12 +272,12 @@ public class AddUserBasicInfoActivity extends BaseLocationActivity {
             currentLocationTask.cancel(true);
         }
 
-        currentLocationTask = new ReverseGeocoderTask(AddUserBasicInfoActivity.this, new LocationAddressListener() {
+        currentLocationTask = new ReverseGeocoderTask(AddAddressActivity.this, new LocationAddressListener() {
             @Override
             public void getLocationAddress(UserLocationAddress locationAddress) {
 
                 clearPreviousData();
-                llAddLocation.setVisibility(View.VISIBLE);
+                llDone.setVisibility(View.VISIBLE);
                 llLocationDetail.setVisibility(View.VISIBLE);
 
                 Log.d(TAG, "UserLocationAddress: " + locationAddress.toString());
@@ -346,7 +300,7 @@ public class AddUserBasicInfoActivity extends BaseLocationActivity {
         clearPreviousData();
         acPlace.setText("");
         acPlace.dismissDropDown();
-        llAddLocation.setVisibility(View.GONE);
+        llDone.setVisibility(View.GONE);
         llLocationDetail.setVisibility(View.GONE);
     }
 
@@ -357,13 +311,14 @@ public class AddUserBasicInfoActivity extends BaseLocationActivity {
         tvCountry.setText("");
     }
 
-    private class DoAddAddUserBasicInfo extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
+    private class DoAddAddress extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
 
         private Context mContext;
-        private String mStreet = "", mCity = "", mState = "", mZip = "", mCountry = "", mLatitude = "", mLongitude = "", mName = "", mPhone = "", mEmail = "";
+        private String mUserId = "", mStreet = "", mCity = "", mState = "", mZip = "", mCountry = "", mLatitude = "", mLongitude = "";
 
-        public DoAddAddUserBasicInfo(Context context, String street, String city, String state, String zip, String country, String latitude, String longitude, String name, String phone, String email) {
+        public DoAddAddress(Context context, String userId, String street, String city, String state, String zip, String country, String latitude, String longitude) {
             mContext = context;
+            mUserId = userId;
             mStreet = street;
             mCity = city;
             mState = state;
@@ -371,9 +326,6 @@ public class AddUserBasicInfoActivity extends BaseLocationActivity {
             mCountry = country;
             mLatitude = latitude;
             mLongitude = longitude;
-            mName = name;
-            mPhone = phone;
-            mEmail = email;
         }
 
         @Override
@@ -397,7 +349,7 @@ public class AddUserBasicInfoActivity extends BaseLocationActivity {
 
         @Override
         protected HttpRequestManager.HttpResponse doInBackground(String... params) {
-            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getAddUserBasicInfoUrl(), AllUrls.getAddUserBasicInfoParameters(mStreet, mCity, mState, mZip, mCountry, mLatitude, mLongitude, mName, mPhone, mEmail), null);
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getAddUserLocationUrl(), AllUrls.getAddUserLocationParameters(mUserId, mStreet, mCity, mState, mZip, mCountry, mLatitude, mLongitude), null);
             return response;
         }
 
@@ -411,35 +363,25 @@ public class AddUserBasicInfoActivity extends BaseLocationActivity {
 
             if (result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
                 Log.d(TAG, "success response from web: " + result.getResult().toString());
-                ResponseAddUserBasicInfo responseData = ResponseAddUserBasicInfo.getResponseObject(result.getResult().toString(), ResponseAddUserBasicInfo.class);
+                ResponseAddAddress responseData = ResponseAddAddress.getResponseObject(result.getResult().toString(), ResponseAddAddress.class);
+                Log.d(TAG, "success wrapper object: " + responseData.toString());
 
                 if (responseData.getStatus().equalsIgnoreCase("success") && (responseData.getData().size() > 0)) {
                     Log.d(TAG, "success wrapper: " + responseData.getData().get(0).toString());
-                    SessionManager.setStringSetting(AddUserBasicInfoActivity.this, SESSION_SELECTED_LOCATION, responseData.getData().get(0).toString());
-                    SessionManager.setBooleanSetting(AddUserBasicInfoActivity.this, SESSION_IS_LOCATION_ADDED, true);
+                    SessionManager.setStringSetting(AddAddressActivity.this, SESSION_SELECTED_LOCATION, responseData.getData().get(0).toString());
+                    SessionManager.setBooleanSetting(AddAddressActivity.this, SESSION_IS_LOCATION_ADDED, true);
 
-                    UserBasicInfo userBasicInfo = new UserBasicInfo(responseData.getData().get(0).getUser_id(), mName, mPhone, mEmail);
-                    SessionManager.setStringSetting(AddUserBasicInfoActivity.this, SESSION_USER_BASIC_INFO, userBasicInfo.toString());
-
-                    Intent intent = new Intent(AddUserBasicInfoActivity.this, HomeActivity.class);
-                    startActivity(intent);
+                    Intent intent = new Intent();
+                    intent.putExtra(INTENT_KEY_ADDRESS_LIST, true);
+                    setResult(RESULT_OK,intent);
                     finish();
                 } else {
-                    Toast.makeText(AddUserBasicInfoActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddAddressActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
                 }
 
             } else {
-                Toast.makeText(AddUserBasicInfoActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddAddressActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
             }
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (isStepOneSelected) {
-            super.onBackPressed();
-        } else {
-            setLocationPage();
         }
     }
 }

@@ -3,18 +3,21 @@ package com.rc.foodsignal.activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.adapter.AddressListViewAdapter;
+import com.rc.foodsignal.model.Location;
 import com.rc.foodsignal.model.ResponseAddressList;
 import com.rc.foodsignal.model.UserBasicInfo;
 import com.rc.foodsignal.util.AllUrls;
@@ -23,6 +26,9 @@ import com.rc.foodsignal.util.HttpRequestManager;
 import com.reversecoder.library.network.NetworkManager;
 import com.reversecoder.library.storage.SessionManager;
 
+import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_ADDRESS_LIST;
+import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_ADDRESS_LIST;
+import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_LOCATION;
 import static com.rc.foodsignal.util.AllConstants.SESSION_USER_BASIC_INFO;
 
 /**
@@ -33,6 +39,7 @@ public class AddressListActivity extends AppCompatActivity {
 
     TextView tvTitle;
     ImageView ivBack;
+    LinearLayout llAddAddress;
     ProgressDialog loadingDialog;
 
     UserBasicInfo userBasicInfo;
@@ -57,6 +64,7 @@ public class AddressListActivity extends AppCompatActivity {
         }
 
         ivBack = (ImageView) findViewById(R.id.iv_back);
+        llAddAddress = (LinearLayout) findViewById(R.id.ll_done);
 
         tvTitle = (TextView) findViewById(R.id.text_title);
         tvTitle.setText(getString(R.string.title_activity_address_list));
@@ -78,6 +86,14 @@ public class AddressListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 onBackPressed();
+            }
+        });
+
+        llAddAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentAddress = new Intent(AddressListActivity.this, AddAddressActivity.class);
+                startActivityForResult(intentAddress, INTENT_REQUEST_CODE_ADDRESS_LIST);
             }
         });
     }
@@ -142,6 +158,27 @@ public class AddressListActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(AddressListActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case INTENT_REQUEST_CODE_ADDRESS_LIST: {
+                if (data != null && resultCode == RESULT_OK) {
+                    if (data.getBooleanExtra(INTENT_KEY_ADDRESS_LIST, false)) {
+
+                        //Update address list
+                        Location mLocation = Location.getResponseObject(SessionManager.getStringSetting(AddressListActivity.this, SESSION_SELECTED_LOCATION), Location.class);
+                        addressListViewAdapter.addData(mLocation);
+                    }
+                }
+                break;
+            }
+            default:
+                break;
         }
     }
 }

@@ -39,6 +39,11 @@ public class AddressListViewAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void addData(Location location) {
+        mData.add(location);
+        notifyDataSetChanged();
+    }
+
     public int getItemPosition(Location music) {
         for (int i = 0; i < mData.size(); i++) {
             if ((mData.get(i)).getStreet().contains(music.getStreet())) {

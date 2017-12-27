@@ -9,10 +9,9 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar_add_location" />
+    <include layout="@layout/toolbar_done" />
 
     <LinearLayout
-        android:id="@+id/ll_step_one"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -36,7 +35,7 @@
                 android:layout_height="50dp"
                 android:layout_weight=".5"
                 android:checked="true"
-                android:text="Current Location" />
+                android:text="Current Address" />
 
             <RadioButton
                 android:id="@+id/segmented_rbtn_search_location"
@@ -44,7 +43,7 @@
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight=".5"
-                android:text="Search Location" />
+                android:text="Search Address" />
 
         </com.reversecoder.library.segmentradiogroup.SegmentedRadioGroup>
 
@@ -172,93 +171,6 @@
             </LinearLayout>
 
         </ScrollView>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_step_two"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical">
-
-            <EditText
-                android:id="@+id/edt_name"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@null"
-                android:gravity="bottom"
-                android:hint="Name"
-                android:paddingLeft="10dp"
-                android:textColor="@color/textColorSecondary"
-                android:textColorHint="@color/textColorSecondary" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorPrimaryDark" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:orientation="vertical">
-
-            <EditText
-                android:id="@+id/edt_phone"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@null"
-                android:gravity="bottom"
-                android:hint="Phone"
-                android:inputType="phone"
-                android:paddingLeft="10dp"
-                android:textColor="@color/textColorSecondary"
-                android:textColorHint="@color/textColorSecondary" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorPrimaryDark" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:orientation="vertical">
-
-            <EditText
-                android:id="@+id/edt_email"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@null"
-                android:gravity="bottom"
-                android:hint="Email(optional)"
-                android:paddingLeft="10dp"
-                android:textColor="@color/textColorSecondary"
-                android:textColorHint="@color/textColorSecondary" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorPrimaryDark" />
-        </LinearLayout>
-
 
     </LinearLayout>
 

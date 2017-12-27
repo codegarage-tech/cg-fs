@@ -23,7 +23,7 @@
         android:textSize="@dimen/activity_title_text_size" />
 
     <LinearLayout
-        android:id="@+id/ll_add_location"
+        android:id="@+id/ll_done"
         android:layout_width="50dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
@@ -32,7 +32,6 @@
         android:visibility="gone">
 
         <ImageView
-            android:id="@+id/iv_add_location"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/vector_done" />

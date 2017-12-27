@@ -53,35 +53,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <!--<activity
-            android:name=".activity.FoodMenuActivity"
-            android:label="@string/title_activity_login"
+        <activity
+            android:name="com.rc.foodsignal.activity.AddAddressActivity"
+            android:label="@string/title_activity_add_address"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity
-            android:name=".activity.AddFoodItemActivity"
-            android:label="@string/title_activity_login"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".activity.SignUpActivity"
-            android:label="@string/title_activity_login"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".activity.RegisterDeviceActivity"
-            android:label="@string/title_activity_login"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".activity.SearchRestaurantActivity"
-            android:label="@string/title_activity_login"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />-->
     </application>
 
 </manifest>

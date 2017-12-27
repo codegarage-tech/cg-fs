@@ -16,9 +16,11 @@ public class AllConstants {
 
     //Intent request code
     public static final int INTENT_REQUEST_CODE_ACCOUNT = 420;
+    public static final int INTENT_REQUEST_CODE_ADDRESS_LIST = 4200;
 
     //Intent key
     public static final String INTENT_KEY_LOGIN = "INTENT_KEY_LOGIN";
+    public static final String INTENT_KEY_ADDRESS_LIST = "INTENT_KEY_ADDRESS_LIST";
 
     public static final int NAVIGATION_DRAWER_CLOSE_DELAY = 200;
 }
