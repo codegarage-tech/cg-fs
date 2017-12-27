@@ -24,6 +24,7 @@ import com.reversecoder.library.network.NetworkManager;
 import com.reversecoder.library.storage.SessionManager;
 import com.reversecoder.library.util.AllSettingsManager;
 
+import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_LOGIN;
 import static com.rc.foodsignal.util.AllConstants.SESSION_IS_LOCATION_ADDED;
 import static com.rc.foodsignal.util.AllConstants.SESSION_IS_USER_LOGGED_IN;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_LOCATION;
@@ -165,7 +166,6 @@ public class LoginActivity extends AppCompatActivity {
                     SessionManager.setBooleanSetting(LoginActivity.this, SESSION_IS_USER_LOGGED_IN, true);
 
                     //Save location added status
-//                    Intent intent;
                     if (responseData.getData().get(0).getIs_address_added() == 1) {
                         SessionManager.setBooleanSetting(LoginActivity.this, SESSION_IS_LOCATION_ADDED, true);
                         if (AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(LoginActivity.this, SESSION_SELECTED_LOCATION))) {
@@ -173,13 +173,13 @@ public class LoginActivity extends AppCompatActivity {
                                 SessionManager.setStringSetting(LoginActivity.this, SESSION_SELECTED_LOCATION, responseData.getData().get(0).getSelected_address().get(0).toString());
                             }
                         }
-//                        intent = new Intent(LoginActivity.this, HomeActivity.class);
                     }
-//                    else {
-//                        intent = new Intent(LoginActivity.this, AddUserBasicInfoActivity.class);
-//                    }
-//                    startActivity(intent);
-//                    finish();
+
+                    //Send login status to the account fragment
+                    Intent intent = new Intent();
+                    intent.putExtra(INTENT_KEY_LOGIN, true);
+                    setResult(RESULT_OK,intent);
+                    finish();
                 } else {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
                 }

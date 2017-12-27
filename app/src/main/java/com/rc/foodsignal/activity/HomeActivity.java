@@ -42,6 +42,7 @@ import io.armcha.ribble.presentation.widget.navigation_view.NavigationId;
 import io.armcha.ribble.presentation.widget.navigation_view.NavigationItem;
 import io.armcha.ribble.presentation.widget.navigation_view.NavigationItemSelectedListener;
 
+import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_ACCOUNT;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_RIBBLE_MENU;
 import static com.rc.foodsignal.util.AllConstants.SESSION_USER_BASIC_INFO;
 
@@ -332,21 +333,16 @@ public class HomeActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.d(TAG, "onActivityResult");
-
         switch (requestCode) {
-//            case REQUEST_CODE_FAVOURITE_FRAGMENT: {
-//                if (data != null && resultCode == RESULT_OK) {
-//                    Log.d(TAG, "RESULT_OK");
-//
-//                    FavouriteFragment favouriteFragment = (FavouriteFragment) FragmentUtilsManager.getVisibleSupportFragment(HomeActivity.this, NavigationId.FAVOURITE.INSTANCE.getName());
-//                    if (favouriteFragment != null) {
-//                        Log.d(TAG, "onActivityResult sending to favourite fragment");
-//                        favouriteFragment.onActivityResult(requestCode, resultCode, data);
-//                    }
-//                }
-//                break;
-//            }
+            case INTENT_REQUEST_CODE_ACCOUNT: {
+                if (data != null && resultCode == RESULT_OK) {
+                    AccountFragment accountFragment = (AccountFragment) FragmentUtilsManager.getVisibleSupportFragment(HomeActivity.this, NavigationId.ACCOUNT.INSTANCE.getName());
+                    if (accountFragment != null) {
+                        accountFragment.onActivityResult(requestCode, resultCode, data);
+                    }
+                }
+                break;
+            }
             default:
                 break;
         }

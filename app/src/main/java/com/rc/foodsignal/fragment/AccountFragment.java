@@ -13,7 +13,11 @@ import com.rc.foodsignal.activity.LoginActivity;
 import com.rc.foodsignal.interfaces.OnFragmentBackPressedListener;
 import com.reversecoder.library.storage.SessionManager;
 
+import static android.app.Activity.RESULT_OK;
+import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_LOGIN;
+import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_ACCOUNT;
 import static com.rc.foodsignal.util.AllConstants.SESSION_IS_USER_LOGGED_IN;
+import static com.rc.foodsignal.util.AllConstants.SESSION_USER_DATA;
 
 /**
  * @author Md. Rashadul Alam
@@ -23,6 +27,7 @@ public class AccountFragment extends Fragment implements OnFragmentBackPressedLi
 
     private View parentView;
     private LinearLayout llAddRestaurant, llRestaurantOwner, llLogout;
+    private static String TAG = AccountFragment.class.getSimpleName();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,8 +57,18 @@ public class AccountFragment extends Fragment implements OnFragmentBackPressedLi
             public void onClick(View v) {
                 if (!SessionManager.getBooleanSetting(getActivity(), SESSION_IS_USER_LOGGED_IN, false)) {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    startActivity(intent);
+                    startActivityForResult(intent, INTENT_REQUEST_CODE_ACCOUNT);
                 }
+            }
+        });
+
+        llLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SessionManager.removeSetting(getActivity(), SESSION_IS_USER_LOGGED_IN);
+                SessionManager.removeSetting(getActivity(), SESSION_USER_DATA);
+
+                llRestaurantOwner.setVisibility(View.GONE);
             }
         });
     }
@@ -61,6 +76,26 @@ public class AccountFragment extends Fragment implements OnFragmentBackPressedLi
     @Override
     public void onFragmentBackPressed() {
         getActivity().finish();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case INTENT_REQUEST_CODE_ACCOUNT: {
+                if (data != null && resultCode == RESULT_OK) {
+                    if (data.getBooleanExtra(INTENT_KEY_LOGIN, false)) {
+                        llRestaurantOwner.setVisibility(View.VISIBLE);
+                    } else {
+                        llRestaurantOwner.setVisibility(View.GONE);
+                    }
+                }
+                break;
+            }
+            default:
+                break;
+        }
     }
 }
 
