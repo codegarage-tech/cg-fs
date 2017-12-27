@@ -29,10 +29,11 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tv_profile_txt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:text="SubTitle"
+                    android:singleLine="true"
                     android:textSize="@dimen/medium_font_size" />
 
             </LinearLayout>
@@ -53,10 +54,11 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tv_address_txt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:text="SubTitle"
+                    android:singleLine="true"
                     android:textSize="@dimen/medium_font_size" />
 
             </LinearLayout>
@@ -77,10 +79,11 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tv_notification_txt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:text="SubTitle"
+                    android:singleLine="true"
                     android:textSize="@dimen/medium_font_size" />
 
             </LinearLayout>
@@ -101,10 +104,11 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tv_payment_card_txt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:text="SubTitle"
+                    android:singleLine="true"
                     android:textSize="@dimen/medium_font_size" />
 
             </LinearLayout>
@@ -133,10 +137,11 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/tv_add_restaurant_txt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
-                        android:text="SubTitle"
+                        android:singleLine="true"
                         android:textSize="@dimen/medium_font_size" />
 
                 </LinearLayout>
@@ -164,10 +169,11 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tv_menu_txt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
-                            android:text="SubTitle"
+                            android:singleLine="true"
                             android:textSize="@dimen/medium_font_size" />
 
                     </LinearLayout>
@@ -188,10 +194,11 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tv_about_restaurant_txt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
-                            android:text="SubTitle"
+                            android:singleLine="true"
                             android:textSize="@dimen/medium_font_size" />
 
                     </LinearLayout>
@@ -213,15 +220,17 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tv_logout_txt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
-                            android:text="SubTitle"
+                            android:singleLine="true"
                             android:textSize="@dimen/medium_font_size" />
 
                     </LinearLayout>
 
                 </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>
