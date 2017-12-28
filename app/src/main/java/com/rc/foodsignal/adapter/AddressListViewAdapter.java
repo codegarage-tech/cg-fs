@@ -86,16 +86,23 @@ public class AddressListViewAdapter extends BaseAdapter {
 
         final Location location = getItem(position);
 
-        LinearLayout llAddressCheck = (LinearLayout) vi.findViewById(R.id.ll_address_check);
-        if (mLocation.getStreet().equalsIgnoreCase(location.getStreet())) {
-            llAddressCheck.setVisibility(View.VISIBLE);
-        } else {
-            llAddressCheck.setVisibility(View.GONE);
-        }
         TextView tvStreet = (TextView) vi.findViewById(R.id.tv_street);
         tvStreet.setText(location.getStreet());
         TextView tvAddress = (TextView) vi.findViewById(R.id.tv_address);
         tvAddress.setText(String.format("%s, %s, %s", location.getCity(), location.getState(), location.getCountry()));
+
+        LinearLayout llAddressCheck = (LinearLayout) vi.findViewById(R.id.ll_address_check);
+        if (mLocation.getStreet().equalsIgnoreCase(location.getStreet())) {
+            llAddressCheck.setVisibility(View.VISIBLE);
+
+            tvStreet.setTextColor(mActivity.getResources().getColor(R.color.colorPrimaryDark));
+            tvAddress.setTextColor(mActivity.getResources().getColor(R.color.colorPrimary));
+        } else {
+            llAddressCheck.setVisibility(View.GONE);
+
+            tvStreet.setTextColor(mActivity.getResources().getColor(R.color.textColorPrimary));
+            tvAddress.setTextColor(mActivity.getResources().getColor(R.color.textColorSecondary));
+        }
 
         vi.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -21,6 +21,7 @@ public class RestaurantViewHolder extends BaseViewHolder<Restaurant> {
     private TextView tvFoodPrice;
     private TextView tvRestaurantName;
     private TextView tvRestaurantAddress;
+    private TextView tvRestaurantReview;
 
     public RestaurantViewHolder(ViewGroup parent) {
         super(parent, R.layout.recyclerview_item_food);
@@ -29,6 +30,7 @@ public class RestaurantViewHolder extends BaseViewHolder<Restaurant> {
         tvFoodPrice = $(R.id.tv_food_price);
         tvRestaurantName = $(R.id.tv_restaurant_name);
         tvRestaurantAddress = $(R.id.tv_restaurant_address);
+        tvRestaurantReview = $(R.id.tv_restaurant_review);
     }
 
     @Override
@@ -43,6 +45,7 @@ public class RestaurantViewHolder extends BaseViewHolder<Restaurant> {
 
         tvFoodPrice.setText((data.getItem_details().size() > 0) ? ("$" + data.getItem_details().get(0).getPrice()) : "");
         tvRestaurantName.setText(data.getName());
-        tvRestaurantAddress.setText(data.getAddress());
+        tvRestaurantAddress.setText("Address: " + data.getAddress());
+        tvRestaurantReview.setText("Review: " + "---");
     }
 }

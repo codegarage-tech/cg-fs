@@ -20,6 +20,7 @@ import com.rc.foodsignal.model.ResponseFoodItem;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.HttpRequestManager;
+import com.reversecoder.library.network.NetworkManager;
 import com.reversecoder.library.storage.SessionManager;
 
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_LOCATION;
@@ -56,8 +57,13 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
             Log.d(TAG, "Session data: " + SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION));
             mLocation = Location.getResponseObject(SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION), Location.class);
         }
-        doSearchFood = new DoSearchFood(getActivity(), Double.parseDouble(mLocation.getLat()), Double.parseDouble(mLocation.getLng()));
-        doSearchFood.execute();
+
+        if (!NetworkManager.isConnected(getActivity())) {
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
+        } else {
+            doSearchFood = new DoSearchFood(getActivity(), Double.parseDouble(mLocation.getLat()), Double.parseDouble(mLocation.getLng()));
+            doSearchFood.execute();
+        }
     }
 
     @Override

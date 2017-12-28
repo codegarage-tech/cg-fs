@@ -325,8 +325,8 @@ public class HomeActivity extends AppCompatActivity {
                 .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
                 .apply(new RequestOptions().circleCropTransform())
                 .into(userAvatar);
-        userName.setText(userBasicInfo.getName());
-        userInfo.setText(userBasicInfo.getPhone());
+        userName.setText(getString(R.string.app_name));
+        userInfo.setText(getString(R.string.app_version_name));
     }
 
     @Override
