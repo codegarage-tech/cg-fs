@@ -49,7 +49,7 @@ public class SplashActivity extends AppCompatActivity {
         tvLoadingMessage = (TextView) findViewById(R.id.tv_loading_message);
         tvLoadingMessage.setText(getString(R.string.txt_loading_message));
 
-        YoYo.with(Techniques.Tada)
+        YoYo.with(Techniques.Shake)
                 .duration(1000)
                 .playOn(findViewById(R.id.tv_app_name));
 

@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">Food Signal</string>
-    <string name="app_version_name">1.0.0</string>
+    <string name="app_version_name">1.0.1</string>
     <string name="app_version_text">Version:</string>
 
     <!-- Activity Title -->
-    <string name="title_activity_login">Welcome</string>
+    <string name="title_activity_login">Restaurant Owner</string>
     <string name="title_activity_home">Home</string>
     <string name="title_activity_add_info">Add Info</string>
     <string name="title_activity_address_list">Addresses</string>

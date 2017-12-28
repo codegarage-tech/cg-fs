@@ -4,6 +4,7 @@ public enum Techniques {
 
     FadeOutLeft(FadeOutLeftAnimator.class),
     FadeOutRight(FadeOutRightAnimator.class),
+    Shake(ShakeAnimator.class),
     Tada(TadaAnimator.class);
 
     private Class animatorClazz;
