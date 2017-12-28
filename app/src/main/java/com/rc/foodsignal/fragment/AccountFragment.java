@@ -2,7 +2,6 @@ package com.rc.foodsignal.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,6 @@ import com.rc.foodsignal.R;
 import com.rc.foodsignal.activity.AddressListActivity;
 import com.rc.foodsignal.activity.LoginActivity;
 import com.rc.foodsignal.activity.ProfileActivity;
-import com.rc.foodsignal.interfaces.OnFragmentBackPressedListener;
 import com.rc.foodsignal.model.Location;
 import com.rc.foodsignal.model.UserBasicInfo;
 import com.rc.foodsignal.util.AppUtils;
@@ -32,7 +30,7 @@ import static com.rc.foodsignal.util.AllConstants.SESSION_USER_DATA;
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
  */
-public class AccountFragment extends Fragment implements OnFragmentBackPressedListener {
+public class AccountFragment extends BaseFragment {
 
     private View parentView;
     private LinearLayout llProfile, llAddress, llNotification, llPaymentCard, llAddRestaurant, llMenu, llAboutRestaurant, llLogout, llRestaurantOwner;
@@ -53,16 +51,6 @@ public class AccountFragment extends Fragment implements OnFragmentBackPressedLi
     }
 
     private void setUpViews() {
-        if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(getActivity(), SESSION_USER_BASIC_INFO))) {
-            Log.d(TAG, "Session data: " + SessionManager.getStringSetting(getActivity(), SESSION_USER_BASIC_INFO));
-            userBasicInfo = UserBasicInfo.getResponseObject(SessionManager.getStringSetting(getActivity(), SESSION_USER_BASIC_INFO), UserBasicInfo.class);
-        }
-
-        if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION))) {
-            Log.d(TAG, "Session data: " + SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION));
-            location = Location.getResponseObject(SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION), Location.class);
-        }
-
         llProfile = (LinearLayout) parentView.findViewById(R.id.ll_profile);
         llAddress = (LinearLayout) parentView.findViewById(R.id.ll_address);
         llNotification = (LinearLayout) parentView.findViewById(R.id.ll_notification);
@@ -87,10 +75,20 @@ public class AccountFragment extends Fragment implements OnFragmentBackPressedLi
             llRestaurantOwner.setVisibility(View.GONE);
         }
 
-        setSubtitle();
+//        setSubtitle();
     }
 
     private void setSubtitle() {
+        if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(getActivity(), SESSION_USER_BASIC_INFO))) {
+            Log.d(TAG, "Session data: " + SessionManager.getStringSetting(getActivity(), SESSION_USER_BASIC_INFO));
+            userBasicInfo = UserBasicInfo.getResponseObject(SessionManager.getStringSetting(getActivity(), SESSION_USER_BASIC_INFO), UserBasicInfo.class);
+        }
+
+        if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION))) {
+            Log.d(TAG, "Session data: " + SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION));
+            location = Location.getResponseObject(SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION), Location.class);
+        }
+
         if (userBasicInfo != null) {
             tvProfile.setText(userBasicInfo.getName());
         }
@@ -119,7 +117,7 @@ public class AccountFragment extends Fragment implements OnFragmentBackPressedLi
             public void onClick(View v) {
                 if (!SessionManager.getBooleanSetting(getActivity(), SESSION_IS_USER_LOGGED_IN, false)) {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    startActivityForResult(intent, INTENT_REQUEST_CODE_ACCOUNT);
+                    getActivity().startActivityForResult(intent, INTENT_REQUEST_CODE_ACCOUNT);
                 }
             }
         });
@@ -136,14 +134,7 @@ public class AccountFragment extends Fragment implements OnFragmentBackPressedLi
     }
 
     @Override
-    public void onFragmentBackPressed() {
-        getActivity().finish();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
+    public void onFragmentResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case INTENT_REQUEST_CODE_ACCOUNT: {
                 if (data != null && resultCode == RESULT_OK) {
@@ -158,6 +149,13 @@ public class AccountFragment extends Fragment implements OnFragmentBackPressedLi
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        setSubtitle();
     }
 }
 

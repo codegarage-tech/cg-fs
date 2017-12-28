@@ -1,6 +1,5 @@
 package com.rc.foodsignal.activity;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,14 +22,11 @@ import com.rc.foodsignal.fragment.AccountFragment;
 import com.rc.foodsignal.fragment.FaqFragment;
 import com.rc.foodsignal.fragment.HomeFragment;
 import com.rc.foodsignal.fragment.PrivacyPolicyFragment;
-import com.rc.foodsignal.interfaces.OnFragmentBackPressedListener;
 import com.rc.foodsignal.model.UserBasicInfo;
 import com.rc.foodsignal.util.AllConstants;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.FragmentUtilsManager;
 import com.reversecoder.library.storage.SessionManager;
-
-import java.util.List;
 
 import io.armcha.ribble.presentation.navigation.NavigationState;
 import io.armcha.ribble.presentation.utils.extensions.ViewExKt;
@@ -42,11 +38,14 @@ import io.armcha.ribble.presentation.widget.navigation_view.NavigationId;
 import io.armcha.ribble.presentation.widget.navigation_view.NavigationItem;
 import io.armcha.ribble.presentation.widget.navigation_view.NavigationItemSelectedListener;
 
-import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_ACCOUNT;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_RIBBLE_MENU;
 import static com.rc.foodsignal.util.AllConstants.SESSION_USER_BASIC_INFO;
 
-public class HomeActivity extends AppCompatActivity {
+/**
+ * @author Md. Rashadul Alam
+ *         Email: rashed.droid@gmail.com
+ */
+public class HomeActivity extends BaseActivity {
 
     private String TRANSLATION_X_KEY = "TRANSLATION_X_KEY";
     private String CARD_ELEVATION_KEY = "CARD_ELEVATION_KEY";
@@ -257,16 +256,7 @@ public class HomeActivity extends AppCompatActivity {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-//            super.onBackPressed();
-            //send backpress event to the fragment and finish activity from there
-            List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
-            if (fragmentList != null) {
-                for (Fragment fragment : fragmentList) {
-                    if (fragment instanceof OnFragmentBackPressedListener) {
-                        ((OnFragmentBackPressedListener) fragment).onFragmentBackPressed();
-                    }
-                }
-            }
+            super.onBackPressed();
         }
     }
 
@@ -327,24 +317,5 @@ public class HomeActivity extends AppCompatActivity {
                 .into(userAvatar);
         userName.setText(getString(R.string.app_name));
         userInfo.setText(getString(R.string.app_version_name));
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode) {
-            case INTENT_REQUEST_CODE_ACCOUNT: {
-                if (data != null && resultCode == RESULT_OK) {
-                    AccountFragment accountFragment = (AccountFragment) FragmentUtilsManager.getVisibleSupportFragment(HomeActivity.this, NavigationId.ACCOUNT.INSTANCE.getName());
-                    if (accountFragment != null) {
-                        accountFragment.onActivityResult(requestCode, resultCode, data);
-                    }
-                }
-                break;
-            }
-            default:
-                break;
-        }
     }
 }

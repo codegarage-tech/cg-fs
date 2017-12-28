@@ -49,6 +49,9 @@ public class AddressListViewAdapter extends BaseAdapter {
 
     public void addData(Location location) {
         mData.add(location);
+
+        //For refreshing last added data as selected
+        mLocation = Location.getResponseObject(SessionManager.getStringSetting(mActivity, SESSION_SELECTED_LOCATION), Location.class);
         notifyDataSetChanged();
     }
 
