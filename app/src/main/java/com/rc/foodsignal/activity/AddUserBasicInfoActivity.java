@@ -196,7 +196,10 @@ public class AddUserBasicInfoActivity extends BaseLocationActivity {
                         Toast.makeText(AddUserBasicInfoActivity.this, getResources().getString(R.string.toast_empty_phone_field), Toast.LENGTH_SHORT).show();
                         return;
                     }
-
+                    if (edtEmail.getText().toString().equalsIgnoreCase("")) {
+                        Toast.makeText(AddUserBasicInfoActivity.this, getResources().getString(R.string.toast_empty_email_field), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
                     street = (!tvStreet.getText().toString().equalsIgnoreCase("___")) ? tvStreet.getText().toString() : "";
                     city = (!tvCity.getText().toString().equalsIgnoreCase("___")) ? tvCity.getText().toString() : "";

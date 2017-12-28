@@ -248,7 +248,7 @@
                 android:layout_height="50dp"
                 android:background="@null"
                 android:gravity="bottom"
-                android:hint="Email(optional)"
+                android:hint="Email"
                 android:paddingLeft="10dp"
                 android:textColor="@color/textColorSecondary"
                 android:textColorHint="@color/textColorSecondary" />

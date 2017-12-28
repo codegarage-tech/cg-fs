@@ -9,6 +9,7 @@
     <string name="title_activity_add_info">Add Info</string>
     <string name="title_activity_address_list">Addresses</string>
     <string name="title_activity_add_address">Add Addresses</string>
+    <string name="title_activity_profile">Profile</string>
 
     <!-- Toast message -->
     <string name="toast_could_not_retrieve_info">Could not retrieve info</string>

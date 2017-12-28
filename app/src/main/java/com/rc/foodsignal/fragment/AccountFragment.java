@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.activity.AddressListActivity;
 import com.rc.foodsignal.activity.LoginActivity;
+import com.rc.foodsignal.activity.ProfileActivity;
 import com.rc.foodsignal.interfaces.OnFragmentBackPressedListener;
 import com.rc.foodsignal.model.Location;
 import com.rc.foodsignal.model.UserBasicInfo;
@@ -99,6 +100,13 @@ public class AccountFragment extends Fragment implements OnFragmentBackPressedLi
     }
 
     private void setUpActions() {
+        llProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentProfile = new Intent(getActivity(), ProfileActivity.class);
+                startActivity(intentProfile);
+            }
+        });
         llAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
