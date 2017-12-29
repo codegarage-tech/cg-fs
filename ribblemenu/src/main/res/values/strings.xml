@@ -15,7 +15,7 @@
     <string name="ribble_menu_item_location">LOCATION</string>
     <string name="ribble_menu_item_notification">NOTIFICATION</string>
     <string name="ribble_menu_item_privacy_payment_card">PAYMENT CARD</string>
-    <string name="ribble_menu_item_restaurant">RESTAURANT</string>
+    <string name="ribble_menu_item_restaurant">ADD RESTAURANT</string>
     <string name="ribble_menu_item_menu">MENU</string>
     <string name="ribble_menu_item_profile">PROFILE</string>
     <string name="ribble_menu_item_log_out">LOG OUT</string>

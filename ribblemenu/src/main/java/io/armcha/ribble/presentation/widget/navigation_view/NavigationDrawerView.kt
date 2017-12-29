@@ -29,7 +29,7 @@ class NavigationDrawerView : NavigationView, ItemClickListener {
                     itemIconColor = io.armcha.ribble.R.color.cyan),
             NavigationItem(NavigationId.PAYMENT_CARD, io.armcha.ribble.R.drawable.ic_menu_about,
                     itemIconColor = io.armcha.ribble.R.color.cyan),
-            NavigationItem(NavigationId.RESTAURANT, io.armcha.ribble.R.drawable.ic_menu_about,
+            NavigationItem(NavigationId.ADD_RESTAURANT, io.armcha.ribble.R.drawable.ic_menu_about,
                     itemIconColor = io.armcha.ribble.R.color.cyan),
             NavigationItem(NavigationId.MENU, io.armcha.ribble.R.drawable.ic_menu_about,
                     itemIconColor = io.armcha.ribble.R.color.cyan),

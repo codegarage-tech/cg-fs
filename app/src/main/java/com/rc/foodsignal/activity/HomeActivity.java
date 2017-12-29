@@ -203,7 +203,7 @@ public class HomeActivity extends BaseActivity {
         } else if (item.getName().equalsIgnoreCase(NavigationId.PAYMENT_CARD.INSTANCE.getName())) {
             checkPosition = 3;
             Toast.makeText(HomeActivity.this, getString(R.string.toast_under_development), Toast.LENGTH_SHORT).show();
-        } else if (item.getName().equalsIgnoreCase(NavigationId.RESTAURANT.INSTANCE.getName())) {
+        } else if (item.getName().equalsIgnoreCase(NavigationId.ADD_RESTAURANT.INSTANCE.getName())) {
             if (!SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_USER_LOGGED_IN, false)) {
                 Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
                 startActivityForResult(intent, INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN);
@@ -279,11 +279,6 @@ public class HomeActivity extends BaseActivity {
             currentNavigationSelectedItem = position;
             navDrawerView.setChecked(currentNavigationSelectedItem);
         }
-    }
-
-    public void hideNavigationItem(int position) {
-
-//        navDrawerView.getRecyclerView().get
     }
 
     public void setToolBarTitle(String title) {
