@@ -15,7 +15,7 @@ public class AllConstants {
     public static final String SESSION_USER_DATA = "SESSION_USER_DATA";
 
     //Intent request code
-    public static final int INTENT_REQUEST_CODE_ACCOUNT = 420;
+    public static final int INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN = 420;
     public static final int INTENT_REQUEST_CODE_ADDRESS_LIST = 4200;
 
     //Intent key

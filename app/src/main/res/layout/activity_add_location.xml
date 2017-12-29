@@ -35,7 +35,7 @@
                 android:layout_height="50dp"
                 android:layout_weight=".5"
                 android:checked="true"
-                android:text="Current Address" />
+                android:text="Current Location" />
 
             <RadioButton
                 android:id="@+id/segmented_rbtn_search_location"
@@ -43,7 +43,7 @@
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight=".5"
-                android:text="Search Address" />
+                android:text="Search Location" />
 
         </com.reversecoder.library.segmentradiogroup.SegmentedRadioGroup>
 
@@ -166,7 +166,6 @@
                         android:textSize="@dimen/medium_font_size" />
 
                 </LinearLayout>
-
 
             </LinearLayout>
 

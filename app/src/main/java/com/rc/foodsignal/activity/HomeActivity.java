@@ -1,28 +1,19 @@
 package com.rc.foodsignal.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.rc.foodsignal.R;
-import com.rc.foodsignal.fragment.AccountFragment;
-import com.rc.foodsignal.fragment.FaqFragment;
 import com.rc.foodsignal.fragment.HomeFragment;
-import com.rc.foodsignal.fragment.PrivacyPolicyFragment;
-import com.rc.foodsignal.model.UserBasicInfo;
 import com.rc.foodsignal.util.AllConstants;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.FragmentUtilsManager;
@@ -38,8 +29,11 @@ import io.armcha.ribble.presentation.widget.navigation_view.NavigationId;
 import io.armcha.ribble.presentation.widget.navigation_view.NavigationItem;
 import io.armcha.ribble.presentation.widget.navigation_view.NavigationItemSelectedListener;
 
+import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_LOGIN;
+import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN;
+import static com.rc.foodsignal.util.AllConstants.SESSION_IS_USER_LOGGED_IN;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_RIBBLE_MENU;
-import static com.rc.foodsignal.util.AllConstants.SESSION_USER_BASIC_INFO;
+import static com.rc.foodsignal.util.AllConstants.SESSION_USER_DATA;
 
 /**
  * @author Md. Rashadul Alam
@@ -58,10 +52,12 @@ public class HomeActivity extends BaseActivity {
     public ArcView arcMenuView;
     public AnimatedImageView arcMenuImage;
     AnimatedTextView toolbarTitle;
-    ImageView userAvatar;
-    TextView userName;
-    TextView userInfo;
-    UserBasicInfo userBasicInfo;
+
+    //User info into menu
+//    ImageView userAvatar;
+//    TextView userName;
+//    TextView userInfo;
+//    UserBasicInfo userBasicInfo;
 
     private boolean isArcIcon = false;
     private boolean isDrawerOpened = false;
@@ -84,13 +80,11 @@ public class HomeActivity extends BaseActivity {
             setArcHamburgerIconState();
         }
         setToolBarTitle(activeTitle);
-        updateUserInfo();
+//        updateUserInfo();
 
-        if (savedInstanceState == null) {
-            SessionManager.setStringSetting(HomeActivity.this, SESSION_SELECTED_RIBBLE_MENU, getString(R.string.ribble_menu_item_home));
-            handleFragmentChanges(HomeActivity.this, getString(R.string.ribble_menu_item_home), new HomeFragment());
+        if (savedInstanceState == null && navDrawerView != null) {
+            handleMenuItemsChanges(navDrawerView.getItemList().get(0));
         }
-
     }
 
     private void initViews() {
@@ -98,14 +92,14 @@ public class HomeActivity extends BaseActivity {
         initToolBar();
 
         navDrawerView = (NavigationDrawerView) findViewById(R.id.navigation_drawer_view);
-        userAvatar = (ImageView) navDrawerView.getHeader().findViewById(R.id.userAvatar);
-        userName = (TextView) navDrawerView.getHeader().findViewById(R.id.userName);
-        userInfo = (TextView) navDrawerView.getHeader().findViewById(R.id.userInfo);
-
-        if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(HomeActivity.this, SESSION_USER_BASIC_INFO))) {
-            Log.d(TAG, "Session data: " + SessionManager.getStringSetting(HomeActivity.this, SESSION_USER_BASIC_INFO));
-            userBasicInfo = UserBasicInfo.getResponseObject(SessionManager.getStringSetting(HomeActivity.this, SESSION_USER_BASIC_INFO), UserBasicInfo.class);
-        }
+//        userAvatar = (ImageView) navDrawerView.getHeader().findViewById(R.id.userAvatar);
+//        userName = (TextView) navDrawerView.getHeader().findViewById(R.id.userName);
+//        userInfo = (TextView) navDrawerView.getHeader().findViewById(R.id.userInfo);
+//
+//        if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(HomeActivity.this, SESSION_USER_BASIC_INFO))) {
+//            Log.d(TAG, "Session data: " + SessionManager.getStringSetting(HomeActivity.this, SESSION_USER_BASIC_INFO));
+//            userBasicInfo = UserBasicInfo.getResponseObject(SessionManager.getStringSetting(HomeActivity.this, SESSION_USER_BASIC_INFO), UserBasicInfo.class);
+//        }
 
         contentHome = (CardView) findViewById(R.id.mainView);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -119,19 +113,24 @@ public class HomeActivity extends BaseActivity {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            //Store current ribble menu in session
-                            SessionManager.setStringSetting(HomeActivity.this, SESSION_SELECTED_RIBBLE_MENU, item.getId().getName());
-
-                            //Set menu action
-                            if (item.getId().getName().equalsIgnoreCase(NavigationId.HOME.INSTANCE.getName())) {
-                                handleFragmentChanges(HomeActivity.this, getString(R.string.ribble_menu_item_home), new HomeFragment());
-                            } else if (item.getId().getName().equalsIgnoreCase(NavigationId.ACCOUNT.INSTANCE.getName())) {
-                                handleFragmentChanges(HomeActivity.this, getString(R.string.ribble_menu_item_account), new AccountFragment());
-                            } else if (item.getId().getName().equalsIgnoreCase(NavigationId.FAQ.INSTANCE.getName())) {
-                                handleFragmentChanges(HomeActivity.this, getString(R.string.ribble_menu_item_faq), new FaqFragment());
-                            } else if (item.getId().getName().equalsIgnoreCase(NavigationId.PRIVACY_POLICY.INSTANCE.getName())) {
-                                handleFragmentChanges(HomeActivity.this, getString(R.string.ribble_menu_item_privacy_policy), new PrivacyPolicyFragment());
-                            }
+                            handleMenuItemsChanges(item);
+//                            if (item.getId().getName().equalsIgnoreCase(NavigationId.HOME.INSTANCE.getName())) {
+//                                handleMenuItemsChanges(HomeActivity.this, getString(R.string.ribble_menu_item_home));
+//                            } else if (item.getId().getName().equalsIgnoreCase(NavigationId.LOCATION.INSTANCE.getName())) {
+//                                handleMenuItemsChanges(HomeActivity.this, getString(R.string.ribble_menu_item_location));
+//                            } else if (item.getId().getName().equalsIgnoreCase(NavigationId.NOTIFICATION.INSTANCE.getName())) {
+//                                handleMenuItemsChanges(HomeActivity.this, getString(R.string.ribble_menu_item_notification));
+//                            } else if (item.getId().getName().equalsIgnoreCase(NavigationId.PAYMENT_CARD.INSTANCE.getName())) {
+//                                handleMenuItemsChanges(HomeActivity.this, getString(R.string.ribble_menu_item_privacy_payment_card));
+//                            } else if (item.getId().getName().equalsIgnoreCase(NavigationId.RESTAURANT.INSTANCE.getName())) {
+//                                handleMenuItemsChanges(HomeActivity.this, getString(R.string.ribble_menu_item_restaurant));
+//                            } else if (item.getId().getName().equalsIgnoreCase(NavigationId.MENU.INSTANCE.getName())) {
+//                                handleMenuItemsChanges(HomeActivity.this, getString(R.string.ribble_menu_item_menu));
+//                            } else if (item.getId().getName().equalsIgnoreCase(NavigationId.PROFILE.INSTANCE.getName())) {
+//                                handleMenuItemsChanges(HomeActivity.this, getString(R.string.ribble_menu_item_profile));
+//                            } else if (item.getId().getName().equalsIgnoreCase(NavigationId.LOG_OUT.INSTANCE.getName())) {
+//                                handleMenuItemsChanges(HomeActivity.this, getString(R.string.ribble_menu_item_log_out));
+//                            }
                         }
                     }, AllConstants.NAVIGATION_DRAWER_CLOSE_DELAY);
                 }
@@ -188,42 +187,62 @@ public class HomeActivity extends BaseActivity {
         });
     }
 
-    public void handleFragmentChanges(AppCompatActivity activity, String currentTag, Fragment fragment) {
-        saveNavigatorState(new NavigationState(currentTag, toolbarTitle.getText().toString(), false));
-
-        setToolBarTitle(currentTag);
-        activeTitle = currentTag;
-        if (isArcIcon) {
-            isArcIcon = false;
-            setArcHamburgerIconState();
-        }
+    public void handleMenuItemsChanges(NavigationItem item) {
+        //Store current ribble menu in session
+        SessionManager.setStringSetting(HomeActivity.this, SESSION_SELECTED_RIBBLE_MENU, item.getId().getName());
 
         int checkPosition = -1;
-        if (currentTag.equalsIgnoreCase(NavigationId.HOME.INSTANCE.getName())) {
-            checkPosition = 0;
-            goScreen(checkPosition, currentTag, fragment);
-        } else if (currentTag.equalsIgnoreCase(NavigationId.ACCOUNT.INSTANCE.getName())) {
-            checkPosition = 1;
-            goScreen(checkPosition, currentTag, fragment);
-        } else if (currentTag.equalsIgnoreCase(NavigationId.FAQ.INSTANCE.getName())) {
-            checkPosition = 2;
-            goScreen(checkPosition, currentTag, fragment);
-        } else if (currentTag.equalsIgnoreCase(NavigationId.PRIVACY_POLICY.INSTANCE.getName())) {
-            checkPosition = 3;
-            goScreen(checkPosition, currentTag, fragment);
-        } else {
-            checkPosition = currentNavigationSelectedItem;
-            goScreen(checkPosition, currentTag, fragment);
-        }
 
+        if (item.getName().equalsIgnoreCase(NavigationId.HOME.INSTANCE.getName())) {
+            saveNavigatorState(new NavigationState(item.getName(), toolbarTitle.getText().toString(), false));
+            checkPosition = 0;
+            checkNavigationItem(checkPosition);
+            setToolBarTitle(item.getName());
+            goFragmentScreen(item.getName(), new HomeFragment());
+        } else if (item.getName().equalsIgnoreCase(NavigationId.LOCATION.INSTANCE.getName())) {
+            Intent intentAddress = new Intent(HomeActivity.this, LocationListActivity.class);
+            startActivity(intentAddress);
+        } else if (item.getName().equalsIgnoreCase(NavigationId.NOTIFICATION.INSTANCE.getName())) {
+            checkPosition = 2;
+            Toast.makeText(HomeActivity.this, getString(R.string.toast_under_development), Toast.LENGTH_SHORT).show();
+        } else if (item.getName().equalsIgnoreCase(NavigationId.PAYMENT_CARD.INSTANCE.getName())) {
+            checkPosition = 3;
+            Toast.makeText(HomeActivity.this, getString(R.string.toast_under_development), Toast.LENGTH_SHORT).show();
+        } else if (item.getName().equalsIgnoreCase(NavigationId.RESTAURANT.INSTANCE.getName())) {
+            if (!SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_USER_LOGGED_IN, false)) {
+                Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                startActivityForResult(intent, INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN);
+            } else {
+                Intent intentRestaurant = new Intent(HomeActivity.this, RestaurantListActivity.class);
+                startActivity(intentRestaurant);
+            }
+        } else if (item.getName().equalsIgnoreCase(NavigationId.MENU.INSTANCE.getName())) {
+            checkPosition = 5;
+            Toast.makeText(HomeActivity.this, getString(R.string.toast_under_development), Toast.LENGTH_SHORT).show();
+        } else if (item.getName().equalsIgnoreCase(NavigationId.PROFILE.INSTANCE.getName())) {
+            checkPosition = 6;
+            Toast.makeText(HomeActivity.this, getString(R.string.toast_under_development), Toast.LENGTH_SHORT).show();
+        } else if (item.getName().equalsIgnoreCase(NavigationId.LOG_OUT.INSTANCE.getName())) {
+            SessionManager.removeSetting(HomeActivity.this, SESSION_IS_USER_LOGGED_IN);
+            SessionManager.removeSetting(HomeActivity.this, SESSION_USER_DATA);
+
+            visibleMenuItems(false);
+        }
     }
 
-    private void goScreen(int checkPosition, String currentTag, Fragment fragment) {
-        if (currentNavigationSelectedItem != checkPosition) {
-            currentNavigationSelectedItem = checkPosition;
-            checkNavigationItem(currentNavigationSelectedItem);
+    private void visibleMenuItems(boolean isVisible) {
+        if (isVisible) {
+            navDrawerView.getRecyclerView().findViewHolderForAdapterPosition(5).itemView.setVisibility(View.VISIBLE);
+            navDrawerView.getRecyclerView().findViewHolderForAdapterPosition(6).itemView.setVisibility(View.VISIBLE);
+            navDrawerView.getRecyclerView().findViewHolderForAdapterPosition(7).itemView.setVisibility(View.VISIBLE);
+        } else {
+            navDrawerView.getRecyclerView().findViewHolderForAdapterPosition(5).itemView.setVisibility(View.GONE);
+            navDrawerView.getRecyclerView().findViewHolderForAdapterPosition(6).itemView.setVisibility(View.GONE);
+            navDrawerView.getRecyclerView().findViewHolderForAdapterPosition(7).itemView.setVisibility(View.GONE);
         }
+    }
 
+    private void goFragmentScreen(String currentTag, Fragment fragment) {
         FragmentUtilsManager.changeSupportFragment(HomeActivity.this, fragment, currentTag);
     }
 
@@ -261,10 +280,19 @@ public class HomeActivity extends BaseActivity {
     }
 
     public void checkNavigationItem(int position) {
-        navDrawerView.setChecked(position);
+        if (currentNavigationSelectedItem != position) {
+            currentNavigationSelectedItem = position;
+            navDrawerView.setChecked(currentNavigationSelectedItem);
+        }
+    }
+
+    public void hideNavigationItem(int position) {
+
+//        navDrawerView.getRecyclerView().get
     }
 
     public void setToolBarTitle(String title) {
+        activeTitle = title;
         toolbarTitle.setAnimatedText(title, 0L);
     }
 
@@ -290,6 +318,11 @@ public class HomeActivity extends BaseActivity {
 
     public void saveNavigatorState(NavigationState state) {
         this.navigationState = state;
+
+        if (isArcIcon) {
+            isArcIcon = false;
+            setArcHamburgerIconState();
+        }
     }
 
     public NavigationState getNavigatorState() {
@@ -308,14 +341,36 @@ public class HomeActivity extends BaseActivity {
         isDrawerOpened = false;
     }
 
-    public void updateUserInfo() {
-        Glide
-                .with(HomeActivity.this)
-                .load(R.mipmap.ic_launcher_round)
-                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
-                .apply(new RequestOptions().circleCropTransform())
-                .into(userAvatar);
-        userName.setText(getString(R.string.app_name));
-        userInfo.setText(getString(R.string.app_version_name));
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN: {
+                if (data != null && resultCode == RESULT_OK) {
+                    if (data.getBooleanExtra(INTENT_KEY_LOGIN, false)) {
+                        visibleMenuItems(true);
+
+                        Intent intentRestaurant = new Intent(HomeActivity.this, RestaurantListActivity.class);
+                        startActivity(intentRestaurant);
+                    } else {
+                        visibleMenuItems(true);
+                    }
+                }
+                break;
+            }
+            default:
+                break;
+        }
     }
+
+//    public void updateUserInfo() {
+//        Glide
+//                .with(HomeActivity.this)
+//                .load(R.mipmap.ic_launcher_round)
+//                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
+//                .apply(new RequestOptions().circleCropTransform())
+//                .into(userAvatar);
+//        userName.setText(getString(R.string.app_name));
+//        userInfo.setText(getString(R.string.app_version_name));
+//    }
 }

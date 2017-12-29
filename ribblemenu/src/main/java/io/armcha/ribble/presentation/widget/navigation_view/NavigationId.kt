@@ -9,8 +9,11 @@ sealed class NavigationId(val name: String = emptyString, val fullName: String =
 
     //For English
     object HOME : NavigationId("HOME")
-
-    object ACCOUNT : NavigationId("ACCOUNT")
-    object FAQ : NavigationId("FAQ")
-    object PRIVACY_POLICY : NavigationId("PRIVACY POLICY")
+    object LOCATION : NavigationId("LOCATION")
+    object NOTIFICATION : NavigationId("NOTIFICATION")
+    object PAYMENT_CARD : NavigationId("PAYMENT CARD")
+    object RESTAURANT : NavigationId("RESTAURANT")
+    object MENU : NavigationId("MENU")
+    object PROFILE : NavigationId("PROFILE")
+    object LOG_OUT : NavigationId("LOG OUT")
 }

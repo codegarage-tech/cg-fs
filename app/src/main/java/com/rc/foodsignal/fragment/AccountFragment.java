@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.rc.foodsignal.R;
-import com.rc.foodsignal.activity.AddressListActivity;
+import com.rc.foodsignal.activity.LocationListActivity;
 import com.rc.foodsignal.activity.LoginActivity;
 import com.rc.foodsignal.activity.ProfileActivity;
 import com.rc.foodsignal.model.Location;
@@ -20,7 +20,7 @@ import com.reversecoder.library.storage.SessionManager;
 
 import static android.app.Activity.RESULT_OK;
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_LOGIN;
-import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_ACCOUNT;
+import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN;
 import static com.rc.foodsignal.util.AllConstants.SESSION_IS_USER_LOGGED_IN;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_LOCATION;
 import static com.rc.foodsignal.util.AllConstants.SESSION_USER_BASIC_INFO;
@@ -108,7 +108,7 @@ public class AccountFragment extends BaseFragment {
         llAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentAddress = new Intent(getActivity(), AddressListActivity.class);
+                Intent intentAddress = new Intent(getActivity(), LocationListActivity.class);
                 startActivity(intentAddress);
             }
         });
@@ -117,7 +117,7 @@ public class AccountFragment extends BaseFragment {
             public void onClick(View v) {
                 if (!SessionManager.getBooleanSetting(getActivity(), SESSION_IS_USER_LOGGED_IN, false)) {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    getActivity().startActivityForResult(intent, INTENT_REQUEST_CODE_ACCOUNT);
+                    getActivity().startActivityForResult(intent, INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN);
                 }
             }
         });
@@ -136,7 +136,7 @@ public class AccountFragment extends BaseFragment {
     @Override
     public void onFragmentResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case INTENT_REQUEST_CODE_ACCOUNT: {
+            case INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN: {
                 if (data != null && resultCode == RESULT_OK) {
                     if (data.getBooleanExtra(INTENT_KEY_LOGIN, false)) {
                         llRestaurantOwner.setVisibility(View.VISIBLE);

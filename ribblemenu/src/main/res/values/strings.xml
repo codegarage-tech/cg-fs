@@ -12,7 +12,11 @@
 
     <!-- Navigation drawer menu -->
     <string name="ribble_menu_item_home">HOME</string>
-    <string name="ribble_menu_item_account">ACCOUNT</string>
-    <string name="ribble_menu_item_faq">FAQ</string>
-    <string name="ribble_menu_item_privacy_policy">PRIVACY POLICY</string>
+    <string name="ribble_menu_item_location">LOCATION</string>
+    <string name="ribble_menu_item_notification">NOTIFICATION</string>
+    <string name="ribble_menu_item_privacy_payment_card">PAYMENT CARD</string>
+    <string name="ribble_menu_item_restaurant">RESTAURANT</string>
+    <string name="ribble_menu_item_menu">MENU</string>
+    <string name="ribble_menu_item_profile">PROFILE</string>
+    <string name="ribble_menu_item_log_out">LOG OUT</string>
 </resources>

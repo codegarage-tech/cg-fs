@@ -20,21 +20,29 @@ import io.armcha.ribble.presentation.utils.extensions.nonSafeLazy
  */
 class NavigationDrawerView : NavigationView, ItemClickListener {
 
-    private var itemList = mutableListOf(
+    public var itemList = mutableListOf(
             NavigationItem(NavigationId.HOME, io.armcha.ribble.R.drawable.ic_menu_home, isSelected = true,
                     itemIconColor = io.armcha.ribble.R.color.light_green),
-            NavigationItem(NavigationId.ACCOUNT, io.armcha.ribble.R.drawable.ic_menu_favourite,
+            NavigationItem(NavigationId.LOCATION, io.armcha.ribble.R.drawable.ic_menu_favourite,
                     itemIconColor = io.armcha.ribble.R.color.colorAccent),
-            NavigationItem(NavigationId.FAQ, io.armcha.ribble.R.drawable.ic_menu_about,
+            NavigationItem(NavigationId.NOTIFICATION, io.armcha.ribble.R.drawable.ic_menu_about,
                     itemIconColor = io.armcha.ribble.R.color.cyan),
-            NavigationItem(NavigationId.PRIVACY_POLICY, io.armcha.ribble.R.drawable.ic_menu_about,
+            NavigationItem(NavigationId.PAYMENT_CARD, io.armcha.ribble.R.drawable.ic_menu_about,
+                    itemIconColor = io.armcha.ribble.R.color.cyan),
+            NavigationItem(NavigationId.RESTAURANT, io.armcha.ribble.R.drawable.ic_menu_about,
+                    itemIconColor = io.armcha.ribble.R.color.cyan),
+            NavigationItem(NavigationId.MENU, io.armcha.ribble.R.drawable.ic_menu_about,
+                    itemIconColor = io.armcha.ribble.R.color.cyan),
+            NavigationItem(NavigationId.PROFILE, io.armcha.ribble.R.drawable.ic_menu_about,
+                    itemIconColor = io.armcha.ribble.R.color.cyan),
+            NavigationItem(NavigationId.LOG_OUT, io.armcha.ribble.R.drawable.ic_menu_about,
                     itemIconColor = io.armcha.ribble.R.color.cyan))
 
     private var currentSelectedItem: Int = 0
-    private val adapter by nonSafeLazy {
+    public val adapter by nonSafeLazy {
         NavigationViewAdapter(itemList, this)
     }
-    private val recyclerView by nonSafeLazy {
+    public val recyclerView by nonSafeLazy {
         RecyclerView(context).apply {
             layoutManager = LinearLayoutManager(context)
         }
@@ -51,7 +59,8 @@ class NavigationDrawerView : NavigationView, ItemClickListener {
         setBackgroundColor(Color.TRANSPARENT)
         val layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT)
-        layoutParams.topMargin = context.resources.getDimension(io.armcha.ribble.R.dimen.nav_header_height).toInt()
+        layoutParams.topMargin = context.resources.getDimension(io.armcha.ribble.R.dimen.nav_item_recycler_view_top_margin).toInt()
+        layoutParams.bottomMargin = context.resources.getDimension(io.armcha.ribble.R.dimen.nav_item_recycler_view_top_margin).toInt()
         recyclerView.layoutParams = layoutParams
         recyclerView.adapter = adapter
 

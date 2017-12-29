@@ -99,7 +99,7 @@ public class AddUserBasicInfoActivity extends BaseLocationActivity {
     private void initAddLocationUI() {
         ivBack = (ImageView) findViewById(R.id.iv_back);
         tvTitle = (TextView) findViewById(R.id.text_title);
-        tvTitle.setText(getString(R.string.title_activity_add_address));
+        tvTitle.setText(getString(R.string.title_activity_add_location));
         llAddLocation = (LinearLayout) findViewById(R.id.ll_done);
         llLocationDetail = (LinearLayout) findViewById(R.id.ll_location_detail);
         llStepOne = (LinearLayout) findViewById(R.id.ll_step_one);
@@ -248,14 +248,14 @@ public class AddUserBasicInfoActivity extends BaseLocationActivity {
     }
 
     private void setUserInfoPage() {
-        tvTitle.setText(getString(R.string.title_activity_add_info));
+        tvTitle.setText(getString(R.string.title_activity_add_user_basic_info));
         llStepOne.setVisibility(View.GONE);
         llStepTwo.setVisibility(View.VISIBLE);
         isStepOneSelected = false;
     }
 
     private void setLocationPage() {
-        tvTitle.setText(getString(R.string.title_activity_add_address));
+        tvTitle.setText(getString(R.string.title_activity_add_location));
         llStepTwo.setVisibility(View.GONE);
         llStepOne.setVisibility(View.VISIBLE);
         isStepOneSelected = true;

@@ -35,7 +35,7 @@ import static com.rc.foodsignal.util.AllConstants.SESSION_USER_BASIC_INFO;
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
  */
-public class AddressListActivity extends AppCompatActivity {
+public class LocationListActivity extends AppCompatActivity {
 
     TextView tvTitle;
     ImageView ivBack;
@@ -46,37 +46,37 @@ public class AddressListActivity extends AppCompatActivity {
     GetAddressList getAddressList;
     AddressListViewAdapter addressListViewAdapter;
     ListView lvAddress;
-    String TAG = AppUtils.getTagName(AddressListActivity.class);
+    String TAG = AppUtils.getTagName(LocationListActivity.class);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_address_list);
+        setContentView(R.layout.activity_location_list);
 
         initUI();
         initActions();
     }
 
     private void initUI() {
-        if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(AddressListActivity.this, SESSION_USER_BASIC_INFO))) {
-            Log.d(TAG, "Session data: " + SessionManager.getStringSetting(AddressListActivity.this, SESSION_USER_BASIC_INFO));
-            userBasicInfo = UserBasicInfo.getResponseObject(SessionManager.getStringSetting(AddressListActivity.this, SESSION_USER_BASIC_INFO), UserBasicInfo.class);
+        if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(LocationListActivity.this, SESSION_USER_BASIC_INFO))) {
+            Log.d(TAG, "Session data: " + SessionManager.getStringSetting(LocationListActivity.this, SESSION_USER_BASIC_INFO));
+            userBasicInfo = UserBasicInfo.getResponseObject(SessionManager.getStringSetting(LocationListActivity.this, SESSION_USER_BASIC_INFO), UserBasicInfo.class);
         }
 
         ivBack = (ImageView) findViewById(R.id.iv_back);
         llAddAddress = (LinearLayout) findViewById(R.id.ll_done);
 
         tvTitle = (TextView) findViewById(R.id.text_title);
-        tvTitle.setText(getString(R.string.title_activity_address_list));
+        tvTitle.setText(getString(R.string.title_activity_location_list));
 
         lvAddress = (ListView) findViewById(R.id.lv_address);
-        addressListViewAdapter = new AddressListViewAdapter(AddressListActivity.this);
+        addressListViewAdapter = new AddressListViewAdapter(LocationListActivity.this);
         lvAddress.setAdapter(addressListViewAdapter);
 
-        if (!NetworkManager.isConnected(AddressListActivity.this)) {
-            Toast.makeText(AddressListActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
+        if (!NetworkManager.isConnected(LocationListActivity.this)) {
+            Toast.makeText(LocationListActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
         } else {
-            getAddressList = new GetAddressList(AddressListActivity.this, userBasicInfo.getUser_id());
+            getAddressList = new GetAddressList(LocationListActivity.this, userBasicInfo.getUser_id());
             getAddressList.execute();
         }
     }
@@ -92,7 +92,7 @@ public class AddressListActivity extends AppCompatActivity {
         llAddAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentAddress = new Intent(AddressListActivity.this, AddAddressActivity.class);
+                Intent intentAddress = new Intent(LocationListActivity.this, AddLocationActivity.class);
                 startActivityForResult(intentAddress, INTENT_REQUEST_CODE_ADDRESS_LIST);
             }
         });
@@ -152,11 +152,11 @@ public class AddressListActivity extends AppCompatActivity {
                     //Update listview
                     addressListViewAdapter.setData(responseData.getData());
                 } else {
-                    Toast.makeText(AddressListActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LocationListActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
                 }
 
             } else {
-                Toast.makeText(AddressListActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LocationListActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -171,7 +171,7 @@ public class AddressListActivity extends AppCompatActivity {
                     if (data.getBooleanExtra(INTENT_KEY_ADDRESS_LIST, false)) {
 
                         //Update address list
-                        Location mLocation = Location.getResponseObject(SessionManager.getStringSetting(AddressListActivity.this, SESSION_SELECTED_LOCATION), Location.class);
+                        Location mLocation = Location.getResponseObject(SessionManager.getStringSetting(LocationListActivity.this, SESSION_SELECTED_LOCATION), Location.class);
                         addressListViewAdapter.addData(mLocation);
                     }
                 }
