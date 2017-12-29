@@ -108,29 +108,10 @@ public class HomeActivity extends BaseActivity {
             @Override
             public void onNavigationItemSelected(final NavigationItem item) {
                 if (!getNavigatorState().getActiveTag().equalsIgnoreCase(item.getId().getName())) {
-
-                    //Wait for few second and close drawer
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             handleMenuItemsChanges(item);
-//                            if (item.getId().getName().equalsIgnoreCase(NavigationId.HOME.INSTANCE.getName())) {
-//                                handleMenuItemsChanges(HomeActivity.this, getString(R.string.ribble_menu_item_home));
-//                            } else if (item.getId().getName().equalsIgnoreCase(NavigationId.LOCATION.INSTANCE.getName())) {
-//                                handleMenuItemsChanges(HomeActivity.this, getString(R.string.ribble_menu_item_location));
-//                            } else if (item.getId().getName().equalsIgnoreCase(NavigationId.NOTIFICATION.INSTANCE.getName())) {
-//                                handleMenuItemsChanges(HomeActivity.this, getString(R.string.ribble_menu_item_notification));
-//                            } else if (item.getId().getName().equalsIgnoreCase(NavigationId.PAYMENT_CARD.INSTANCE.getName())) {
-//                                handleMenuItemsChanges(HomeActivity.this, getString(R.string.ribble_menu_item_privacy_payment_card));
-//                            } else if (item.getId().getName().equalsIgnoreCase(NavigationId.RESTAURANT.INSTANCE.getName())) {
-//                                handleMenuItemsChanges(HomeActivity.this, getString(R.string.ribble_menu_item_restaurant));
-//                            } else if (item.getId().getName().equalsIgnoreCase(NavigationId.MENU.INSTANCE.getName())) {
-//                                handleMenuItemsChanges(HomeActivity.this, getString(R.string.ribble_menu_item_menu));
-//                            } else if (item.getId().getName().equalsIgnoreCase(NavigationId.PROFILE.INSTANCE.getName())) {
-//                                handleMenuItemsChanges(HomeActivity.this, getString(R.string.ribble_menu_item_profile));
-//                            } else if (item.getId().getName().equalsIgnoreCase(NavigationId.LOG_OUT.INSTANCE.getName())) {
-//                                handleMenuItemsChanges(HomeActivity.this, getString(R.string.ribble_menu_item_log_out));
-//                            }
                         }
                     }, AllConstants.NAVIGATION_DRAWER_CLOSE_DELAY);
                 }
@@ -148,12 +129,26 @@ public class HomeActivity extends BaseActivity {
                 contentHome.setTranslationX(moveFactor);
                 ViewExKt.setScale(contentHome, 1 - slideOffset / 4);
                 contentHome.setCardElevation(slideOffset * AppUtils.toPx(HomeActivity.this, 10));
+
+                //Restaurant owner status
+                if (!SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_USER_LOGGED_IN, false)) {
+                    visibleMenuItems(false);
+                } else {
+                    visibleMenuItems(true);
+                }
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 handleDrawerOpen();
+
+                //Restaurant owner status
+                if (!SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_USER_LOGGED_IN, false)) {
+                    visibleMenuItems(false);
+                } else {
+                    visibleMenuItems(true);
+                }
             }
 
             @Override
