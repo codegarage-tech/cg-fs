@@ -11,7 +11,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.fragment.HomeFragment;
 import com.rc.foodsignal.util.AllConstants;
@@ -36,6 +41,8 @@ public class MainActivity extends BaseActivity {
     NavigationView navigationView;
     ActionBarDrawerToggle toggle;
     MenuItem previousSelectedMenuItem;
+    ImageView userAvatar;
+    TextView userName, userInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +106,19 @@ public class MainActivity extends BaseActivity {
                 return true;
             }
         });
+
+        userAvatar = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.userAvatar);
+        userName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.userName);
+        userInfo = (TextView) navigationView.getHeaderView(0).findViewById(R.id.userInfo);
+
+        Glide
+                .with(MainActivity.this)
+                .load(R.mipmap.ic_launcher_round)
+                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
+                .apply(new RequestOptions().circleCropTransform())
+                .into(userAvatar);
+        userName.setText(getString(R.string.app_name));
+        userInfo.setText(getString(R.string.app_version_name));
     }
 
     public void setToolbarTitle(String title) {
