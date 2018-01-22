@@ -3,6 +3,9 @@
     <string name="app_version_name">1.0.2</string>
     <string name="app_version_text">Version:</string>
 
+    <!-- Fragment tag/title -->
+    <string name="title_fragment_home">Home</string>
+
     <!-- Activity Title -->
     <string name="title_activity_login">Restaurant Owner</string>
     <string name="title_activity_home">Home</string>

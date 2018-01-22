@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item android:title="Food Signal">
+        <menu>
+            <item
+                android:id="@+id/nav_home"
+                android:icon="@drawable/ic_menu_home"
+                android:title="Restaurants" />
+            <item
+                android:id="@+id/nav_location"
+                android:icon="@drawable/ic_menu_location"
+                android:title="Location" />
+            <item
+                android:id="@+id/nav_notification"
+                android:icon="@drawable/ic_menu_notification"
+                android:title="Notification" />
+            <item
+                android:id="@+id/nav_google_pay"
+                android:icon="@drawable/ic_menu_google_pay"
+                android:title="Google Pay" />
+            <item
+                android:id="@+id/nav_add_restaurants"
+                android:icon="@drawable/ic_menu_add_restaurants"
+                android:title="Add Restaurants" />
+        </menu>
+    </item>
+
+    <item android:title="More">
+        <menu>
+            <item
+                android:id="@+id/nav_faq"
+                android:icon="@drawable/ic_menu_faq"
+                android:title="FAQ" />
+            <item
+                android:id="@+id/nav_privacy_policy"
+                android:icon="@drawable/ic_menu_privacy_policy"
+                android:title="Privacy Policy" />
+        </menu>
+    </item>
+
+</menu>

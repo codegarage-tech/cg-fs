@@ -32,7 +32,7 @@ import io.armcha.ribble.presentation.widget.navigation_view.NavigationItemSelect
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_LOGIN;
 import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN;
 import static com.rc.foodsignal.util.AllConstants.SESSION_IS_USER_LOGGED_IN;
-import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_RIBBLE_MENU;
+import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_NAVIGATION_MENU;
 import static com.rc.foodsignal.util.AllConstants.SESSION_USER_DATA;
 
 /**
@@ -184,7 +184,7 @@ public class HomeActivity extends BaseActivity {
 
     public void handleMenuItemsChanges(NavigationItem item) {
         //Store current ribble menu in session
-        SessionManager.setStringSetting(HomeActivity.this, SESSION_SELECTED_RIBBLE_MENU, item.getId().getName());
+        SessionManager.setStringSetting(HomeActivity.this, SESSION_SELECTED_NAVIGATION_MENU, item.getId().getName());
 
         int checkPosition = -1;
 

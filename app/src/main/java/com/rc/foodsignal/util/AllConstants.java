@@ -7,7 +7,7 @@ package com.rc.foodsignal.util;
 public class AllConstants {
 
     //Session key
-    public static final String SESSION_SELECTED_RIBBLE_MENU = "SESSION_SELECTED_RIBBLE_MENU";
+    public static final String SESSION_SELECTED_NAVIGATION_MENU = "SESSION_SELECTED_NAVIGATION_MENU";
     public static final String SESSION_IS_LOCATION_ADDED = "SESSION_IS_LOCATION_ADDED";
     public static final String SESSION_SELECTED_LOCATION = "SESSION_SELECTED_LOCATION";
     public static final String SESSION_USER_BASIC_INFO = "SESSION_USER_BASIC_INFO";

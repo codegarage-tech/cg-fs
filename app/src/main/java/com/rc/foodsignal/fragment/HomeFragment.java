@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.rc.foodsignal.R;
+import com.rc.foodsignal.activity.MainActivity;
 import com.rc.foodsignal.adapter.RestaurantAdapter;
 import com.rc.foodsignal.interfaces.OnFragmentBackPressedListener;
 import com.rc.foodsignal.model.Location;
@@ -49,6 +50,9 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
 
     private void initHomeFragmentViews() {
         recyclerViewFood = (RecyclerView) parentView.findViewById(R.id.rv_food);
+
+        ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.title_fragment_home));
+
         restaurantAdapter = new RestaurantAdapter(getActivity());
         recyclerViewFood.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerViewFood.setAdapter(restaurantAdapter);
