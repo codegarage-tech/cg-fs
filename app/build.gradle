@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'deploygate'
 
 repositories {
     maven {
@@ -48,6 +49,7 @@ dependencies {
     compile project(":ribblemenu")
     compile project(":placesautocomplete")
     compile project(":easyrecyclerview")
+    compile project(":matisse")
 
     compile 'com.reversecoder.permission:rc-permission:1.0.1-SNAPSHOT'
     compile 'com.reversecoder.library:rc-library:1.0.1-SNAPSHOT'

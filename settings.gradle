@@ -1,1 +1,1 @@
-include ':app', ':ribblemenu', ':placesautocomplete', ':easyrecyclerview'
+include ':app', ':ribblemenu', ':placesautocomplete', ':easyrecyclerview', ':matisse'
