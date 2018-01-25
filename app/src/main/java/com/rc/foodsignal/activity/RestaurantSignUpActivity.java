@@ -1,6 +1,7 @@
 package com.rc.foodsignal.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +25,14 @@ import com.reversecoder.library.network.NetworkManager;
 import com.seatgeek.placesautocomplete.geocoding.LocationAddressListener;
 import com.seatgeek.placesautocomplete.geocoding.ReverseGeocoderTask;
 import com.seatgeek.placesautocomplete.geocoding.UserLocationAddress;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.engine.impl.GlideEngine;
+import com.zhihu.matisse.internal.entity.CaptureStrategy;
+
+import java.util.List;
+
+import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_IMAGE_PICKER;
 
 /**
  * @author Md. Rashadul Alam
@@ -103,6 +112,21 @@ public class RestaurantSignUpActivity extends BaseLocationActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+
+        ivUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Matisse.from(RestaurantSignUpActivity.this)
+                        .choose(MimeType.ofImage())
+                        .theme(R.style.Matisse_Zhihu)
+                        .capture(true)
+                        .captureStrategy(new CaptureStrategy(true, "com.zhihu.matisse.sample.fileprovider"))
+                        .countable(false)
+                        .maxSelectable(1)
+                        .imageEngine(new GlideEngine())
+                        .forResult(INTENT_REQUEST_CODE_IMAGE_PICKER);
             }
         });
 
@@ -212,5 +236,23 @@ public class RestaurantSignUpActivity extends BaseLocationActivity {
             }
         });
         currentLocationTask.execute(location);
+    }
+
+    /****************************
+     * Location data processing *
+     ****************************/
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == INTENT_REQUEST_CODE_IMAGE_PICKER && resultCode == RESULT_OK) {
+//            mAdapter.setData(Matisse.obtainResult(data), Matisse.obtainPathResult(data));
+            List<String> mData = Matisse.obtainPathResult(data);
+            Glide
+                    .with(RestaurantSignUpActivity.this)
+                    .load((mData.size() == 1) ? mData.get(0) : "")
+                    .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
+                    .apply(new RequestOptions().circleCropTransform())
+                    .into(ivUser);
+        }
     }
 }
