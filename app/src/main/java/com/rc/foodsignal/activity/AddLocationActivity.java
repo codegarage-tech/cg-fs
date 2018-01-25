@@ -292,8 +292,6 @@ public class AddLocationActivity extends BaseLocationActivity {
             }
         });
         currentLocationTask.execute(location);
-
-
     }
 
     private void clearAllView() {

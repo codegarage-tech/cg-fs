@@ -38,7 +38,7 @@
             android:name="com.reversecoder.permission.activity.PermissionListActivity"
             android:label="@string/app_name_rc_permission"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Permission" />
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name="com.rc.foodsignal.activity.RestaurantLoginActivity"

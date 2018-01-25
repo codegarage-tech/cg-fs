@@ -32,7 +32,7 @@
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.7" />
 
-            <include layout="@layout/toolbar_scrollable" />
+            <include layout="@layout/toolbar_profile" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 

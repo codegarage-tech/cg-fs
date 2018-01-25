@@ -195,7 +195,6 @@ public abstract class BaseLocationActivity extends AppCompatActivity {
         return null;
     }
 
-
     public void checkLocationSettings(GoogleApiClient googleApiClient, LocationSettingsRequest locationSettingsRequest) {
         if (googleApiClient != null && locationSettingsRequest != null) {
             PendingResult<LocationSettingsResult> result =

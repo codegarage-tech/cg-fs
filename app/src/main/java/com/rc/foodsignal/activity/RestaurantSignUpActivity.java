@@ -1,18 +1,17 @@
 package com.rc.foodsignal.activity;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -21,12 +20,16 @@ import com.rc.foodsignal.R;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.HttpRequestManager;
+import com.reversecoder.library.network.NetworkManager;
+import com.seatgeek.placesautocomplete.geocoding.LocationAddressListener;
+import com.seatgeek.placesautocomplete.geocoding.ReverseGeocoderTask;
+import com.seatgeek.placesautocomplete.geocoding.UserLocationAddress;
 
 /**
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
  */
-public class RestaurantSignUpActivity extends AppCompatActivity {
+public class RestaurantSignUpActivity extends BaseLocationActivity {
 
     DoSignUp doSignUpUser;
     String TAG = AppUtils.getTagName(RestaurantSignUpActivity.class);
@@ -37,13 +40,16 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
 
     ImageView ivUser;
     EditText edtName, edtEmail, edtAddress, edtPhone, edtPassword;
-    ToggleButton toggleButtonDone;
+    LinearLayout llDone;
+
+    ReverseGeocoderTask currentLocationTask;
+    UserLocationAddress userLocationAddress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_restaurant_signup);
+
         initRegistrationUI();
         initRegistrationAction();
     }
@@ -61,13 +67,9 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
         edtAddress = (EditText) findViewById(R.id.edt_address);
         edtPhone = (EditText) findViewById(R.id.edt_phone);
         edtPassword = (EditText) findViewById(R.id.edt_password);
-        toggleButtonDone = (ToggleButton) findViewById(R.id.toggle_button_done);
+        llDone = (LinearLayout) findViewById(R.id.ll_done);
 
-        if (!toggleButtonDone.isChecked()) {
-            setEditMode(true);
-        }else{
-            setEditMode(false);
-        }
+//        setEditMode(true);
 
         Glide
                 .with(RestaurantSignUpActivity.this)
@@ -77,14 +79,14 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
                 .into(ivUser);
     }
 
-    private void setEditMode(boolean isEditMode){
-        if(isEditMode){
+    private void setEditMode(boolean isEditMode) {
+        if (isEditMode) {
             ivUser.setEnabled(true);
             edtName.setEnabled(true);
             edtEmail.setEnabled(true);
             edtPhone.setEnabled(true);
             edtPassword.setEnabled(true);
-        }else{
+        } else {
             ivUser.setEnabled(false);
             edtName.setEnabled(false);
             edtEmail.setEnabled(false);
@@ -104,26 +106,45 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
             }
         });
 
-        toggleButtonDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        llDone.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    setEditMode(false);
-                }else{
-                    setEditMode(true);
+            public void onClick(View v) {
+
+                String mName = edtName.getText().toString(),
+                        mEmail = edtEmail.getText().toString(),
+                        mAddress = edtAddress.getText().toString(),
+                        mPhone = edtPhone.getText().toString(),
+                        mPassword = edtPassword.getText().toString();
+
+                if (mName.equalsIgnoreCase("")) {
+                    Toast.makeText(RestaurantSignUpActivity.this, getResources().getString(R.string.toast_empty_name_field), Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                if (mEmail.equalsIgnoreCase("")) {
+                    Toast.makeText(RestaurantSignUpActivity.this, getResources().getString(R.string.toast_empty_email_field), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (mAddress.equalsIgnoreCase("")) {
+                    Toast.makeText(RestaurantSignUpActivity.this, getResources().getString(R.string.toast_empty_address_field), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (mPhone.equalsIgnoreCase("")) {
+                    Toast.makeText(RestaurantSignUpActivity.this, getResources().getString(R.string.toast_empty_phone_field), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (mPassword.equalsIgnoreCase("")) {
+                    Toast.makeText(RestaurantSignUpActivity.this, getResources().getString(R.string.toast_empty_password_field), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!NetworkManager.isConnected(RestaurantSignUpActivity.this)) {
+                    Toast.makeText(RestaurantSignUpActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+//                doSignUpUser = new DoSignUp(RestaurantSignUpActivity.this, mName, userLocationAddress.getLatitude(), mAddress, mPhone, userLocationAddress.getLongitude(), mEmail, mPassword, mImage);
+//                doSignUpUser.execute();
             }
         });
-
-//        int mLat = 2343, mLng = 2343, mAddress = 3, mPhone = 2343;
-//
-//        String mName = "niloy",
-//                mEmail = "niloy.cste123@gmail.com",
-//                mPassword = "1234567",
-//                mImage = "";
-//
-//        doSignUpUser = new DoSignUp(RestaurantSignUpActivity.this, mName, mLat, mAddress, mPhone, mLng, mEmail, mPassword, mImage);
-//        doSignUpUser.execute();
     }
 
     public class DoSignUp extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
@@ -163,5 +184,33 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
                 Toast.makeText(RestaurantSignUpActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    /****************************
+     * Location data processing *
+     ****************************/
+    @Override
+    public void onLocationFound(Location location) {
+        if (location != null) {
+            setCurrentLocationDetail(location);
+        }
+    }
+
+    private void setCurrentLocationDetail(Location location) {
+        if ((currentLocationTask != null) && (currentLocationTask.getStatus() == AsyncTask.Status.RUNNING)) {
+            currentLocationTask.cancel(true);
+        }
+
+        currentLocationTask = new ReverseGeocoderTask(RestaurantSignUpActivity.this, new LocationAddressListener() {
+            @Override
+            public void getLocationAddress(UserLocationAddress locationAddress) {
+
+                Log.d(TAG, "UserLocationAddress: " + locationAddress.toString());
+//                String addressText = String.format("%s, %s, %s, %s", locationAddress.getStreetAddress(), locationAddress.getCity(), locationAddress.getState(), locationAddress.getCountry());
+                userLocationAddress = locationAddress;
+                edtAddress.setText(locationAddress.getAddressLine());
+            }
+        });
+        currentLocationTask.execute(location);
     }
 }
