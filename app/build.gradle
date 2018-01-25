@@ -41,7 +41,8 @@ dependencies {
     compile "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
     compile "com.android.support:appcompat-v7:$supportlibraryVersion"
     compile "com.android.support:support-v4:$supportlibraryVersion"
-    implementation 'com.google.android.gms:play-services-location:11.6.0'
+    compile "com.android.support:design:$supportlibraryVersion"
+    implementation 'com.google.android.gms:play-services-location:11.8.0'
 
     //library projects
     compile project(":ribblemenu")

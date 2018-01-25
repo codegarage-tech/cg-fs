@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.activity.LocationListActivity;
-import com.rc.foodsignal.activity.LoginActivity;
+import com.rc.foodsignal.activity.RestaurantLoginActivity;
 import com.rc.foodsignal.activity.ProfileActivity;
 import com.rc.foodsignal.model.Location;
 import com.rc.foodsignal.model.UserBasicInfo;
@@ -116,7 +116,7 @@ public class AccountFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if (!SessionManager.getBooleanSetting(getActivity(), SESSION_IS_USER_LOGGED_IN, false)) {
-                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    Intent intent = new Intent(getActivity(), RestaurantLoginActivity.class);
                     getActivity().startActivityForResult(intent, INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN);
                 }
             }

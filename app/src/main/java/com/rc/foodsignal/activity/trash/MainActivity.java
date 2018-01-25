@@ -49,7 +49,7 @@
 //        btnSignup.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                Intent signUpIntent = new Intent(MainActivity.this, SignUpActivity.class);
+//                Intent signUpIntent = new Intent(MainActivity.this, RestaurantSignUpActivity.class);
 //                startActivity(signUpIntent);
 //            }
 //        });

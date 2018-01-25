@@ -177,7 +177,7 @@ public class MainActivity extends BaseActivity {
 
         } else if (id == R.id.nav_add_restaurants) {
             if (!SessionManager.getBooleanSetting(MainActivity.this, SESSION_IS_USER_LOGGED_IN, false)) {
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                Intent intent = new Intent(MainActivity.this, RestaurantLoginActivity.class);
                 startActivityForResult(intent, INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN);
             } else {
                 Intent intentRestaurant = new Intent(MainActivity.this, RestaurantListActivity.class);

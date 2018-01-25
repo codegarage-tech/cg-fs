@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_horizontal_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_restaurant_signup">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
+            android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/iv_name"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_above="@+id/line_name"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="12dp"
+                android:background="@drawable/ic_name" />
+
+            <EditText
+                android:id="@+id/edt_name"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_above="@+id/line_name"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:layout_toRightOf="@+id/iv_name"
+                android:background="@null"
+                android:gravity="bottom"
+                android:hint="Name"
+                android:paddingLeft="20dp"
+                android:textColor="@color/textColorSecondary"
+                android:textColorHint="@color/textColorSecondary" />
+
+            <View
+                android:id="@+id/line_name"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/colorPrimaryDark" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
+            android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/iv_email"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_above="@+id/line_email"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="12dp"
+                android:background="@drawable/ic_email" />
+
+            <EditText
+                android:id="@+id/edt_email"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_above="@+id/line_email"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:layout_toRightOf="@+id/iv_email"
+                android:background="@null"
+                android:gravity="bottom"
+                android:hint="Email Address"
+                android:paddingLeft="20dp"
+                android:textColor="@color/textColorSecondary"
+                android:textColorHint="@color/textColorSecondary" />
+
+            <View
+                android:id="@+id/line_email"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/colorPrimaryDark" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
+            android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/iv_address"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_above="@+id/line_address"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="12dp"
+                android:background="@drawable/ic_country" />
+
+            <EditText
+                android:id="@+id/edt_address"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_above="@+id/line_address"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:layout_toRightOf="@+id/iv_address"
+                android:background="@null"
+                android:enabled="false"
+                android:gravity="bottom"
+                android:hint="Address"
+                android:paddingLeft="20dp"
+                android:textColor="@color/textColorSecondary"
+                android:textColorHint="@color/textColorSecondary" />
+
+            <View
+                android:id="@+id/line_address"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/colorPrimaryDark" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
+            android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/iv_phone"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_above="@+id/line_phone"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="12dp"
+                android:background="@drawable/ic_email" />
+
+            <EditText
+                android:id="@+id/edt_phone"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_above="@+id/line_phone"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:layout_toRightOf="@+id/iv_phone"
+                android:background="@null"
+                android:gravity="bottom"
+                android:hint="Phone"
+                android:paddingLeft="20dp"
+                android:textColor="@color/textColorSecondary"
+                android:textColorHint="@color/textColorSecondary" />
+
+            <View
+                android:id="@+id/line_phone"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/colorPrimaryDark" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
+            android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/iv_password"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_above="@+id/line_password"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="12dp"
+                android:background="@drawable/ic_password" />
+
+            <EditText
+                android:id="@+id/edt_password"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_above="@+id/line_password"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:layout_toRightOf="@+id/iv_password"
+                android:background="@null"
+                android:gravity="bottom"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:paddingLeft="20dp"
+                android:textColor="@color/textColorSecondary"
+                android:textColorHint="@color/textColorSecondary" />
+
+            <View
+                android:id="@+id/line_password"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/colorPrimaryDark" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

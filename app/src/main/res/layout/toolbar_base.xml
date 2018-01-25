@@ -28,7 +28,7 @@
         android:layout_height="40dp"
         android:layout_gravity="end"
         android:layout_marginRight="10dp"
-        android:src="@drawable/ic_filter"
+        android:src="@drawable/ic_vector_filter_empty_white"
         android:visibility="gone" />
 
 </android.support.v7.widget.Toolbar>

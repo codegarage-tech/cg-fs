@@ -205,7 +205,7 @@ public class HomeActivity extends BaseActivity {
             Toast.makeText(HomeActivity.this, getString(R.string.toast_under_development), Toast.LENGTH_SHORT).show();
         } else if (item.getName().equalsIgnoreCase(NavigationId.ADD_RESTAURANT.INSTANCE.getName())) {
             if (!SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_USER_LOGGED_IN, false)) {
-                Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                Intent intent = new Intent(HomeActivity.this, RestaurantLoginActivity.class);
                 startActivityForResult(intent, INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN);
             } else {
                 Intent intentRestaurant = new Intent(HomeActivity.this, RestaurantListActivity.class);

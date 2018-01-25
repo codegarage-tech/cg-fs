@@ -34,7 +34,7 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/vector_done" />
+            android:src="@drawable/ic_vector_done_empty_white" />
     </LinearLayout>
 
 </android.support.v7.widget.Toolbar>

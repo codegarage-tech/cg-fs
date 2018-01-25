@@ -41,8 +41,14 @@
             android:theme="@style/AppTheme.Permission" />
 
         <activity
-            android:name="com.rc.foodsignal.activity.LoginActivity"
-            android:label="@string/title_activity_login"
+            android:name="com.rc.foodsignal.activity.RestaurantLoginActivity"
+            android:label="@string/title_activity_restaurant_login"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name="com.rc.foodsignal.activity.RestaurantSignUpActivity"
+            android:label="@string/title_activity_restaurant_signup"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 

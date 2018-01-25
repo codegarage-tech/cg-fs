@@ -34,30 +34,33 @@ import static com.rc.foodsignal.util.AllConstants.SESSION_USER_DATA;
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
  */
-public class LoginActivity extends AppCompatActivity {
+public class RestaurantLoginActivity extends AppCompatActivity {
 
     Button btnSignIn, btnRegistration;
     EditText edtEmail, edtPassword;
+    //Toolbar
     TextView tvTitle;
     ImageView ivBack;
     ProgressDialog loadingDialog;
 
     DoLogin doLoginUser;
-    String TAG = AppUtils.getTagName(LoginActivity.class);
+    String TAG = AppUtils.getTagName(RestaurantLoginActivity.class);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_restaurant_login);
 
         initLoginUI();
         initLoginAction();
     }
 
     private void initLoginUI() {
+        //Toolbar
         ivBack = (ImageView) findViewById(R.id.iv_back);
         tvTitle = (TextView) findViewById(R.id.text_title);
-        tvTitle.setText(getString(R.string.title_activity_login));
+        tvTitle.setText(getString(R.string.title_activity_restaurant_login));
+        //Activity view
         btnSignIn = (Button) findViewById(R.id.btn_sign_in);
         btnRegistration = (Button) findViewById(R.id.btn_registration);
         edtEmail = (EditText) findViewById(R.id.edt_email);
@@ -84,20 +87,20 @@ public class LoginActivity extends AppCompatActivity {
                 String mEmail = edtEmail.getText().toString(), mPassword = edtPassword.getText().toString();
 
                 if (mEmail.equalsIgnoreCase("")) {
-                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.toast_empty_email_field), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RestaurantLoginActivity.this, getResources().getString(R.string.toast_empty_email_field), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (mPassword.equalsIgnoreCase("")) {
-                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.toast_empty_password_field), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RestaurantLoginActivity.this, getResources().getString(R.string.toast_empty_password_field), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (!NetworkManager.isConnected(LoginActivity.this)) {
-                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
+                if (!NetworkManager.isConnected(RestaurantLoginActivity.this)) {
+                    Toast.makeText(RestaurantLoginActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                doLoginUser = new DoLogin(LoginActivity.this, mEmail, mPassword);
+                doLoginUser = new DoLogin(RestaurantLoginActivity.this, mEmail, mPassword);
                 doLoginUser.execute();
             }
         });
@@ -105,9 +108,8 @@ public class LoginActivity extends AppCompatActivity {
         btnRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-//                startActivity(intent);
-//                finish();
+                Intent intent = new Intent(RestaurantLoginActivity.this, RestaurantSignUpActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -162,15 +164,15 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (responseData.getStatus().equalsIgnoreCase("1") && (responseData.getData().size() > 0)) {
                     Log.d(TAG, "success wrapper: " + responseData.getData().get(0).toString());
-                    SessionManager.setStringSetting(LoginActivity.this, SESSION_USER_DATA, responseData.getData().get(0).toString());
-                    SessionManager.setBooleanSetting(LoginActivity.this, SESSION_IS_USER_LOGGED_IN, true);
+                    SessionManager.setStringSetting(RestaurantLoginActivity.this, SESSION_USER_DATA, responseData.getData().get(0).toString());
+                    SessionManager.setBooleanSetting(RestaurantLoginActivity.this, SESSION_IS_USER_LOGGED_IN, true);
 
                     //Save location added status
                     if (responseData.getData().get(0).getIs_address_added() == 1) {
-                        SessionManager.setBooleanSetting(LoginActivity.this, SESSION_IS_LOCATION_ADDED, true);
-                        if (AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(LoginActivity.this, SESSION_SELECTED_LOCATION))) {
+                        SessionManager.setBooleanSetting(RestaurantLoginActivity.this, SESSION_IS_LOCATION_ADDED, true);
+                        if (AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(RestaurantLoginActivity.this, SESSION_SELECTED_LOCATION))) {
                             if (responseData.getData().get(0).getSelected_address().size() > 0) {
-                                SessionManager.setStringSetting(LoginActivity.this, SESSION_SELECTED_LOCATION, responseData.getData().get(0).getSelected_address().get(0).toString());
+                                SessionManager.setStringSetting(RestaurantLoginActivity.this, SESSION_SELECTED_LOCATION, responseData.getData().get(0).getSelected_address().get(0).toString());
                             }
                         }
                     }
@@ -178,14 +180,14 @@ public class LoginActivity extends AppCompatActivity {
                     //Send login status to the account fragment
                     Intent intent = new Intent();
                     intent.putExtra(INTENT_KEY_LOGIN, true);
-                    setResult(RESULT_OK,intent);
+                    setResult(RESULT_OK, intent);
                     finish();
                 } else {
-                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RestaurantLoginActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
                 }
 
             } else {
-                Toast.makeText(LoginActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
+                Toast.makeText(RestaurantLoginActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
             }
         }
     }
