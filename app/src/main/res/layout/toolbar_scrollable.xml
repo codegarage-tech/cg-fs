@@ -40,6 +40,7 @@
             android:orientation="vertical">
 
             <ToggleButton
+                android:id="@+id/toggle_button_done"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:background="@drawable/selector_toggle_edit"
