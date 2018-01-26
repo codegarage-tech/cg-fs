@@ -34,8 +34,8 @@ public class AllUrls {
         return url;
     }
 
-    public static JSONObject getSignUpParameters(String name, int lat, int address, int phone,
-                                                 int lng, String email, String password, String image) {
+    public static JSONObject getSignUpParameters(String name, double lat, String address, String phone,
+                                                 double lng, String email, String password, String image) {
         JSONObject params = HttpRequestManager.HttpParameter.getInstance()
                 .addJSONParam("id", 0)
                 .addJSONParam("name", name)
@@ -45,6 +45,7 @@ public class AllUrls {
                 .addJSONParam("lng", lng)
                 .addJSONParam("email", email)
                 .addJSONParam("password", password)
+                .addJSONParam("is_restaurant", 1)
                 .addJSONParam("image", image)
                 .getJSONParam();
         Log.d(TAG, "getSignUpParameters: " + params.toString());
@@ -57,8 +58,8 @@ public class AllUrls {
         return url;
     }
 
-    public static JSONObject getUpdateParameters(int id, String name, int lat, int address, int phone,
-                                                 int lng, String email, String password, String image) {
+    public static JSONObject getUpdateParameters(int id, String name, double lat, int address, String phone,
+                                                 double lng, String email, String password, String image) {
         JSONObject params = HttpRequestManager.HttpParameter.getInstance()
                 .addJSONParam("id", id)
                 .addJSONParam("name", name)
@@ -68,6 +69,7 @@ public class AllUrls {
                 .addJSONParam("lng", lng)
                 .addJSONParam("email", email)
                 .addJSONParam("password", password)
+                .addJSONParam("is_restaurant", 1)
                 .addJSONParam("image", image)
                 .getJSONParam();
         Log.d(TAG, "getSignUpParameters: " + params.toString());

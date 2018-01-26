@@ -3,6 +3,7 @@ package com.rc.foodsignal.application;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v7.app.AppCompatDelegate;
 
 /**
  * @author Md. Rashadul Alam
@@ -17,6 +18,9 @@ public class FoodSignalApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        //For using vector drawable
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         mContext = this;
         initTypeface();

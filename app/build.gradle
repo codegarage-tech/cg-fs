@@ -23,6 +23,9 @@ android {
         targetSdkVersion appTargetSdkVersion
         versionCode appVersionCode
         versionName appVersionName
+
+        vectorDrawables.useSupportLibrary = true
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -50,6 +53,7 @@ dependencies {
     compile project(":placesautocomplete")
     compile project(":easyrecyclerview")
     compile project(":matisse")
+    compile project(":imagezipper")
 
     compile 'com.reversecoder.permission:rc-permission:1.0.1-SNAPSHOT'
     compile 'com.reversecoder.library:rc-library:1.0.1-SNAPSHOT'

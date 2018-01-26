@@ -2,6 +2,7 @@ package com.rc.foodsignal.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,23 +18,24 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.developers.imagezipper.ImageZipper;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.model.Location;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.HttpRequestManager;
 import com.reversecoder.library.network.NetworkManager;
-import com.seatgeek.placesautocomplete.geocoding.ReverseGeocoderTask;
-import com.seatgeek.placesautocomplete.geocoding.UserLocationAddress;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
 
+import java.io.File;
 import java.util.List;
 
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_SEARCH_ADDRESS;
 import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_ADDRESS_SEARCH;
 import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_IMAGE_PICKER;
+import static com.rc.foodsignal.util.AllConstants.PREFIX_BASE64_STRING;
 
 /**
  * @author Md. Rashadul Alam
@@ -52,9 +54,8 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
     EditText edtName, edtEmail, edtPhone, edtPassword;
     TextView tvAddress;
     LinearLayout llDone;
-
-    ReverseGeocoderTask currentLocationTask;
-    UserLocationAddress userLocationAddress;
+    String mBase64 = "";
+    Location mLocation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,26 +83,10 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
 
         Glide
                 .with(RestaurantSignUpActivity.this)
-                .load(R.drawable.ic_rashed)
+                .load(R.drawable.ic_default_avatar)
                 .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
                 .apply(new RequestOptions().circleCropTransform())
                 .into(ivUser);
-    }
-
-    private void setEditMode(boolean isEditMode) {
-        if (isEditMode) {
-            ivUser.setEnabled(true);
-            edtName.setEnabled(true);
-            edtEmail.setEnabled(true);
-            edtPhone.setEnabled(true);
-            edtPassword.setEnabled(true);
-        } else {
-            ivUser.setEnabled(false);
-            edtName.setEnabled(false);
-            edtEmail.setEnabled(false);
-            edtPhone.setEnabled(false);
-            edtPassword.setEnabled(false);
-        }
     }
 
     private void initRegistrationAction() {
@@ -118,7 +103,7 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Matisse.from(RestaurantSignUpActivity.this)
                         .choose(MimeType.ofImage())
-                        .theme(R.style.Matisse_Zhihu)
+                        .theme(R.style.Matisse_Dracula)
                         .capture(true)
                         .setDefaultCaptureStrategy()
                         .countable(false)
@@ -171,8 +156,15 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
                     return;
                 }
 
-//                doSignUpUser = new DoSignUp(RestaurantSignUpActivity.this, mName, userLocationAddress.getLatitude(), mAddress, mPhone, userLocationAddress.getLongitude(), mEmail, mPassword, mImage);
-//                doSignUpUser.execute();
+                if (mBase64.equalsIgnoreCase("")) {
+                    ivUser.buildDrawingCache();
+                    Bitmap bmap = ivUser.getDrawingCache();
+                    mBase64 = PREFIX_BASE64_STRING + ImageZipper.getBase64forImage(bmap);
+                    Log.d("Default(base64): ", mBase64);
+                }
+
+                doSignUpUser = new DoSignUp(RestaurantSignUpActivity.this, mName, Double.parseDouble(mLocation.getLat()), mAddress, mPhone, Double.parseDouble(mLocation.getLng()), mEmail, mPassword, mBase64);
+                doSignUpUser.execute();
             }
         });
     }
@@ -180,10 +172,10 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
     public class DoSignUp extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
 
         private Context mContext;
-        private int mLat, mLng, mAddress, mPhone;
-        private String mName = "", mEmail = "", mPassword = "", mImage = "";
+        private double mLat, mLng;
+        private String mName = "", mAddress = "", mPhone = "", mEmail = "", mPassword = "", mImage = "";
 
-        public DoSignUp(Context context, String name, int lat, int address, int phone, int lng, String email, String password, String image) {
+        public DoSignUp(Context context, String name, double lat, String address, String phone, double lng, String email, String password, String image) {
             this.mContext = context;
             this.mName = name;
             this.mLat = lat;
@@ -209,6 +201,7 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
         protected void onPostExecute(HttpRequestManager.HttpResponse result) {
             if (result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
                 Log.d(TAG, "success response: " + result.getResult().toString());
+                Toast.makeText(RestaurantSignUpActivity.this, "Registration successfull", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(RestaurantSignUpActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
             }
@@ -249,18 +242,34 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
         if (requestCode == INTENT_REQUEST_CODE_IMAGE_PICKER && resultCode == RESULT_OK) {
 //            mAdapter.setData(Matisse.obtainResult(data), Matisse.obtainPathResult(data));
             List<String> mData = Matisse.obtainPathResult(data);
-            Log.d("MatisseImage: ", mData.get(0));
-            Glide
-                    .with(RestaurantSignUpActivity.this)
-                    .load((mData.size() == 1) ? mData.get(0) : "")
-                    .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
-                    .apply(new RequestOptions().circleCropTransform())
-                    .into(ivUser);
+
+            if (mData.size() == 1) {
+                Log.d("MatisseImage: ", mData.get(0));
+                Glide
+                        .with(RestaurantSignUpActivity.this)
+                        .load(mData.get(0))
+                        .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
+                        .apply(new RequestOptions().circleCropTransform())
+                        .into(ivUser);
+
+                try {
+                    File imageZipperFile = new ImageZipper(RestaurantSignUpActivity.this)
+                            .setQuality(100)
+                            .setMaxWidth(200)
+                            .setMaxHeight(200)
+                            .setCompressFormat(Bitmap.CompressFormat.JPEG)
+                            .compressToFile(new File(mData.get(0)));
+                    mBase64 = PREFIX_BASE64_STRING + ImageZipper.getBase64forImage(imageZipperFile);
+                    Log.d("MatisseImage(base64): ", mBase64);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
         } else if (requestCode == INTENT_REQUEST_CODE_ADDRESS_SEARCH && resultCode == RESULT_OK) {
             if (data.getParcelableExtra(INTENT_KEY_SEARCH_ADDRESS) != null) {
-                Location location = data.getParcelableExtra(INTENT_KEY_SEARCH_ADDRESS);
-                String addressText = String.format("%s, %s, %s, %s", location.getStreet(), location.getCity(), location.getState(), location.getCountry());
-                Log.d("SearchLocationResult: ", location.toString());
+                mLocation = data.getParcelableExtra(INTENT_KEY_SEARCH_ADDRESS);
+                String addressText = String.format("%s, %s, %s, %s", mLocation.getStreet(), mLocation.getCity(), mLocation.getState(), mLocation.getCountry());
+                Log.d("SearchLocationResult: ", mLocation.toString());
                 tvAddress.setText(addressText);
             }
         }
