@@ -112,18 +112,17 @@
                 android:layout_marginLeft="12dp"
                 android:background="@drawable/ic_country" />
 
-            <EditText
-                android:id="@+id/edt_address"
+            <TextView
+                android:id="@+id/tv_address"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_above="@+id/line_address"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="10dp"
                 android:layout_toRightOf="@+id/iv_address"
-                android:background="@null"
-                android:enabled="false"
                 android:gravity="bottom"
-                android:hint="Address"
+                android:text="Address"
+                android:textSize="@dimen/medium_font_size"
                 android:paddingLeft="20dp"
                 android:textColor="@color/textColorSecondary"
                 android:textColorHint="@color/textColorSecondary" />

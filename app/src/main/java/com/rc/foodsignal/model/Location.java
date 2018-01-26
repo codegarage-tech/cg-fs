@@ -1,10 +1,13 @@
 package com.rc.foodsignal.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
  */
-public class Location extends ResponseBase {
+public class Location extends ResponseBase implements Parcelable {
 
     private String id = "";
     private String user_id = "";
@@ -113,5 +116,51 @@ public class Location extends ResponseBase {
                 ", lat='" + lat + '\'' +
                 ", lng='" + lng + '\'' +
                 '}';
+    }
+
+    /**************************
+     * Methods for parcelable *
+     **************************/
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(user_id);
+        dest.writeString(street);
+        dest.writeString(city);
+        dest.writeString(state);
+        dest.writeString(zip);
+        dest.writeString(country);
+        dest.writeString(lat);
+        dest.writeString(lng);
+    }
+
+    // Creator
+    public static final Creator CREATOR
+            = new Creator() {
+        public Location createFromParcel(Parcel in) {
+            return new Location(in);
+        }
+
+        public Location[] newArray(int size) {
+            return new Location[size];
+        }
+    };
+
+    // "De-parcel object
+    public Location(Parcel in) {
+        id = in.readString();
+        user_id = in.readString();
+        street = in.readString();
+        city = in.readString();
+        state = in.readString();
+        zip = in.readString();
+        country = in.readString();
+        lat = in.readString();
+        lng = in.readString();
     }
 }
