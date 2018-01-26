@@ -211,6 +211,11 @@ public final class SelectionCreator {
         return this;
     }
 
+    public SelectionCreator setDefaultCaptureStrategy() {
+        mSelectionSpec.captureStrategy = new CaptureStrategy(true, mMatisse.getActivity().getPackageName() + ".fileprovider");
+        return this;
+    }
+
     /**
      * Set the desired orientation of this activity.
      *

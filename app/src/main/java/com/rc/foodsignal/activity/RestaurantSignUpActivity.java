@@ -122,7 +122,7 @@ public class RestaurantSignUpActivity extends BaseLocationActivity {
                         .choose(MimeType.ofImage())
                         .theme(R.style.Matisse_Zhihu)
                         .capture(true)
-                        .captureStrategy(new CaptureStrategy(true, "com.zhihu.matisse.sample.fileprovider"))
+                        .setDefaultCaptureStrategy()
                         .countable(false)
                         .maxSelectable(1)
                         .imageEngine(new GlideEngine())
@@ -247,6 +247,7 @@ public class RestaurantSignUpActivity extends BaseLocationActivity {
         if (requestCode == INTENT_REQUEST_CODE_IMAGE_PICKER && resultCode == RESULT_OK) {
 //            mAdapter.setData(Matisse.obtainResult(data), Matisse.obtainPathResult(data));
             List<String> mData = Matisse.obtainPathResult(data);
+            Log.d("MatisseImage: ",mData.get(0));
             Glide
                     .with(RestaurantSignUpActivity.this)
                     .load((mData.size() == 1) ? mData.get(0) : "")

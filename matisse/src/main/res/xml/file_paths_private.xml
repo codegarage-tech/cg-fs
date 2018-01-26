@@ -17,5 +17,5 @@
 <paths>
     <external-path
         name="my_images"
-        path="Android/data/com.rc.foodsignal/files/Pictures"/>
+        path="Android/data/${applicationId}/files/Pictures"/>
 </paths>
