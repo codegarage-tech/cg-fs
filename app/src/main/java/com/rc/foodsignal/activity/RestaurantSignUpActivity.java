@@ -1,6 +1,8 @@
 package com.rc.foodsignal.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -21,6 +23,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.developers.imagezipper.ImageZipper;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.model.Location;
+import com.rc.foodsignal.model.ResponseRestaurantLoginData;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.HttpRequestManager;
@@ -49,6 +52,7 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
     Toolbar toolbar;
     TextView tvTitle;
     ImageView ivBack;
+    ProgressDialog loadingDialog;
 
     ImageView ivUser;
     EditText edtName, edtEmail, edtPhone, edtPassword;
@@ -189,6 +193,21 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
+            loadingDialog = new ProgressDialog(mContext);
+            loadingDialog.setMessage(getResources().getString(R.string.txt_loading));
+            loadingDialog.setIndeterminate(false);
+            loadingDialog.setCancelable(true);
+            loadingDialog.setCanceledOnTouchOutside(false);
+            loadingDialog.show();
+            loadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface arg0) {
+                    if (loadingDialog != null
+                            && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
+                }
+            });
         }
 
         @Override
@@ -199,42 +218,28 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(HttpRequestManager.HttpResponse result) {
+
+            if (loadingDialog != null
+                    && loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
+            }
+
             if (result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
-                Log.d(TAG, "success response: " + result.getResult().toString());
-                Toast.makeText(RestaurantSignUpActivity.this, "Registration successfull", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "success response from web: " + result.getResult().toString());
+                ResponseRestaurantLoginData responseData = ResponseRestaurantLoginData.getResponseObject(result.getResult().toString(), ResponseRestaurantLoginData.class);
+
+                if (responseData.getStatus().equalsIgnoreCase("1") && (responseData.getData().size() > 0)) {
+                    Log.d(TAG, "success wrapper: " + responseData.getData().get(0).toString());
+
+                    Toast.makeText(RestaurantSignUpActivity.this, responseData.getMsg(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(RestaurantSignUpActivity.this, responseData.getMsg(), Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(RestaurantSignUpActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
             }
         }
     }
-
-//    /****************************
-//     * Location data processing *
-//     ****************************/
-//    @Override
-//    public void onLocationFound(Location location) {
-//        if (location != null) {
-//            setCurrentLocationDetail(location);
-//        }
-//    }
-//
-//    private void setCurrentLocationDetail(Location location) {
-//        if ((currentLocationTask != null) && (currentLocationTask.getStatus() == AsyncTask.Status.RUNNING)) {
-//            currentLocationTask.cancel(true);
-//        }
-//
-//        currentLocationTask = new ReverseGeocoderTask(RestaurantSignUpActivity.this, new LocationAddressListener() {
-//            @Override
-//            public void getLocationAddress(UserLocationAddress locationAddress) {
-//
-//                Log.d(TAG, "UserLocationAddress: " + locationAddress.toString());
-////                String addressText = String.format("%s, %s, %s, %s", locationAddress.getStreetAddress(), locationAddress.getCity(), locationAddress.getState(), locationAddress.getCountry());
-//                userLocationAddress = locationAddress;
-//                edtAddress.setText(locationAddress.getAddressLine());
-//            }
-//        });
-//        currentLocationTask.execute(location);
-//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

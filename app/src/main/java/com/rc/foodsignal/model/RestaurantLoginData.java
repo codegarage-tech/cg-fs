@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
  */
-public class UserData extends ResponseBase {
+public class RestaurantLoginData extends ResponseBase {
 
     private String id = "";
     private String name = "";
@@ -23,7 +23,7 @@ public class UserData extends ResponseBase {
     private int is_address_added = 0;
     private ArrayList<Location> selected_address = new ArrayList<>();
 
-    public UserData(String id, String name, String image, String lat, String lng, String email, String phone, String address, String password, String is_restaurant, String sms_notification, String push_notification, int is_address_added, ArrayList<Location> selected_address) {
+    public RestaurantLoginData(String id, String name, String image, String lat, String lng, String email, String phone, String address, String password, String is_restaurant, String sms_notification, String push_notification, int is_address_added, ArrayList<Location> selected_address) {
         this.id = id;
         this.name = name;
         this.image = image;

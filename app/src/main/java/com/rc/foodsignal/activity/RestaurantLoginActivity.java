@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rc.foodsignal.R;
-import com.rc.foodsignal.model.ResponseUserData;
+import com.rc.foodsignal.model.ResponseRestaurantLoginData;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.HttpRequestManager;
@@ -160,7 +160,7 @@ public class RestaurantLoginActivity extends AppCompatActivity {
 
             if (result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
                 Log.d(TAG, "success response from web: " + result.getResult().toString());
-                ResponseUserData responseData = ResponseUserData.getResponseObject(result.getResult().toString(), ResponseUserData.class);
+                ResponseRestaurantLoginData responseData = ResponseRestaurantLoginData.getResponseObject(result.getResult().toString(), ResponseRestaurantLoginData.class);
 
                 if (responseData.getStatus().equalsIgnoreCase("1") && (responseData.getData().size() > 0)) {
                     Log.d(TAG, "success wrapper: " + responseData.getData().get(0).toString());
@@ -177,7 +177,7 @@ public class RestaurantLoginActivity extends AppCompatActivity {
                         }
                     }
 
-                    //Send login status to the account fragment
+                    //Send login status to the navigation drawer activity
                     Intent intent = new Intent();
                     intent.putExtra(INTENT_KEY_LOGIN, true);
                     setResult(RESULT_OK, intent);

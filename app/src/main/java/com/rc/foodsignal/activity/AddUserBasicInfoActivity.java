@@ -22,7 +22,6 @@ import android.widget.Toast;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.model.ResponseAddUserBasicInfo;
 import com.rc.foodsignal.model.UserBasicInfo;
-import com.rc.foodsignal.model.UserData;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
 import com.reversecoder.library.httprequest.HttpRequestManager;
@@ -55,7 +54,6 @@ public class AddUserBasicInfoActivity extends BaseLocationActivity {
     TextView tvTitle;
     ImageView ivBack;
     LinearLayout llAddLocation, llLocationDetail, llStepOne, llStepTwo;
-    UserData userData;
 
     //User info
     boolean isStepOneSelected = true;

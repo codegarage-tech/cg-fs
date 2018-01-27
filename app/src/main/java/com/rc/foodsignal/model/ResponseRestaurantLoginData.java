@@ -6,16 +6,16 @@ import java.util.ArrayList;
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
  */
-public class ResponseUserData extends ResponseBase {
+public class ResponseRestaurantLoginData extends ResponseBase {
 
     private String status = "";
     private String msg = "";
-    private ArrayList<UserData> data = new ArrayList<UserData>();
+    private ArrayList<RestaurantLoginData> data = new ArrayList<RestaurantLoginData>();
 
-    public ResponseUserData() {
+    public ResponseRestaurantLoginData() {
     }
 
-    public ResponseUserData(String status, String msg, ArrayList<UserData> data) {
+    public ResponseRestaurantLoginData(String status, String msg, ArrayList<RestaurantLoginData> data) {
         this.status = status;
         this.msg = msg;
         this.data = data;
@@ -37,11 +37,11 @@ public class ResponseUserData extends ResponseBase {
         this.msg = msg;
     }
 
-    public ArrayList<UserData> getData() {
+    public ArrayList<RestaurantLoginData> getData() {
         return data;
     }
 
-    public void setData(ArrayList<UserData> user_details) {
+    public void setData(ArrayList<RestaurantLoginData> user_details) {
         this.data = user_details;
     }
 }
