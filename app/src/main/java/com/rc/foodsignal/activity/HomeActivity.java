@@ -31,9 +31,9 @@ import io.armcha.ribble.presentation.widget.navigation_view.NavigationItemSelect
 
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_LOGIN;
 import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN;
-import static com.rc.foodsignal.util.AllConstants.SESSION_IS_USER_LOGGED_IN;
+import static com.rc.foodsignal.util.AllConstants.SESSION_IS_RESTAURANT_LOGGED_IN;
+import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_LOGIN_DATA;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_NAVIGATION_MENU;
-import static com.rc.foodsignal.util.AllConstants.SESSION_USER_DATA;
 
 /**
  * @author Md. Rashadul Alam
@@ -131,7 +131,7 @@ public class HomeActivity extends BaseActivity {
                 contentHome.setCardElevation(slideOffset * AppUtils.toPx(HomeActivity.this, 10));
 
                 //Restaurant owner status
-                if (!SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_USER_LOGGED_IN, false)) {
+                if (!SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_RESTAURANT_LOGGED_IN, false)) {
                     visibleMenuItems(false);
                 } else {
                     visibleMenuItems(true);
@@ -144,7 +144,7 @@ public class HomeActivity extends BaseActivity {
                 handleDrawerOpen();
 
                 //Restaurant owner status
-                if (!SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_USER_LOGGED_IN, false)) {
+                if (!SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_RESTAURANT_LOGGED_IN, false)) {
                     visibleMenuItems(false);
                 } else {
                     visibleMenuItems(true);
@@ -204,11 +204,11 @@ public class HomeActivity extends BaseActivity {
             checkPosition = 3;
             Toast.makeText(HomeActivity.this, getString(R.string.toast_under_development), Toast.LENGTH_SHORT).show();
         } else if (item.getName().equalsIgnoreCase(NavigationId.ADD_RESTAURANT.INSTANCE.getName())) {
-            if (!SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_USER_LOGGED_IN, false)) {
+            if (!SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_RESTAURANT_LOGGED_IN, false)) {
                 Intent intent = new Intent(HomeActivity.this, RestaurantLoginActivity.class);
                 startActivityForResult(intent, INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN);
             } else {
-                Intent intentRestaurant = new Intent(HomeActivity.this, RestaurantListActivity.class);
+                Intent intentRestaurant = new Intent(HomeActivity.this, AboutRestaurantActivity.class);
                 startActivity(intentRestaurant);
             }
         } else if (item.getName().equalsIgnoreCase(NavigationId.MENU.INSTANCE.getName())) {
@@ -218,8 +218,8 @@ public class HomeActivity extends BaseActivity {
             checkPosition = 6;
             Toast.makeText(HomeActivity.this, getString(R.string.toast_under_development), Toast.LENGTH_SHORT).show();
         } else if (item.getName().equalsIgnoreCase(NavigationId.LOG_OUT.INSTANCE.getName())) {
-            SessionManager.removeSetting(HomeActivity.this, SESSION_IS_USER_LOGGED_IN);
-            SessionManager.removeSetting(HomeActivity.this, SESSION_USER_DATA);
+            SessionManager.removeSetting(HomeActivity.this, SESSION_IS_RESTAURANT_LOGGED_IN);
+            SessionManager.removeSetting(HomeActivity.this, SESSION_RESTAURANT_LOGIN_DATA);
 
             visibleMenuItems(false);
         }
@@ -340,7 +340,7 @@ public class HomeActivity extends BaseActivity {
                     if (data.getBooleanExtra(INTENT_KEY_LOGIN, false)) {
                         visibleMenuItems(true);
 
-                        Intent intentRestaurant = new Intent(HomeActivity.this, RestaurantListActivity.class);
+                        Intent intentRestaurant = new Intent(HomeActivity.this, AboutRestaurantActivity.class);
                         startActivity(intentRestaurant);
                     } else {
                         visibleMenuItems(true);

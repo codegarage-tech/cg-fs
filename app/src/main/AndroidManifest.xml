@@ -78,14 +78,14 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name="com.rc.foodsignal.activity.RestaurantListActivity"
-            android:label="@string/title_activity_restaurant_list"
+            android:name="com.rc.foodsignal.activity.SearchLocationActivity"
+            android:label="@string/title_activity_search_location"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name="com.rc.foodsignal.activity.SearchLocationActivity"
-            android:label="@string/title_activity_search_location"
+            android:name="com.rc.foodsignal.activity.AboutRestaurantActivity"
+            android:label="@string/title_activity_about_restaurant"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 

@@ -26,9 +26,9 @@ import com.reversecoder.library.util.AllSettingsManager;
 
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_LOGIN;
 import static com.rc.foodsignal.util.AllConstants.SESSION_IS_LOCATION_ADDED;
-import static com.rc.foodsignal.util.AllConstants.SESSION_IS_USER_LOGGED_IN;
+import static com.rc.foodsignal.util.AllConstants.SESSION_IS_RESTAURANT_LOGGED_IN;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_LOCATION;
-import static com.rc.foodsignal.util.AllConstants.SESSION_USER_DATA;
+import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_LOGIN_DATA;
 
 /**
  * @author Md. Rashadul Alam
@@ -69,7 +69,7 @@ public class RestaurantLoginActivity extends AppCompatActivity {
 //        edtEmail.setText("niloy.cste1@gmail.com");
 //        edtPassword.setText("1234567");
 
-        edtEmail.setText("rashed.droid@gmail.com");
+        edtEmail.setText("rashadul.alam@gmail.com");
         edtPassword.setText("123456");
     }
 
@@ -146,7 +146,7 @@ public class RestaurantLoginActivity extends AppCompatActivity {
 
         @Override
         protected HttpRequestManager.HttpResponse doInBackground(String... params) {
-            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getLoginUrl(), AllUrls.getLoginParameters(mEmail, mPassword), null);
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getRestaurantLoginUrl(), AllUrls.getRestaurantLoginParameters(mEmail, mPassword), null);
             return response;
         }
 
@@ -164,18 +164,18 @@ public class RestaurantLoginActivity extends AppCompatActivity {
 
                 if (responseData.getStatus().equalsIgnoreCase("1") && (responseData.getData().size() > 0)) {
                     Log.d(TAG, "success wrapper: " + responseData.getData().get(0).toString());
-                    SessionManager.setStringSetting(RestaurantLoginActivity.this, SESSION_USER_DATA, responseData.getData().get(0).toString());
-                    SessionManager.setBooleanSetting(RestaurantLoginActivity.this, SESSION_IS_USER_LOGGED_IN, true);
+                    SessionManager.setStringSetting(RestaurantLoginActivity.this, SESSION_RESTAURANT_LOGIN_DATA, responseData.getData().get(0).toString());
+                    SessionManager.setBooleanSetting(RestaurantLoginActivity.this, SESSION_IS_RESTAURANT_LOGGED_IN, true);
 
-                    //Save location added status
-                    if (responseData.getData().get(0).getIs_address_added() == 1) {
-                        SessionManager.setBooleanSetting(RestaurantLoginActivity.this, SESSION_IS_LOCATION_ADDED, true);
-                        if (AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(RestaurantLoginActivity.this, SESSION_SELECTED_LOCATION))) {
-                            if (responseData.getData().get(0).getSelected_address().size() > 0) {
-                                SessionManager.setStringSetting(RestaurantLoginActivity.this, SESSION_SELECTED_LOCATION, responseData.getData().get(0).getSelected_address().get(0).toString());
-                            }
-                        }
-                    }
+//                    //Save location added status
+//                    if (responseData.getData().get(0).getIs_address_added() == 1) {
+//                        SessionManager.setBooleanSetting(RestaurantLoginActivity.this, SESSION_IS_LOCATION_ADDED, true);
+//                        if (AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(RestaurantLoginActivity.this, SESSION_SELECTED_LOCATION))) {
+//                            if (responseData.getData().get(0).getSelected_address().size() > 0) {
+//                                SessionManager.setStringSetting(RestaurantLoginActivity.this, SESSION_SELECTED_LOCATION, responseData.getData().get(0).getSelected_address().get(0).toString());
+//                            }
+//                        }
+//                    }
 
                     //Send login status to the navigation drawer activity
                     Intent intent = new Intent();

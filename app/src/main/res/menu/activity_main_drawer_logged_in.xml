@@ -20,10 +20,6 @@
             android:id="@+id/nav_google_pay"
             android:icon="@drawable/ic_menu_google_pay"
             android:title="Google Pay" />
-        <item
-            android:id="@+id/nav_add_restaurants"
-            android:icon="@drawable/ic_menu_add_restaurants"
-            android:title="Add Restaurants" />
     </group>
 
     <item android:title="More">

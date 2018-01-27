@@ -26,9 +26,9 @@ import com.reversecoder.library.storage.SessionManager;
 
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_LOGIN;
 import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN;
-import static com.rc.foodsignal.util.AllConstants.SESSION_IS_USER_LOGGED_IN;
+import static com.rc.foodsignal.util.AllConstants.SESSION_IS_RESTAURANT_LOGGED_IN;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_NAVIGATION_MENU;
-import static com.rc.foodsignal.util.AllConstants.SESSION_USER_DATA;
+import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_LOGIN_DATA;
 
 public class MainActivity extends BaseActivity {
 
@@ -85,7 +85,7 @@ public class MainActivity extends BaseActivity {
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.inflateHeaderView(R.layout.nav_header_main);
-        if (SessionManager.getBooleanSetting(MainActivity.this, SESSION_IS_USER_LOGGED_IN, false)) {
+        if (SessionManager.getBooleanSetting(MainActivity.this, SESSION_IS_RESTAURANT_LOGGED_IN, false)) {
             navigationView.inflateMenu(R.menu.activity_main_drawer_logged_in);
         } else {
             navigationView.inflateMenu(R.menu.activity_main_drawer_guest);
@@ -151,7 +151,7 @@ public class MainActivity extends BaseActivity {
 
     private void refreshNavigationMenu() {
         navigationView.getMenu().clear();
-        if (SessionManager.getBooleanSetting(MainActivity.this, SESSION_IS_USER_LOGGED_IN, false)) {
+        if (SessionManager.getBooleanSetting(MainActivity.this, SESSION_IS_RESTAURANT_LOGGED_IN, false)) {
             navigationView.inflateMenu(R.menu.activity_main_drawer_logged_in);
         } else {
             navigationView.inflateMenu(R.menu.activity_main_drawer_guest);
@@ -176,19 +176,15 @@ public class MainActivity extends BaseActivity {
         } else if (id == R.id.nav_google_pay) {
 
         } else if (id == R.id.nav_add_restaurants) {
-            if (!SessionManager.getBooleanSetting(MainActivity.this, SESSION_IS_USER_LOGGED_IN, false)) {
-                Intent intent = new Intent(MainActivity.this, RestaurantLoginActivity.class);
-                startActivityForResult(intent, INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN);
-            } else {
-                Intent intentRestaurant = new Intent(MainActivity.this, RestaurantListActivity.class);
-                startActivity(intentRestaurant);
-            }
+            Intent intent = new Intent(MainActivity.this, RestaurantLoginActivity.class);
+            startActivityForResult(intent, INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN);
         } else if (id == R.id.nav_faq) {
 
         } else if (id == R.id.nav_privacy_policy) {
 
         } else if (id == R.id.nav_about_restaurant) {
-
+            Intent intentRestaurant = new Intent(MainActivity.this, AboutRestaurantActivity.class);
+            startActivity(intentRestaurant);
         } else if (id == R.id.nav_menu) {
 
         } else if (id == R.id.nav_menu_gallery) {
@@ -200,8 +196,8 @@ public class MainActivity extends BaseActivity {
         } else if (id == R.id.nav_marketing_tools) {
 
         } else if (id == R.id.nav_logout) {
-            SessionManager.removeSetting(MainActivity.this, SESSION_IS_USER_LOGGED_IN);
-            SessionManager.removeSetting(MainActivity.this, SESSION_USER_DATA);
+            SessionManager.removeSetting(MainActivity.this, SESSION_IS_RESTAURANT_LOGGED_IN);
+            SessionManager.removeSetting(MainActivity.this, SESSION_RESTAURANT_LOGIN_DATA);
 
             refreshNavigationMenu();
         }
@@ -217,7 +213,7 @@ public class MainActivity extends BaseActivity {
 
                         refreshNavigationMenu();
 
-                        Intent intentRestaurant = new Intent(MainActivity.this, RestaurantListActivity.class);
+                        Intent intentRestaurant = new Intent(MainActivity.this, AboutRestaurantActivity.class);
                         startActivity(intentRestaurant);
                     }
                 }

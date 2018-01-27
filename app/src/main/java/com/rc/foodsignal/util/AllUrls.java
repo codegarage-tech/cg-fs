@@ -13,29 +13,29 @@ public class AllUrls {
     private static String TAG = AllUrls.class.getSimpleName();
     private static final String BASE_URL = "http://ntstx.com/food_api/index.php/";
 
-    public static String getLoginUrl() {
+    public static String getRestaurantLoginUrl() {
         String url = BASE_URL + "login/index";
-        Log.d(TAG, "getLoginUrl: " + url);
+        Log.d(TAG, "getRestaurantLoginUrl: " + url);
         return url;
     }
 
-    public static JSONObject getLoginParameters(String email, String password) {
+    public static JSONObject getRestaurantLoginParameters(String email, String password) {
         JSONObject params = HttpRequestManager.HttpParameter.getInstance()
                 .addJSONParam("email", email)
                 .addJSONParam("password", password)
                 .getJSONParam();
-        Log.d(TAG, "getLoginParameters: " + params.toString());
+        Log.d(TAG, "getRestaurantLoginParameters: " + params.toString());
         return params;
     }
 
-    public static String getSignUpUrl() {
+    public static String getRestaurantSignUpUrl() {
         String url = BASE_URL + "signup/index";
-        Log.d(TAG, "getSignUpUrl: " + url);
+        Log.d(TAG, "getRestaurantSignUpUrl: " + url);
         return url;
     }
 
-    public static JSONObject getSignUpParameters(String name, double lat, String address, String phone,
-                                                 double lng, String email, String password, String image) {
+    public static JSONObject getRestaurantSignUpParameters(String name, double lat, String address, String phone,
+                                                           double lng, String email, String password, String image) {
         JSONObject params = HttpRequestManager.HttpParameter.getInstance()
                 .addJSONParam("id", 0)
                 .addJSONParam("name", name)
@@ -48,18 +48,18 @@ public class AllUrls {
                 .addJSONParam("is_restaurant", 1)
                 .addJSONParam("image", image)
                 .getJSONParam();
-        Log.d(TAG, "getSignUpParameters: " + params.toString());
+        Log.d(TAG, "getRestaurantSignUpParameters: " + params.toString());
         return params;
     }
 
-    public static String getUpdateUserUrl() {
+    public static String getRestaurantUpdateUrl() {
         String url = BASE_URL + "signup/index";
-        Log.d(TAG, "getUpdateUserUrl: " + url);
+        Log.d(TAG, "getRestaurantUpdateUrl: " + url);
         return url;
     }
 
-    public static JSONObject getUpdateParameters(int id, String name, double lat, int address, String phone,
-                                                 double lng, String email, String password, String image) {
+    public static JSONObject getRestaurantUpdateParameters(String id, String name, double lat, String address, String phone,
+                                                           double lng, String email, String password, String image) {
         JSONObject params = HttpRequestManager.HttpParameter.getInstance()
                 .addJSONParam("id", id)
                 .addJSONParam("name", name)
@@ -72,7 +72,7 @@ public class AllUrls {
                 .addJSONParam("is_restaurant", 1)
                 .addJSONParam("image", image)
                 .getJSONParam();
-        Log.d(TAG, "getSignUpParameters: " + params.toString());
+        Log.d(TAG, "getRestaurantUpdateParameters: " + params.toString());
         return params;
     }
 

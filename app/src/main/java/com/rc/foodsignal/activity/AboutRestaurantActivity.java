@@ -25,30 +25,36 @@ import com.developers.imagezipper.ImageZipper;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.model.Location;
 import com.rc.foodsignal.model.ResponseRestaurantLoginData;
+import com.rc.foodsignal.model.RestaurantLoginData;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.HttpRequestManager;
 import com.reversecoder.library.network.NetworkManager;
+import com.reversecoder.library.storage.SessionManager;
+import com.reversecoder.library.util.AllSettingsManager;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_SEARCH_ADDRESS;
 import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_ADDRESS_SEARCH;
 import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_IMAGE_PICKER;
 import static com.rc.foodsignal.util.AllConstants.PREFIX_BASE64_STRING;
+import static com.rc.foodsignal.util.AllConstants.SESSION_IS_RESTAURANT_LOGGED_IN;
+import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_LOGIN_DATA;
 
 /**
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
  */
-public class RestaurantSignUpActivity extends AppCompatActivity {
+public class AboutRestaurantActivity extends AppCompatActivity {
 
-    DoRestaurentSignUp doRestaurentSignUpUser;
-    String TAG = AppUtils.getTagName(RestaurantSignUpActivity.class);
+    DoUpdateRestaurantInfo doUpdateRestaurantInfo;
+    String TAG = AppUtils.getTagName(AboutRestaurantActivity.class);
     //Toolbar
     Toolbar toolbar;
     TextView tvTitle;
@@ -62,10 +68,12 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
     String mBase64 = "";
     Location mLocation;
 
+    RestaurantLoginData restaurantLoginData;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_restaurant_signup);
+        setContentView(R.layout.activity_about_restaurant);
 
         initRegistrationUI();
         initRegistrationAction();
@@ -76,7 +84,7 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         ivBack = (ImageView) findViewById(R.id.iv_back);
         tvTitle = (TextView) findViewById(R.id.text_title);
-        tvTitle.setText(getString(R.string.title_activity_restaurant_signup));
+        tvTitle.setText(getString(R.string.title_activity_about_restaurant));
 
         ivUser = (ImageView) findViewById(R.id.iv_user);
         edtName = (EditText) findViewById(R.id.edt_name);
@@ -86,12 +94,29 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
         edtPassword = (EditText) findViewById(R.id.edt_password);
         llDone = (LinearLayout) findViewById(R.id.ll_done);
 
+        if (!AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(AboutRestaurantActivity.this, SESSION_RESTAURANT_LOGIN_DATA))) {
+            restaurantLoginData = RestaurantLoginData.getResponseObject(SessionManager.getStringSetting(AboutRestaurantActivity.this, SESSION_RESTAURANT_LOGIN_DATA), RestaurantLoginData.class);
+            Log.d("LoginUser: ", restaurantLoginData.toString());
+
+            if (restaurantLoginData != null) {
+                setRestaurantInfo(restaurantLoginData);
+            }
+        }
+    }
+
+    private void setRestaurantInfo(RestaurantLoginData restaurantLoginInfo) {
+
         Glide
-                .with(RestaurantSignUpActivity.this)
-                .load(R.drawable.ic_default_avatar)
+                .with(AboutRestaurantActivity.this)
+                .load((!AllSettingsManager.isNullOrEmpty(restaurantLoginInfo.getImage())) ? restaurantLoginInfo.getImage() : R.drawable.ic_default_avatar)
                 .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
                 .apply(new RequestOptions().circleCropTransform())
                 .into(ivUser);
+        edtName.setText((!AllSettingsManager.isNullOrEmpty(restaurantLoginInfo.getName())) ? restaurantLoginInfo.getName() : "");
+        edtEmail.setText((!AllSettingsManager.isNullOrEmpty(restaurantLoginInfo.getEmail())) ? restaurantLoginInfo.getEmail() : "");
+        tvAddress.setText((!AllSettingsManager.isNullOrEmpty(restaurantLoginInfo.getAddress())) ? restaurantLoginInfo.getAddress() : "");
+        edtPhone.setText((!AllSettingsManager.isNullOrEmpty(restaurantLoginInfo.getPhone())) ? restaurantLoginInfo.getPhone() : "");
+        edtPassword.setText((!AllSettingsManager.isNullOrEmpty(restaurantLoginInfo.getPassword())) ? restaurantLoginInfo.getPassword() : "");
     }
 
     private void initRegistrationAction() {
@@ -106,7 +131,7 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
         ivUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Matisse.from(RestaurantSignUpActivity.this)
+                Matisse.from(AboutRestaurantActivity.this)
                         .choose(MimeType.ofImage())
                         .theme(R.style.Matisse_Dracula)
                         .capture(true)
@@ -121,7 +146,7 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
         tvAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentAddress = new Intent(RestaurantSignUpActivity.this, SearchLocationActivity.class);
+                Intent intentAddress = new Intent(AboutRestaurantActivity.this, SearchLocationActivity.class);
                 startActivityForResult(intentAddress, INTENT_REQUEST_CODE_ADDRESS_SEARCH);
             }
         });
@@ -137,49 +162,62 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
                         mPassword = edtPassword.getText().toString();
 
                 if (mName.equalsIgnoreCase("")) {
-                    Toast.makeText(RestaurantSignUpActivity.this, getResources().getString(R.string.toast_empty_name_field), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AboutRestaurantActivity.this, getResources().getString(R.string.toast_empty_name_field), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (mEmail.equalsIgnoreCase("")) {
-                    Toast.makeText(RestaurantSignUpActivity.this, getResources().getString(R.string.toast_empty_email_field), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AboutRestaurantActivity.this, getResources().getString(R.string.toast_empty_email_field), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (mAddress.equalsIgnoreCase("")) {
-                    Toast.makeText(RestaurantSignUpActivity.this, getResources().getString(R.string.toast_empty_address_field), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AboutRestaurantActivity.this, getResources().getString(R.string.toast_empty_address_field), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (mPhone.equalsIgnoreCase("")) {
-                    Toast.makeText(RestaurantSignUpActivity.this, getResources().getString(R.string.toast_empty_phone_field), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AboutRestaurantActivity.this, getResources().getString(R.string.toast_empty_phone_field), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (mPassword.equalsIgnoreCase("")) {
-                    Toast.makeText(RestaurantSignUpActivity.this, getResources().getString(R.string.toast_empty_password_field), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AboutRestaurantActivity.this, getResources().getString(R.string.toast_empty_password_field), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (!NetworkManager.isConnected(RestaurantSignUpActivity.this)) {
-                    Toast.makeText(RestaurantSignUpActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
+                if (!NetworkManager.isConnected(AboutRestaurantActivity.this)) {
+                    Toast.makeText(AboutRestaurantActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (mBase64.equalsIgnoreCase("")) {
-                    Bitmap bmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_default_avatar);;
+                if (AllSettingsManager.isNullOrEmpty(restaurantLoginData.getImage())) {
+                    Bitmap bmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_default_avatar);
                     mBase64 = PREFIX_BASE64_STRING + ImageZipper.getBase64forImage(bmap);
-                    Log.d("Default(base64): ", mBase64);
+                    Log.d("Base64(default): ", mBase64);
+                } else {
+                    try {
+                        URL url = new URL(restaurantLoginData.getImage());
+                        Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                        mBase64 = PREFIX_BASE64_STRING + ImageZipper.getBase64forImage(image);
+                        Log.d("Base64(url): ", mBase64);
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
                 }
 
-                doRestaurentSignUpUser = new DoRestaurentSignUp(RestaurantSignUpActivity.this, mName, Double.parseDouble(mLocation.getLat()), mAddress, mPhone, Double.parseDouble(mLocation.getLng()), mEmail, mPassword, mBase64);
-                doRestaurentSignUpUser.execute();
+                if (mAddress.equalsIgnoreCase(restaurantLoginData.getAddress())) {
+                    doUpdateRestaurantInfo = new DoUpdateRestaurantInfo(AboutRestaurantActivity.this, mName, Double.parseDouble(restaurantLoginData.getLat()), mAddress, mPhone, Double.parseDouble(restaurantLoginData.getLng()), mEmail, mPassword, mBase64);
+                } else {
+                    doUpdateRestaurantInfo = new DoUpdateRestaurantInfo(AboutRestaurantActivity.this, mName, Double.parseDouble(mLocation.getLat()), mAddress, mPhone, Double.parseDouble(mLocation.getLng()), mEmail, mPassword, mBase64);
+                }
+                doUpdateRestaurantInfo.execute();
             }
         });
     }
 
-    public class DoRestaurentSignUp extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
+    public class DoUpdateRestaurantInfo extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
 
         private Context mContext;
         private double mLat, mLng;
         private String mName = "", mAddress = "", mPhone = "", mEmail = "", mPassword = "", mImage = "";
 
-        public DoRestaurentSignUp(Context context, String name, double lat, String address, String phone, double lng, String email, String password, String image) {
+        public DoUpdateRestaurantInfo(Context context, String name, double lat, String address, String phone, double lng, String email, String password, String image) {
             this.mContext = context;
             this.mName = name;
             this.mLat = lat;
@@ -212,7 +250,7 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
 
         @Override
         protected HttpRequestManager.HttpResponse doInBackground(String... params) {
-            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getRestaurantSignUpUrl(), AllUrls.getRestaurantSignUpParameters(mName, mLat, mAddress, mPhone, mLng, mEmail, mPassword, mImage), null);
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getRestaurantUpdateUrl(), AllUrls.getRestaurantUpdateParameters(restaurantLoginData.getId(), mName, mLat, mAddress, mPhone, mLng, mEmail, mPassword, mImage), null);
             return response;
         }
 
@@ -231,14 +269,19 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
                 if (responseData.getStatus().equalsIgnoreCase("1") && (responseData.getData().size() > 0)) {
                     Log.d(TAG, "success wrapper: " + responseData.getData().get(0).toString());
 
-                    Toast.makeText(RestaurantSignUpActivity.this, responseData.getMsg(), Toast.LENGTH_SHORT).show();
+                    //Update session data for login user
+                    SessionManager.setStringSetting(AboutRestaurantActivity.this, SESSION_RESTAURANT_LOGIN_DATA, responseData.getData().get(0).toString());
+                    SessionManager.setBooleanSetting(AboutRestaurantActivity.this, SESSION_IS_RESTAURANT_LOGGED_IN, true);
+
+                    Toast.makeText(AboutRestaurantActivity.this, responseData.getMsg(), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(RestaurantSignUpActivity.this, responseData.getMsg(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AboutRestaurantActivity.this, responseData.getMsg(), Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(RestaurantSignUpActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AboutRestaurantActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
             }
         }
+
     }
 
     @Override
@@ -251,14 +294,14 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
             if (mData.size() == 1) {
                 Log.d("MatisseImage: ", mData.get(0));
                 Glide
-                        .with(RestaurantSignUpActivity.this)
+                        .with(AboutRestaurantActivity.this)
                         .load(mData.get(0))
                         .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
                         .apply(new RequestOptions().circleCropTransform())
                         .into(ivUser);
 
                 try {
-                    File imageZipperFile = new ImageZipper(RestaurantSignUpActivity.this)
+                    File imageZipperFile = new ImageZipper(AboutRestaurantActivity.this)
                             .setQuality(100)
                             .setMaxWidth(200)
                             .setMaxHeight(200)
