@@ -2,6 +2,8 @@ package com.rc.foodsignal.util;
 
 import android.util.Log;
 
+import com.reversecoder.library.util.AllSettingsManager;
+
 import org.json.JSONObject;
 
 /**
@@ -60,18 +62,37 @@ public class AllUrls {
 
     public static JSONObject getRestaurantUpdateParameters(String id, String name, double lat, String address, String phone,
                                                            double lng, String email, String password, String image) {
-        JSONObject params = HttpRequestManager.HttpParameter.getInstance()
-                .addJSONParam("id", id)
-                .addJSONParam("name", name)
-                .addJSONParam("lat", lat)
-                .addJSONParam("address", address)
-                .addJSONParam("phone", phone)
-                .addJSONParam("lng", lng)
-                .addJSONParam("email", email)
-                .addJSONParam("password", password)
-                .addJSONParam("is_restaurant", 1)
-                .addJSONParam("image", image)
-                .getJSONParam();
+        HttpRequestManager.HttpParameter httpParameter = HttpRequestManager.HttpParameter.getInstance();
+
+        if (!AllSettingsManager.isNullOrEmpty(id)) {
+            httpParameter.addJSONParam("id", id);
+        }
+        if (!AllSettingsManager.isNullOrEmpty(name)) {
+            httpParameter.addJSONParam("name", name);
+        }
+        if (lat != -1) {
+            httpParameter.addJSONParam("lat", lat);
+        }
+        if (!AllSettingsManager.isNullOrEmpty(address)) {
+            httpParameter.addJSONParam("address", address);
+        }
+        if (!AllSettingsManager.isNullOrEmpty(phone)) {
+            httpParameter.addJSONParam("phone", phone);
+        }
+        if (lng != -1) {
+            httpParameter.addJSONParam("lng", lng);
+        }
+        if (!AllSettingsManager.isNullOrEmpty(email)) {
+            httpParameter.addJSONParam("email", email);
+        }
+        if (!AllSettingsManager.isNullOrEmpty(password)) {
+            httpParameter.addJSONParam("password", password);
+        }
+        if (!AllSettingsManager.isNullOrEmpty(image)) {
+            httpParameter.addJSONParam("image", image);
+        }
+
+        JSONObject params = httpParameter.getJSONParam();
         Log.d(TAG, "getRestaurantUpdateParameters: " + params.toString());
         return params;
     }

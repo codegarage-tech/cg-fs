@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -37,7 +36,6 @@ import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
 
 import java.io.File;
-import java.net.URL;
 import java.util.List;
 
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_SEARCH_ADDRESS;
@@ -186,25 +184,10 @@ public class AboutRestaurantActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (AllSettingsManager.isNullOrEmpty(restaurantLoginData.getImage())) {
-                    Bitmap bmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_default_avatar);
-                    mBase64 = PREFIX_BASE64_STRING + ImageZipper.getBase64forImage(bmap);
-                    Log.d("Base64(default): ", mBase64);
-                } else {
-                    try {
-                        URL url = new URL(restaurantLoginData.getImage());
-                        Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                        mBase64 = PREFIX_BASE64_STRING + ImageZipper.getBase64forImage(image);
-                        Log.d("Base64(url): ", mBase64);
-                    } catch (Exception e) {
-                        System.out.println(e);
-                    }
-                }
-
                 if (mAddress.equalsIgnoreCase(restaurantLoginData.getAddress())) {
                     doUpdateRestaurantInfo = new DoUpdateRestaurantInfo(AboutRestaurantActivity.this, mName, Double.parseDouble(restaurantLoginData.getLat()), mAddress, mPhone, Double.parseDouble(restaurantLoginData.getLng()), mEmail, mPassword, mBase64);
                 } else {
-                    doUpdateRestaurantInfo = new DoUpdateRestaurantInfo(AboutRestaurantActivity.this, mName, Double.parseDouble(mLocation.getLat()), mAddress, mPhone, Double.parseDouble(mLocation.getLng()), mEmail, mPassword, mBase64);
+                    doUpdateRestaurantInfo = new DoUpdateRestaurantInfo(AboutRestaurantActivity.this, mName, ((mLocation != null) ? Double.parseDouble(mLocation.getLat()) : -1), mAddress, mPhone, ((mLocation != null) ? Double.parseDouble(mLocation.getLng()) : -1), mEmail, mPassword, mBase64);
                 }
                 doUpdateRestaurantInfo.execute();
             }
@@ -214,7 +197,7 @@ public class AboutRestaurantActivity extends AppCompatActivity {
     public class DoUpdateRestaurantInfo extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
 
         private Context mContext;
-        private double mLat, mLng;
+        private double mLat = -1, mLng = -1;
         private String mName = "", mAddress = "", mPhone = "", mEmail = "", mPassword = "", mImage = "";
 
         public DoUpdateRestaurantInfo(Context context, String name, double lat, String address, String phone, double lng, String email, String password, String image) {

@@ -47,7 +47,7 @@ import static com.rc.foodsignal.util.AllConstants.PREFIX_BASE64_STRING;
  */
 public class RestaurantSignUpActivity extends AppCompatActivity {
 
-    DoRestaurentSignUp doRestaurentSignUpUser;
+    DoRestaurantSignUp doRestaurantSignUpUser;
     String TAG = AppUtils.getTagName(RestaurantSignUpActivity.class);
     //Toolbar
     Toolbar toolbar;
@@ -167,19 +167,19 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
                     Log.d("Default(base64): ", mBase64);
                 }
 
-                doRestaurentSignUpUser = new DoRestaurentSignUp(RestaurantSignUpActivity.this, mName, Double.parseDouble(mLocation.getLat()), mAddress, mPhone, Double.parseDouble(mLocation.getLng()), mEmail, mPassword, mBase64);
-                doRestaurentSignUpUser.execute();
+                doRestaurantSignUpUser = new DoRestaurantSignUp(RestaurantSignUpActivity.this, mName, Double.parseDouble(mLocation.getLat()), mAddress, mPhone, Double.parseDouble(mLocation.getLng()), mEmail, mPassword, mBase64);
+                doRestaurantSignUpUser.execute();
             }
         });
     }
 
-    public class DoRestaurentSignUp extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
+    public class DoRestaurantSignUp extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
 
         private Context mContext;
         private double mLat, mLng;
         private String mName = "", mAddress = "", mPhone = "", mEmail = "", mPassword = "", mImage = "";
 
-        public DoRestaurentSignUp(Context context, String name, double lat, String address, String phone, double lng, String email, String password, String image) {
+        public DoRestaurantSignUp(Context context, String name, double lat, String address, String phone, double lng, String email, String password, String image) {
             this.mContext = context;
             this.mName = name;
             this.mLat = lat;
