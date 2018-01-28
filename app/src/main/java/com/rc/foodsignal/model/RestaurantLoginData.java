@@ -1,7 +1,5 @@
 package com.rc.foodsignal.model;
 
-import java.util.ArrayList;
-
 /**
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
@@ -21,9 +19,8 @@ public class RestaurantLoginData extends ResponseBase {
     private String sms_notification = "";
     private String push_notification = "";
     private int is_address_added = 0;
-    private ArrayList<Location> selected_address = new ArrayList<>();
 
-    public RestaurantLoginData(String id, String name, String image, String lat, String lng, String email, String phone, String address, String password, String is_restaurant, String sms_notification, String push_notification, int is_address_added, ArrayList<Location> selected_address) {
+    public RestaurantLoginData(String id, String name, String image, String lat, String lng, String email, String phone, String address, String password, String is_restaurant, String sms_notification, String push_notification, int is_address_added) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -37,7 +34,6 @@ public class RestaurantLoginData extends ResponseBase {
         this.sms_notification = sms_notification;
         this.push_notification = push_notification;
         this.is_address_added = is_address_added;
-        this.selected_address = selected_address;
     }
 
     public String getId() {
@@ -144,14 +140,6 @@ public class RestaurantLoginData extends ResponseBase {
         this.is_address_added = is_address_added;
     }
 
-    public ArrayList<Location> getSelected_address() {
-        return selected_address;
-    }
-
-    public void setSelected_address(ArrayList<Location> selected_address) {
-        this.selected_address = selected_address;
-    }
-
     @Override
     public String toString() {
         return "{" +
@@ -168,7 +156,6 @@ public class RestaurantLoginData extends ResponseBase {
                 ", sms_notification='" + sms_notification + '\'' +
                 ", push_notification='" + push_notification + '\'' +
                 ", is_address_added=" + is_address_added +
-                ", selected_address=" + selected_address +
                 '}';
     }
 }

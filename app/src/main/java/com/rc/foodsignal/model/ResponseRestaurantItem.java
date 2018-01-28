@@ -6,15 +6,15 @@ import java.util.ArrayList;
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
  */
-public class ResponseFoodItem extends ResponseBase {
+public class ResponseRestaurantItem extends ResponseBase {
 
     private String status = "";
     private ArrayList<Restaurant> data = new ArrayList<Restaurant>();
 
-    public ResponseFoodItem() {
+    public ResponseRestaurantItem() {
     }
 
-    public ResponseFoodItem(String status, ArrayList<Restaurant> data) {
+    public ResponseRestaurantItem(String status, ArrayList<Restaurant> data) {
         this.status = status;
         this.data = data;
     }

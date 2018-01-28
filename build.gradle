@@ -33,7 +33,8 @@ allprojects {
     ext.supportlibraryVersion = '27.0.2'
     ext.archVersion = '1.0.0-alpha8'
     ext.constraintLayoutVersion = '1.0.2'
-    ext.glideVersion = '4.0.0'
+    ext.glideVersion = '4.5.0'
+    ext.picassoVersion = '2.5.2'
 }
 
 task clean(type: Delete) {

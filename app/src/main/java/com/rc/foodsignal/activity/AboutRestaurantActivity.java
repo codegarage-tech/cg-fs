@@ -106,8 +106,9 @@ public class AboutRestaurantActivity extends AppCompatActivity {
 
         Glide
                 .with(AboutRestaurantActivity.this)
+                .asBitmap()
                 .load((!AllSettingsManager.isNullOrEmpty(restaurantLoginInfo.getImage())) ? restaurantLoginInfo.getImage() : R.drawable.ic_default_avatar)
-                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
+//                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
                 .apply(new RequestOptions().circleCropTransform())
                 .into(ivUser);
         edtName.setText((!AllSettingsManager.isNullOrEmpty(restaurantLoginInfo.getName())) ? restaurantLoginInfo.getName() : "");
@@ -279,7 +280,7 @@ public class AboutRestaurantActivity extends AppCompatActivity {
                 Glide
                         .with(AboutRestaurantActivity.this)
                         .load(mData.get(0))
-                        .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
+//                        .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
                         .apply(new RequestOptions().circleCropTransform())
                         .into(ivUser);
 

@@ -89,7 +89,7 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
         Glide
                 .with(RestaurantSignUpActivity.this)
                 .load(R.drawable.ic_default_avatar)
-                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
+//                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
                 .apply(new RequestOptions().circleCropTransform())
                 .into(ivUser);
     }
@@ -253,7 +253,7 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
                 Glide
                         .with(RestaurantSignUpActivity.this)
                         .load(mData.get(0))
-                        .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
+//                        .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
                         .apply(new RequestOptions().circleCropTransform())
                         .into(ivUser);
 

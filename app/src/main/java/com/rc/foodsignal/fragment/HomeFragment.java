@@ -17,7 +17,7 @@ import com.rc.foodsignal.activity.MainActivity;
 import com.rc.foodsignal.adapter.RestaurantAdapter;
 import com.rc.foodsignal.interfaces.OnFragmentBackPressedListener;
 import com.rc.foodsignal.model.Location;
-import com.rc.foodsignal.model.ResponseFoodItem;
+import com.rc.foodsignal.model.ResponseRestaurantItem;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.HttpRequestManager;
@@ -34,7 +34,7 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
 
     String TAG = AppUtils.getTagName(HomeFragment.class);
     private View parentView;
-    DoSearchFood doSearchFood;
+    DoSearchRestaurant doSearchRestaurant;
     Location mLocation;
     RecyclerView recyclerViewFood;
     RestaurantAdapter restaurantAdapter;
@@ -65,8 +65,8 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
         if (!NetworkManager.isConnected(getActivity())) {
             Toast.makeText(getActivity(), getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
         } else {
-            doSearchFood = new DoSearchFood(getActivity(), Double.parseDouble(mLocation.getLat()), Double.parseDouble(mLocation.getLng()));
-            doSearchFood.execute();
+            doSearchRestaurant = new DoSearchRestaurant(getActivity(), Double.parseDouble(mLocation.getLat()), Double.parseDouble(mLocation.getLng()));
+            doSearchRestaurant.execute();
         }
     }
 
@@ -75,13 +75,13 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
         getActivity().finish();
     }
 
-    private class DoSearchFood extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
+    private class DoSearchRestaurant extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
 
         private Context mContext;
         private double mLat = 0.00;
         private double mLng = 0.00;
 
-        public DoSearchFood(Context context, double lat, double lng) {
+        public DoSearchRestaurant(Context context, double lat, double lng) {
             this.mContext = context;
             this.mLat = lat;
             this.mLng = lng;
@@ -102,7 +102,7 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
 
             if (result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
                 Log.d(TAG, "success response from web: " + result.getResult().toString());
-                ResponseFoodItem responseData = ResponseFoodItem.getResponseObject(result.getResult().toString(), ResponseFoodItem.class);
+                ResponseRestaurantItem responseData = ResponseRestaurantItem.getResponseObject(result.getResult().toString(), ResponseRestaurantItem.class);
 
                 if (responseData.getStatus().equalsIgnoreCase("1") && (responseData.getData().size() > 0)) {
                     Log.d(TAG, "success wrapper: " + responseData.toString());

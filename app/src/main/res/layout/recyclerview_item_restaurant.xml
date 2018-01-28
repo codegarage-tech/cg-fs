@@ -60,6 +60,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_price_label"
             android:layout_width="85dp"
             android:layout_height="40dp"
             android:layout_gravity="right"
