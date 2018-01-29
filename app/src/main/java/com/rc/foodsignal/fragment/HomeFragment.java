@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.ArraySet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.rc.foodsignal.model.FoodCategory;
 import com.rc.foodsignal.model.Location;
 import com.rc.foodsignal.model.ResponseFoodCategory;
 import com.rc.foodsignal.model.ResponseRestaurantItem;
+import com.rc.foodsignal.model.Restaurant;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.HttpRequestManager;
@@ -46,7 +48,7 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
     String TAG = AppUtils.getTagName(HomeFragment.class);
     private View parentView;
     GetAllFoodCategory getAllFoodCategory;
-    DoSearchRestaurant doSearchRestaurant;
+    GetRestaurants getRestaurants;
     Location mLocation;
     RecyclerView recyclerViewFood;
     RestaurantAdapter restaurantAdapter;
@@ -90,8 +92,8 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
             getAllFoodCategory = new GetAllFoodCategory(getActivity());
             getAllFoodCategory.execute();
 
-            doSearchRestaurant = new DoSearchRestaurant(getActivity(), Double.parseDouble(mLocation.getLat()), Double.parseDouble(mLocation.getLng()));
-            doSearchRestaurant.execute();
+            getRestaurants = new GetRestaurants(getActivity(), Double.parseDouble(mLocation.getLat()), Double.parseDouble(mLocation.getLng()));
+            getRestaurants.execute();
         }
     }
 
@@ -120,13 +122,13 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
         getActivity().finish();
     }
 
-    private class DoSearchRestaurant extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
+    private class GetRestaurants extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
 
         private Context mContext;
         private double mLat = 0.00;
         private double mLng = 0.00;
 
-        public DoSearchRestaurant(Context context, double lat, double lng) {
+        public GetRestaurants(Context context, double lat, double lng) {
             this.mContext = context;
             this.mLat = lat;
             this.mLng = lng;
@@ -156,6 +158,54 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
                     restaurantAdapter.notifyDataSetChanged();
 
                 } else {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
+                }
+
+            } else {
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private class DoSearchRestaurants extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
+
+        private Context mContext;
+        private Location mLocation;
+        private String mCategoryId;
+
+        public DoSearchRestaurants(Context context, Location location, String categoryId) {
+            this.mContext = context;
+            this.mLocation = location;
+            this.mCategoryId = categoryId;
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected HttpRequestManager.HttpResponse doInBackground(String... params) {
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getSearchRestaurantUrl(), AllUrls.getSearchRestaurantParameters(Double.parseDouble(mLocation.getLat()), Double.parseDouble(mLocation.getLng()), mCategoryId), null);
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(HttpRequestManager.HttpResponse result) {
+
+            if (result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
+                Log.d(TAG, "success response from web: " + result.getResult().toString());
+                ResponseRestaurantItem responseData = ResponseRestaurantItem.getResponseObject(result.getResult().toString(), ResponseRestaurantItem.class);
+
+                if (responseData.getStatus().equalsIgnoreCase("1") && (responseData.getData().size() > 0)) {
+                    Log.d(TAG, "success wrapper: " + responseData.toString());
+
+                    restaurantAdapter.addAll(responseData.getData());
+                    restaurantAdapter.notifyDataSetChanged();
+
+                } else {
+//                    restaurantAdapter.addAll(new ArraySet<Restaurant>());
+//                    restaurantAdapter.notifyDataSetChanged();
+
                     Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
                 }
 
@@ -205,6 +255,15 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
         }
     }
 
+    private void searchRestaurant(Location location, String categoryId) {
+        if (!NetworkManager.isConnected(getActivity())) {
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        new DoSearchRestaurants(getActivity(), location, categoryId).execute();
+    }
+
     /***************************
      * Fabulous Filter methods *
      ***************************/
@@ -231,17 +290,10 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
                         selectedCategory = "";
                     }
 
-//                    if (appliedFilters.get("state") != null) {
-//                        if (appliedFilters.get("state").size() == 1) {
-//                            selectedState = appliedFilters.get("state").get(0);
-//                        }
-//                    }
-
-//                    searchMusic(getSelectedMusicCategory(selectedMusicCategory).getId(), getSelectedCity(selectedState).getId());
+                    searchRestaurant(mLocation, getSelectedFoodCategory(selectedCategory).getId());
                 }
             }
         }
-        //handle result
     }
 
     @Override
@@ -268,5 +320,14 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
 
     public List<String> getCategoryKey() {
         return mCategoryKey;
+    }
+
+    public FoodCategory getSelectedFoodCategory(String category) {
+        for (FoodCategory foodCategory : mCategory) {
+            if (foodCategory.getName().equalsIgnoreCase(category)) {
+                return foodCategory;
+            }
+        }
+        return new FoodCategory("", "", "");
     }
 }

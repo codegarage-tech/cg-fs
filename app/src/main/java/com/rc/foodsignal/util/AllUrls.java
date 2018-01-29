@@ -103,71 +103,71 @@ public class AllUrls {
         return url;
     }
 
-    public static String getAddFoodItemUrl() {
-        String url = BASE_URL + "restaurants/addFoodItem";
-        Log.d(TAG, "getAddFoodItemUrl: " + url);
-        return url;
-    }
+//    public static String getAddFoodItemUrl() {
+//        String url = BASE_URL + "restaurants/addFoodItem";
+//        Log.d(TAG, "getAddFoodItemUrl: " + url);
+//        return url;
+//    }
+//
+//    public static JSONObject getAddFoodItemParameters(String name, String menuId, String price, String restaurantId, String image) {
+//        JSONObject params = HttpRequestManager.HttpParameter.getInstance()
+//                .addJSONParam("name", name)
+//                .addJSONParam("menu_id", menuId)
+//                .addJSONParam("price", price)
+//                .addJSONParam("restaurant_id", restaurantId)
+//                .addJSONParam("image", image)
+//                .addJSONParam("id", 0)
+//                .getJSONParam();
+//        Log.d(TAG, "getAddFoodItemParameters: " + params.toString());
+//        return params;
+//    }
+//
+//    public static String getUpdateFoodItemUrl() {
+//        String url = BASE_URL + "restaurants/addFoodItem";
+//        Log.d(TAG, "getAddFoodItemUrl: " + url);
+//        return url;
+//    }
+//
+//    public static JSONObject getUpdateFoodItemParameters(String name, String menuId, String price, String restaurantId, String image, int id) {
+//        JSONObject params = HttpRequestManager.HttpParameter.getInstance()
+//                .addJSONParam("name", name)
+//                .addJSONParam("menu_id", menuId)
+//                .addJSONParam("price", price)
+//                .addJSONParam("restaurant_id", restaurantId)
+//                .addJSONParam("image", image)
+//                .addJSONParam("id", id)
+//                .getJSONParam();
+//        Log.d(TAG, "getAddFoodItemParameters: " + params.toString());
+//        return params;
+//    }
+//
+//    public static String getRegisterDeviceUrl() {
+//        String url = BASE_URL + "signup/register_device";
+//        Log.d(TAG, "getRegisterDeviceUrl: " + url);
+//        return url;
+//    }
+//
+//    public static JSONObject getRegisterDeviceParameters(String deviceId) {
+//        JSONObject params = HttpRequestManager.HttpParameter.getInstance()
+//                .addJSONParam("deviceId", deviceId)
+//                .getJSONParam();
+//        Log.d(TAG, "getRegisterDeviceParameters: " + params.toString());
+//        return params;
+//    }
 
-    public static JSONObject getAddFoodItemParameters(String name, String menuId, String price, String restaurantId, String image) {
-        JSONObject params = HttpRequestManager.HttpParameter.getInstance()
-                .addJSONParam("name", name)
-                .addJSONParam("menu_id", menuId)
-                .addJSONParam("price", price)
-                .addJSONParam("restaurant_id", restaurantId)
-                .addJSONParam("image", image)
-                .addJSONParam("id", 0)
-                .getJSONParam();
-        Log.d(TAG, "getAddFoodItemParameters: " + params.toString());
-        return params;
-    }
-
-    public static String getUpdateFoodItemUrl() {
-        String url = BASE_URL + "restaurants/addFoodItem";
-        Log.d(TAG, "getAddFoodItemUrl: " + url);
-        return url;
-    }
-
-    public static JSONObject getUpdateFoodItemParameters(String name, String menuId, String price, String restaurantId, String image, int id) {
-        JSONObject params = HttpRequestManager.HttpParameter.getInstance()
-                .addJSONParam("name", name)
-                .addJSONParam("menu_id", menuId)
-                .addJSONParam("price", price)
-                .addJSONParam("restaurant_id", restaurantId)
-                .addJSONParam("image", image)
-                .addJSONParam("id", id)
-                .getJSONParam();
-        Log.d(TAG, "getAddFoodItemParameters: " + params.toString());
-        return params;
-    }
-
-    public static String getRegisterDeviceUrl() {
-        String url = BASE_URL + "signup/register_device";
-        Log.d(TAG, "getRegisterDeviceUrl: " + url);
-        return url;
-    }
-
-    public static JSONObject getRegisterDeviceParameters(String deviceId) {
-        JSONObject params = HttpRequestManager.HttpParameter.getInstance()
-                .addJSONParam("deviceId", deviceId)
-                .getJSONParam();
-        Log.d(TAG, "getRegisterDeviceParameters: " + params.toString());
-        return params;
-    }
-
-    public static String getSearchFoodUrl() {
+    public static String getSearchRestaurantUrl() {
         String url = BASE_URL + "restaurants/search";
-        Log.d(TAG, "getSearchRestaurantsUrl: " + url);
+        Log.d(TAG, "getSearchRestaurantUrl: " + url);
         return url;
     }
 
-    public static JSONObject getSearchFoodParameters(double lat, double lng, String categoryId) {
+    public static JSONObject getSearchRestaurantParameters(double lat, double lng, String categoryId) {
         JSONObject params = HttpRequestManager.HttpParameter.getInstance()
                 .addJSONParam("lat", lat)
                 .addJSONParam("lng", lng)
                 .addJSONParam("category_id", categoryId)
                 .getJSONParam();
-        Log.d(TAG, "getSearchRestaurantsParameters: " + params.toString());
+        Log.d(TAG, "getSearchRestaurantParameters: " + params.toString());
         return params;
     }
 

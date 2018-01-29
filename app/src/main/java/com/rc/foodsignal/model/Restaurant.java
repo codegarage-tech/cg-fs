@@ -22,23 +22,24 @@ public class Restaurant {
     private String push_notification = "";
     private String distance = "";
     private ArrayList<FoodItem> item_details = new ArrayList<FoodItem>();
+    private ArrayList<FoodItem> menu_details = new ArrayList<FoodItem>();
 
-    public Restaurant(String id, String name, String image, String lat, String lng, String email, String phone, String address, String password, String is_restaurant, String sms_notification, String push_notification, String distance, ArrayList<FoodItem> item_details) {
-        this.id = id;
-        this.name = name;
-        this.image = image;
-        this.lat = lat;
-        this.lng = lng;
-        this.email = email;
-        this.phone = phone;
-        this.address = address;
-        this.password = password;
-        this.is_restaurant = is_restaurant;
-        this.sms_notification = sms_notification;
-        this.push_notification = push_notification;
-        this.distance = distance;
-        this.item_details = item_details;
-    }
+//    public Restaurant(String id, String name, String image, String lat, String lng, String email, String phone, String address, String password, String is_restaurant, String sms_notification, String push_notification, String distance, ArrayList<FoodItem> item_details) {
+//        this.id = id;
+//        this.name = name;
+//        this.image = image;
+//        this.lat = lat;
+//        this.lng = lng;
+//        this.email = email;
+//        this.phone = phone;
+//        this.address = address;
+//        this.password = password;
+//        this.is_restaurant = is_restaurant;
+//        this.sms_notification = sms_notification;
+//        this.push_notification = push_notification;
+//        this.distance = distance;
+//        this.item_details = item_details;
+//    }
 
     public String getId() {
         return id;
@@ -152,6 +153,14 @@ public class Restaurant {
         this.item_details = item_details;
     }
 
+    public ArrayList<FoodItem> getMenu_details() {
+        return menu_details;
+    }
+
+    public void setMenu_details(ArrayList<FoodItem> menu_details) {
+        this.menu_details = menu_details;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -169,6 +178,7 @@ public class Restaurant {
                 ", push_notification='" + push_notification + '\'' +
                 ", distance='" + distance + '\'' +
                 ", item_details=" + item_details +
+                ", menu_details=" + menu_details +
                 '}';
     }
 }
