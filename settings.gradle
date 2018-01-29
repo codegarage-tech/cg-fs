@@ -1,1 +1,1 @@
-include ':app', ':ribblemenu', ':placesautocomplete', ':easyrecyclerview', ':matisse', ':imagezipper'
+include ':app', ':ribblemenu', ':placesautocomplete', ':easyrecyclerview', ':matisse', ':imagezipper', ':fabulousfilter'
