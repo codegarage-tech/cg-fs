@@ -23,8 +23,8 @@ import com.rc.foodsignal.adapter.RestaurantAdapter;
 import com.rc.foodsignal.interfaces.OnFragmentBackPressedListener;
 import com.rc.foodsignal.model.FoodCategory;
 import com.rc.foodsignal.model.Location;
+import com.rc.foodsignal.model.ResponseFoodCategory;
 import com.rc.foodsignal.model.ResponseRestaurantItem;
-import com.rc.foodsignal.model.Restaurant;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.HttpRequestManager;
@@ -32,6 +32,7 @@ import com.reversecoder.library.network.NetworkManager;
 import com.reversecoder.library.storage.SessionManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_LOCATION;
@@ -44,6 +45,7 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
 
     String TAG = AppUtils.getTagName(HomeFragment.class);
     private View parentView;
+    GetAllFoodCategory getAllFoodCategory;
     DoSearchRestaurant doSearchRestaurant;
     Location mLocation;
     RecyclerView recyclerViewFood;
@@ -53,9 +55,9 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
     private ArrayMap<String, List<String>> appliedFilters = new ArrayMap<>();
     FilterFragment dialogFrag;
     FloatingActionButton fabFilter;
-    List<Restaurant> mList = new ArrayList<>();
-    List<String> mCategoryKey = new ArrayList<>();
     ArrayList<FoodCategory> mCategory = new ArrayList<>();
+    List<String> mCategoryKey = new ArrayList<>();
+    String selectedCategory = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -85,9 +87,17 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
         if (!NetworkManager.isConnected(getActivity())) {
             Toast.makeText(getActivity(), getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
         } else {
+            getAllFoodCategory = new GetAllFoodCategory(getActivity());
+            getAllFoodCategory.execute();
+
             doSearchRestaurant = new DoSearchRestaurant(getActivity(), Double.parseDouble(mLocation.getLat()), Double.parseDouble(mLocation.getLng()));
             doSearchRestaurant.execute();
         }
+    }
+
+    private void initFabulousFilter(ArrayList<FoodCategory> foodCategories) {
+        mCategory = foodCategories;
+        mCategoryKey = getUniqueCategoryKeys(foodCategories);
     }
 
     private void initHomeFragmentActions() {
@@ -155,6 +165,46 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
         }
     }
 
+    private class GetAllFoodCategory extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
+
+        private Context mContext;
+
+        public GetAllFoodCategory(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected HttpRequestManager.HttpResponse doInBackground(String... params) {
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doGetRequest(AllUrls.getAllFoodCategoryUrl());
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(HttpRequestManager.HttpResponse result) {
+
+            if (result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
+                Log.d(TAG, "success response from web: " + result.getResult().toString());
+
+                ResponseFoodCategory responseFoodCategory = ResponseFoodCategory.getResponseObject(result.getResult().toString(), ResponseFoodCategory.class);
+
+                if (responseFoodCategory.getStatus().equalsIgnoreCase("1") && (responseFoodCategory.getData().size() > 0)) {
+                    Log.d(TAG, "success response from web: " + responseFoodCategory.toString());
+
+                    initFabulousFilter(responseFoodCategory.getData());
+
+                } else {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     /***************************
      * Fabulous Filter methods *
      ***************************/
@@ -167,27 +217,28 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
                 //do something or nothing
             } else {
 
-//                appliedFilters = (ArrayMap<String, List<String>>) result;
-//                ArrayMap<String, List<String>> appliedFilters = (ArrayMap<String, List<String>>) result;
-//                if (appliedFilters.size() != 0) {
-//
-//                    if (appliedFilters.get("category") != null) {
-//                        if (appliedFilters.get("category").size() == 1) {
-//                            selectedMusicCategory = appliedFilters.get("category").get(0);
-//                        } else {
-//                            selectedMusicCategory = "";
-//                        }
-//                    } else {
-//                        selectedMusicCategory = "";
-//                    }
-//
+                appliedFilters = (ArrayMap<String, List<String>>) result;
+                ArrayMap<String, List<String>> appliedFilters = (ArrayMap<String, List<String>>) result;
+                if (appliedFilters.size() != 0) {
+
+                    if (appliedFilters.get("category") != null) {
+                        if (appliedFilters.get("category").size() == 1) {
+                            selectedCategory = appliedFilters.get("category").get(0);
+                        } else {
+                            selectedCategory = "";
+                        }
+                    } else {
+                        selectedCategory = "";
+                    }
+
 //                    if (appliedFilters.get("state") != null) {
 //                        if (appliedFilters.get("state").size() == 1) {
 //                            selectedState = appliedFilters.get("state").get(0);
 //                        }
 //                    }
-//
+
 //                    searchMusic(getSelectedMusicCategory(selectedMusicCategory).getId(), getSelectedCity(selectedState).getId());
+                }
             }
         }
         //handle result
@@ -202,67 +253,20 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
         }
     }
 
-//    @Override
-//    public void onOpenAnimationStart() {
-//        Log.d("aah_animation", "onOpenAnimationStart: ");
-//    }
-//
-//    @Override
-//    public void onOpenAnimationEnd() {
-//        Log.d("aah_animation", "onOpenAnimationEnd: ");
-//    }
-//
-//    @Override
-//    public void onCloseAnimationStart() {
-//        Log.d("aah_animation", "onCloseAnimationStart: ");
-//    }
-//
-//    @Override
-//    public void onCloseAnimationEnd() {
-//        Log.d("aah_animation", "onCloseAnimationEnd: ");
-//    }
+    public List<String> getUniqueCategoryKeys(ArrayList<FoodCategory> foodCategories) {
+        List<String> categories = new ArrayList<>();
+        for (FoodCategory foodCategory : foodCategories) {
+            categories.add(foodCategory.getName());
+        }
+        Collections.sort(categories);
+        return categories;
+    }
 
-//    public List<String> getUniqueCategoryKeys(ArrayList<MusicCategory> musicCategories) {
-//        List<String> categories = new ArrayList<>();
-//        for (MusicCategory musicCategory : musicCategories) {
-//            categories.add(musicCategory.getName());
-//        }
-//        Collections.sort(categories);
-//        return categories;
-//    }
-//
-//    public List<String> getUniqueStateKeys(ArrayList<City> states) {
-//        List<String> cities = new ArrayList<>();
-//        for (City city : states) {
-//            cities.add(city.getName());
-//        }
-//        Collections.sort(cities);
-//        return cities;
-//    }
-//
-//    public List<String> getCategoryKey() {
-//        return mCategoryKey;
-//    }
-//
-//    public List<String> getStateKey() {
-//        return mStateKey;
-//    }
-//
-//    public MusicCategory getSelectedMusicCategory(String category) {
-//        for (MusicCategory musicCategory : mCategory) {
-//            if (musicCategory.getName().equalsIgnoreCase(category)) {
-//                return musicCategory;
-//            }
-//        }
-//        return new MusicCategory("", "");
-//    }
-//
-//    public City getSelectedCity(String city) {
-//        for (City mCity : mState) {
-//            if (mCity.getName().equalsIgnoreCase(city)) {
-//                return mCity;
-//            }
-//        }
-//        return new City("", "");
-//    }
+    public ArrayList<FoodCategory> getCategory() {
+        return mCategory;
+    }
+
+    public List<String> getCategoryKey() {
+        return mCategoryKey;
+    }
 }

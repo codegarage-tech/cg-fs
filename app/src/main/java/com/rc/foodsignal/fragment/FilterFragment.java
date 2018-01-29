@@ -19,6 +19,8 @@ import android.widget.TextView;
 import com.allattentionhere.fabulousfilter.AAH_FabulousFragment;
 import com.google.android.flexbox.FlexboxLayout;
 import com.rc.foodsignal.R;
+import com.rc.foodsignal.activity.HomeActivity;
+import com.rc.foodsignal.util.FragmentUtilsManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -182,7 +184,7 @@ public class FilterFragment extends AAH_FabulousFragment {
 //                keys = ((RibbleActivity) getActivity()).getStateKey();
 //                break;
             case "category":
-//                keys = ((RibbleActivity) getActivity()).getCategoryKey();
+                keys = ((HomeFragment) FragmentUtilsManager.getVisibleSupportFragment((HomeActivity) getActivity(), getString(R.string.title_fragment_home))).getCategoryKey();
                 break;
         }
 
@@ -236,7 +238,7 @@ public class FilterFragment extends AAH_FabulousFragment {
 //                    keys = ((RibbleActivity) getActivity()).getStateKey();
 //                    break;
                 case "category":
-//                    keys = ((RibbleActivity) getActivity()).getCategoryKey();
+                    keys = ((HomeFragment) FragmentUtilsManager.getVisibleSupportFragment((HomeActivity) getActivity(), getString(R.string.title_fragment_home))).getCategoryKey();
                     break;
             }
 
@@ -341,7 +343,7 @@ public class FilterFragment extends AAH_FabulousFragment {
 //                keys = ((RibbleActivity) getActivity()).getStateKey();
 //                break;
             case "category":
-//                keys = ((RibbleActivity) getActivity()).getCategoryKey();
+                keys = ((HomeFragment) FragmentUtilsManager.getVisibleSupportFragment((HomeActivity) getActivity(), getString(R.string.title_fragment_home))).getCategoryKey();
                 break;
         }
 
@@ -374,7 +376,7 @@ public class FilterFragment extends AAH_FabulousFragment {
 //                keys = ((RibbleActivity) getActivity()).getStateKey();
 //                break;
             case "category":
-//                keys = ((RibbleActivity) getActivity()).getCategoryKey();
+                keys = ((HomeFragment) FragmentUtilsManager.getVisibleSupportFragment((HomeActivity) getActivity(), getString(R.string.title_fragment_home))).getCategoryKey();
                 break;
         }
 

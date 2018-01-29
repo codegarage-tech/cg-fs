@@ -97,9 +97,9 @@ public class AllUrls {
         return params;
     }
 
-    public static String getAllFoodMenuUrl() {
+    public static String getAllFoodCategoryUrl() {
         String url = BASE_URL + "food_menu/all";
-        Log.d(TAG, "getAllFoodMenuUrl: " + url);
+        Log.d(TAG, "getAllFoodCategoryUrl: " + url);
         return url;
     }
 
