@@ -1,33 +1,30 @@
 package com.rc.foodsignal.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.CardView;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.Toast;
+import android.util.Log;
+import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.allattentionhere.fabulousfilter.AAH_FabulousFragment;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.fragment.HomeFragment;
 import com.rc.foodsignal.util.AllConstants;
-import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.FragmentUtilsManager;
+import com.rc.foodsignal.view.CanaroTextView;
 import com.reversecoder.library.storage.SessionManager;
-
-import io.armcha.ribble.presentation.navigation.NavigationState;
-import io.armcha.ribble.presentation.utils.extensions.ViewExKt;
-import io.armcha.ribble.presentation.widget.AnimatedImageView;
-import io.armcha.ribble.presentation.widget.AnimatedTextView;
-import io.armcha.ribble.presentation.widget.ArcView;
-import io.armcha.ribble.presentation.widget.navigation_view.NavigationDrawerView;
-import io.armcha.ribble.presentation.widget.navigation_view.NavigationId;
-import io.armcha.ribble.presentation.widget.navigation_view.NavigationItem;
-import io.armcha.ribble.presentation.widget.navigation_view.NavigationItemSelectedListener;
 
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_LOGIN;
 import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN;
@@ -35,205 +32,34 @@ import static com.rc.foodsignal.util.AllConstants.SESSION_IS_RESTAURANT_LOGGED_I
 import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_LOGIN_DATA;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_NAVIGATION_MENU;
 
-/**
- * @author Md. Rashadul Alam
- *         Email: rashed.droid@gmail.com
- */
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends BaseActivity implements AAH_FabulousFragment.Callbacks, AAH_FabulousFragment.AnimationListener {
 
-    private String TRANSLATION_X_KEY = "TRANSLATION_X_KEY";
-    private String CARD_ELEVATION_KEY = "CARD_ELEVATION_KEY";
-    private String SCALE_KEY = "SCALE_KEY";
-
+    //Toolvar
     Toolbar toolbar;
-    NavigationDrawerView navDrawerView;
-    DrawerLayout drawerLayout;
-    CardView contentHome;
-    public ArcView arcMenuView;
-    public AnimatedImageView arcMenuImage;
-    AnimatedTextView toolbarTitle;
+    CanaroTextView tvToolbarTitle;
 
-    //User info into menu
-//    ImageView userAvatar;
-//    TextView userName;
-//    TextView userInfo;
-//    UserBasicInfo userBasicInfo;
-
-    private boolean isArcIcon = false;
-    private boolean isDrawerOpened = false;
-    private String activeTitle = "";
-    private NavigationState navigationState = null;
-    private int currentNavigationSelectedItem = 0;
-
+    //Navigation drawer
+    DrawerLayout drawer;
+    NavigationView navigationView;
+    ActionBarDrawerToggle toggle;
+    MenuItem previousSelectedMenuItem;
+    ImageView userAvatar;
+    TextView userName, userInfo;
     private String TAG = HomeActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_main);
 
-        initViews();
+        initView();
 
-        if (isArcIcon || isDrawerOpened) {
-            setArcArrowState();
-        } else {
-            setArcHamburgerIconState();
-        }
-        setToolBarTitle(activeTitle);
-//        updateUserInfo();
+        if (savedInstanceState == null) {
+            //Set home fragment is any navigation item is not selected
+            goFragmentScreen(getString(R.string.title_fragment_home), new HomeFragment());
 
-        if (savedInstanceState == null && navDrawerView != null) {
-            handleMenuItemsChanges(navDrawerView.getItemList().get(0));
-        }
-    }
-
-    private void initViews() {
-
-        initToolBar();
-
-        navDrawerView = (NavigationDrawerView) findViewById(R.id.navigation_drawer_view);
-//        userAvatar = (ImageView) navDrawerView.getHeader().findViewById(R.id.userAvatar);
-//        userName = (TextView) navDrawerView.getHeader().findViewById(R.id.userName);
-//        userInfo = (TextView) navDrawerView.getHeader().findViewById(R.id.userInfo);
-//
-//        if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(HomeActivity.this, SESSION_USER_BASIC_INFO))) {
-//            Log.d(TAG, "Session data: " + SessionManager.getStringSetting(HomeActivity.this, SESSION_USER_BASIC_INFO));
-//            userBasicInfo = UserBasicInfo.getResponseObject(SessionManager.getStringSetting(HomeActivity.this, SESSION_USER_BASIC_INFO), UserBasicInfo.class);
-//        }
-
-        contentHome = (CardView) findViewById(R.id.mainView);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-        navDrawerView.setNavigationItemSelectListener(new NavigationItemSelectedListener() {
-            @Override
-            public void onNavigationItemSelected(final NavigationItem item) {
-                if (!getNavigatorState().getActiveTag().equalsIgnoreCase(item.getId().getName())) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            handleMenuItemsChanges(item);
-                        }
-                    }, AllConstants.NAVIGATION_DRAWER_CLOSE_DELAY);
-                }
-                drawerLayout.closeDrawer(GravityCompat.START);
-            }
-        });
-
-        drawerLayout.setDrawerElevation(0f);
-        drawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                super.onDrawerSlide(drawerView, slideOffset);
-
-                float moveFactor = navDrawerView.getWidth() * slideOffset;
-                contentHome.setTranslationX(moveFactor);
-                ViewExKt.setScale(contentHome, 1 - slideOffset / 4);
-                contentHome.setCardElevation(slideOffset * AppUtils.toPx(HomeActivity.this, 10));
-
-                //Restaurant owner status
-                if (!SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_RESTAURANT_LOGGED_IN, false)) {
-                    visibleMenuItems(false);
-                } else {
-                    visibleMenuItems(true);
-                }
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                handleDrawerOpen();
-
-                //Restaurant owner status
-                if (!SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_RESTAURANT_LOGGED_IN, false)) {
-                    visibleMenuItems(false);
-                } else {
-                    visibleMenuItems(true);
-                }
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-                handleDrawerClose();
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-                super.onDrawerStateChanged(newState);
-            }
-        });
-
-        drawerLayout.setScrimColor(Color.TRANSPARENT);
-    }
-
-    private void initToolBar() {
-        toolbarTitle = (AnimatedTextView) findViewById(R.id.toolbarTitle);
-        arcMenuImage = (AnimatedImageView) findViewById(R.id.arcImage);
-        arcMenuView = (ArcView) findViewById(R.id.arcView);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        toolbarTitle.setAnimatedText(getString(R.string.title_activity_home), 0L);
-        arcMenuImage.setAnimatedImage(R.drawable.arrow_left, 0L);
-        arcMenuView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
-    }
-
-    public void handleMenuItemsChanges(NavigationItem item) {
-        //Store current ribble menu in session
-        SessionManager.setStringSetting(HomeActivity.this, SESSION_SELECTED_NAVIGATION_MENU, item.getId().getName());
-
-        int checkPosition = -1;
-
-        if (item.getName().equalsIgnoreCase(NavigationId.HOME.INSTANCE.getName())) {
-            saveNavigatorState(new NavigationState(item.getName(), toolbarTitle.getText().toString(), false));
-            checkPosition = 0;
-            checkNavigationItem(checkPosition);
-            setToolBarTitle(item.getName());
-            goFragmentScreen(item.getName(), new HomeFragment());
-        } else if (item.getName().equalsIgnoreCase(NavigationId.LOCATION.INSTANCE.getName())) {
-            Intent intentAddress = new Intent(HomeActivity.this, LocationListActivity.class);
-            startActivity(intentAddress);
-        } else if (item.getName().equalsIgnoreCase(NavigationId.NOTIFICATION.INSTANCE.getName())) {
-            checkPosition = 2;
-            Toast.makeText(HomeActivity.this, getString(R.string.toast_under_development), Toast.LENGTH_SHORT).show();
-        } else if (item.getName().equalsIgnoreCase(NavigationId.PAYMENT_CARD.INSTANCE.getName())) {
-            checkPosition = 3;
-            Toast.makeText(HomeActivity.this, getString(R.string.toast_under_development), Toast.LENGTH_SHORT).show();
-        } else if (item.getName().equalsIgnoreCase(NavigationId.ADD_RESTAURANT.INSTANCE.getName())) {
-            if (!SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_RESTAURANT_LOGGED_IN, false)) {
-                Intent intent = new Intent(HomeActivity.this, RestaurantLoginActivity.class);
-                startActivityForResult(intent, INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN);
-            } else {
-                Intent intentRestaurant = new Intent(HomeActivity.this, AboutRestaurantActivity.class);
-                startActivity(intentRestaurant);
-            }
-        } else if (item.getName().equalsIgnoreCase(NavigationId.MENU.INSTANCE.getName())) {
-            checkPosition = 5;
-            Toast.makeText(HomeActivity.this, getString(R.string.toast_under_development), Toast.LENGTH_SHORT).show();
-        } else if (item.getName().equalsIgnoreCase(NavigationId.PROFILE.INSTANCE.getName())) {
-            checkPosition = 6;
-            Toast.makeText(HomeActivity.this, getString(R.string.toast_under_development), Toast.LENGTH_SHORT).show();
-        } else if (item.getName().equalsIgnoreCase(NavigationId.LOG_OUT.INSTANCE.getName())) {
-            SessionManager.removeSetting(HomeActivity.this, SESSION_IS_RESTAURANT_LOGGED_IN);
-            SessionManager.removeSetting(HomeActivity.this, SESSION_RESTAURANT_LOGIN_DATA);
-
-            visibleMenuItems(false);
-        }
-    }
-
-    private void visibleMenuItems(boolean isVisible) {
-        if (isVisible) {
-            navDrawerView.getRecyclerView().findViewHolderForAdapterPosition(5).itemView.setVisibility(View.VISIBLE);
-            navDrawerView.getRecyclerView().findViewHolderForAdapterPosition(6).itemView.setVisibility(View.VISIBLE);
-            navDrawerView.getRecyclerView().findViewHolderForAdapterPosition(7).itemView.setVisibility(View.VISIBLE);
-        } else {
-            navDrawerView.getRecyclerView().findViewHolderForAdapterPosition(5).itemView.setVisibility(View.GONE);
-            navDrawerView.getRecyclerView().findViewHolderForAdapterPosition(6).itemView.setVisibility(View.GONE);
-            navDrawerView.getRecyclerView().findViewHolderForAdapterPosition(7).itemView.setVisibility(View.GONE);
+            //Check navigation menu item()
+            checkNavigationMenuItem(navigationView.getMenu().findItem(R.id.nav_home));
         }
     }
 
@@ -241,94 +67,143 @@ public class HomeActivity extends BaseActivity {
         FragmentUtilsManager.changeSupportFragment(HomeActivity.this, fragment, currentTag);
     }
 
-    public void setArcArrowState() {
-        arcMenuView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
-        arcMenuImage.setAnimatedImage(R.drawable.arrow_left, 0L);
+    private void initView() {
+        initToolbar();
+        initNavigationDrawer();
     }
 
-    public void setArcHamburgerIconState() {
-        arcMenuView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                drawerLayout.openDrawer(GravityCompat.START);
-            }
-        });
-        arcMenuImage.setAnimatedImage(R.drawable.hamb, 0L);
+    private void initToolbar() {
+        //Toolbar setup
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+        tvToolbarTitle = (CanaroTextView) findViewById(R.id.tv_toolbar_title);
     }
 
-    public String getToolbarTitle() {
-        return toolbarTitle.getText().toString();
+    private void initNavigationDrawer() {
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.inflateHeaderView(R.layout.nav_header_main);
+        if (SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_RESTAURANT_LOGGED_IN, false)) {
+            navigationView.inflateMenu(R.menu.activity_main_drawer_logged_in);
+        } else {
+            navigationView.inflateMenu(R.menu.activity_main_drawer_guest);
+        }
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
+                if (SessionManager.getIntegerSetting(HomeActivity.this, SESSION_SELECTED_NAVIGATION_MENU, -1) != item.getItemId()) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            handleNavigationItemChange(item);
+                        }
+                    }, AllConstants.NAVIGATION_DRAWER_CLOSE_DELAY);
+                }
+
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
+
+        userAvatar = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.userAvatar);
+        userName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.userName);
+        userInfo = (TextView) navigationView.getHeaderView(0).findViewById(R.id.userInfo);
+
+        Glide
+                .with(HomeActivity.this)
+                .load(R.mipmap.ic_launcher_round)
+                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
+                .apply(new RequestOptions().circleCropTransform())
+                .into(userAvatar);
+        userName.setText(getString(R.string.app_name));
+        userInfo.setText(getString(R.string.app_version_name));
+    }
+
+    public void setToolbarTitle(String title) {
+        tvToolbarTitle.setText(title);
     }
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
     }
 
-    public void checkNavigationItem(int position) {
-        if (currentNavigationSelectedItem != position) {
-            currentNavigationSelectedItem = position;
-            navDrawerView.setChecked(currentNavigationSelectedItem);
+    private void checkNavigationMenuItem(MenuItem item) {
+        //Store current menu in session
+        SessionManager.setIntegerSetting(HomeActivity.this, SESSION_SELECTED_NAVIGATION_MENU, item.getItemId());
+
+        //Set checkable for each menu item
+        if (previousSelectedMenuItem != null) {
+            previousSelectedMenuItem.setChecked(false);
         }
+
+        item.setCheckable(true);
+        item.setChecked(true);
+        previousSelectedMenuItem = item;
     }
 
-    public void setToolBarTitle(String title) {
-        activeTitle = title;
-        toolbarTitle.setAnimatedText(title, 0L);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (outState != null) {
-            outState.putFloat(TRANSLATION_X_KEY, contentHome.getTranslationX());
-            outState.putFloat(CARD_ELEVATION_KEY, ViewExKt.getScale(contentHome));
-            outState.putFloat(SCALE_KEY, contentHome.getCardElevation());
+    private void refreshNavigationMenu() {
+        navigationView.getMenu().clear();
+        if (SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_RESTAURANT_LOGGED_IN, false)) {
+            navigationView.inflateMenu(R.menu.activity_main_drawer_logged_in);
+        } else {
+            navigationView.inflateMenu(R.menu.activity_main_drawer_guest);
         }
+
+        checkNavigationMenuItem(navigationView.getMenu().findItem(SessionManager.getIntegerSetting(HomeActivity.this, SESSION_SELECTED_NAVIGATION_MENU, -1)));
     }
 
-    @Override
-    public void onRestoreInstanceState(Bundle savedState) {
-        super.onRestoreInstanceState(savedState);
-        if (savedState != null) {
-            contentHome.setTranslationX(savedState.getFloat(TRANSLATION_X_KEY));
-            ViewExKt.setScale(contentHome, savedState.getFloat(CARD_ELEVATION_KEY));
-            contentHome.setCardElevation(savedState.getFloat(SCALE_KEY));
+    private void handleNavigationItemChange(MenuItem item) {
+
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_home) {
+            goFragmentScreen(getString(R.string.title_fragment_home), new HomeFragment());
+            checkNavigationMenuItem(item);
+        } else if (id == R.id.nav_location) {
+            Intent intentAddress = new Intent(HomeActivity.this, LocationListActivity.class);
+            startActivity(intentAddress);
+        } else if (id == R.id.nav_notification) {
+
+        } else if (id == R.id.nav_google_pay) {
+
+        } else if (id == R.id.nav_add_restaurants) {
+            Intent intent = new Intent(HomeActivity.this, RestaurantLoginActivity.class);
+            startActivityForResult(intent, INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN);
+        } else if (id == R.id.nav_faq) {
+
+        } else if (id == R.id.nav_privacy_policy) {
+
+        } else if (id == R.id.nav_about_restaurant) {
+            Intent intentRestaurant = new Intent(HomeActivity.this, AboutRestaurantActivity.class);
+            startActivity(intentRestaurant);
+        } else if (id == R.id.nav_menu) {
+
+        } else if (id == R.id.nav_menu_gallery) {
+
+        } else if (id == R.id.nav_social_activity) {
+
+        } else if (id == R.id.nav_web_admin) {
+
+        } else if (id == R.id.nav_marketing_tools) {
+
+        } else if (id == R.id.nav_logout) {
+            SessionManager.removeSetting(HomeActivity.this, SESSION_IS_RESTAURANT_LOGGED_IN);
+            SessionManager.removeSetting(HomeActivity.this, SESSION_RESTAURANT_LOGIN_DATA);
+
+            refreshNavigationMenu();
         }
-    }
-
-    public void saveNavigatorState(NavigationState state) {
-        this.navigationState = state;
-
-        if (isArcIcon) {
-            isArcIcon = false;
-            setArcHamburgerIconState();
-        }
-    }
-
-    public NavigationState getNavigatorState() {
-        return navigationState;
-    }
-
-    public void handleDrawerOpen() {
-        if (!isArcIcon)
-            setArcArrowState();
-        isDrawerOpened = true;
-    }
-
-    public void handleDrawerClose() {
-        if (!isArcIcon && isDrawerOpened)
-            setArcHamburgerIconState();
-        isDrawerOpened = false;
     }
 
     @Override
@@ -338,12 +213,11 @@ public class HomeActivity extends BaseActivity {
             case INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN: {
                 if (data != null && resultCode == RESULT_OK) {
                     if (data.getBooleanExtra(INTENT_KEY_LOGIN, false)) {
-                        visibleMenuItems(true);
+
+                        refreshNavigationMenu();
 
                         Intent intentRestaurant = new Intent(HomeActivity.this, AboutRestaurantActivity.class);
                         startActivity(intentRestaurant);
-                    } else {
-                        visibleMenuItems(true);
                     }
                 }
                 break;
@@ -353,14 +227,32 @@ public class HomeActivity extends BaseActivity {
         }
     }
 
-//    public void updateUserInfo() {
-//        Glide
-//                .with(HomeActivity.this)
-//                .load(R.mipmap.ic_launcher_round)
-//                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
-//                .apply(new RequestOptions().circleCropTransform())
-//                .into(userAvatar);
-//        userName.setText(getString(R.string.app_name));
-//        userInfo.setText(getString(R.string.app_version_name));
-//    }
+    /***************************
+     * Fabulous Filter methods *
+     ***************************/
+    @Override
+    public void onResult(Object result) {
+        Log.d(TAG, "onResult: " + result.toString());
+        ((HomeFragment) FragmentUtilsManager.getVisibleSupportFragment(HomeActivity.this, getString(R.string.title_fragment_home))).onResult(result);
+    }
+
+    @Override
+    public void onOpenAnimationStart() {
+        Log.d("aah_animation", "onOpenAnimationStart: ");
+    }
+
+    @Override
+    public void onOpenAnimationEnd() {
+        Log.d("aah_animation", "onOpenAnimationEnd: ");
+    }
+
+    @Override
+    public void onCloseAnimationStart() {
+        Log.d("aah_animation", "onCloseAnimationStart: ");
+    }
+
+    @Override
+    public void onCloseAnimationEnd() {
+        Log.d("aah_animation", "onCloseAnimationEnd: ");
+    }
 }

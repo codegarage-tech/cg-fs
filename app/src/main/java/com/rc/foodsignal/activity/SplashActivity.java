@@ -88,7 +88,7 @@ public class SplashActivity extends AppCompatActivity {
     private void navigateHomeActivity() {
         Intent intent;
         if (SessionManager.getBooleanSetting(SplashActivity.this, SESSION_IS_LOCATION_ADDED, false)) {
-            intent = new Intent(SplashActivity.this, MainActivity.class);
+            intent = new Intent(SplashActivity.this, HomeActivity.class);
         } else {
             intent = new Intent(SplashActivity.this, AddUserBasicInfoActivity.class);
         }

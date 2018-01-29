@@ -9,7 +9,7 @@
 //import com.rc.foodsignal.R;
 ////import com.rc.foodsignal.activity.LoginActivity;
 //
-//public class MainActivity extends AppCompatActivity {
+//public class HomeActivity extends AppCompatActivity {
 //
 //    Button btnLogin, btnFoodMenu;
 //    Button addFoodItem, btnSignup;
@@ -25,7 +25,7 @@
 //        btnLogin.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-////                Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+////                Intent loginIntent = new Intent(HomeActivity.this, LoginActivity.class);
 ////                startActivity(loginIntent);
 //            }
 //        });
@@ -33,7 +33,7 @@
 //        btnFoodMenu.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                Intent foodMenuIntent = new Intent(MainActivity.this, FoodMenuActivity.class);
+//                Intent foodMenuIntent = new Intent(HomeActivity.this, FoodMenuActivity.class);
 //                startActivity(foodMenuIntent);
 //            }
 //        });
@@ -41,7 +41,7 @@
 //        addFoodItem.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                Intent addfoodItemIntent = new Intent(MainActivity.this, AddFoodItemActivity.class);
+//                Intent addfoodItemIntent = new Intent(HomeActivity.this, AddFoodItemActivity.class);
 //                startActivity(addfoodItemIntent);
 //            }
 //        });
@@ -49,7 +49,7 @@
 //        btnSignup.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                Intent signUpIntent = new Intent(MainActivity.this, RestaurantSignUpActivity.class);
+//                Intent signUpIntent = new Intent(HomeActivity.this, RestaurantSignUpActivity.class);
 //                startActivity(signUpIntent);
 //            }
 //        });
@@ -57,7 +57,7 @@
 //        btnRegisterDevice.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                Intent registerDeviceIntent = new Intent(MainActivity.this, RegisterDeviceActivity.class);
+//                Intent registerDeviceIntent = new Intent(HomeActivity.this, RegisterDeviceActivity.class);
 //                startActivity(registerDeviceIntent);
 //            }
 //        });
@@ -65,7 +65,7 @@
 //        btnSearchRestaurant.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                Intent searchRestaurantIntent = new Intent(MainActivity.this, SearchRestaurantActivity.class);
+//                Intent searchRestaurantIntent = new Intent(HomeActivity.this, SearchRestaurantActivity.class);
 //                startActivity(searchRestaurantIntent);
 //            }
 //        });

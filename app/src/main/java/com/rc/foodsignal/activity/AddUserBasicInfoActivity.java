@@ -422,7 +422,7 @@ public class AddUserBasicInfoActivity extends BaseLocationActivity {
                     UserBasicInfo userBasicInfo = new UserBasicInfo(responseData.getData().get(0).getUser_id(), mName, mPhone, mEmail);
                     SessionManager.setStringSetting(AddUserBasicInfoActivity.this, SESSION_USER_BASIC_INFO, userBasicInfo.toString());
 
-                    Intent intent = new Intent(AddUserBasicInfoActivity.this, MainActivity.class);
+                    Intent intent = new Intent(AddUserBasicInfoActivity.this, HomeActivity.class);
                     startActivity(intent);
                     finish();
                 } else {

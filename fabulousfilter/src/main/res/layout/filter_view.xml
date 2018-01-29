@@ -27,7 +27,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight=".80"
-                android:background="@color/filters_header"
+                android:background="@color/colorPrimaryDark"
                 app:tabGravity="fill"
                 app:tabIndicatorColor="@color/filters_buttons"
                 app:tabIndicatorHeight="3dp"
