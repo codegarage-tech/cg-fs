@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 import com.developers.imagezipper.ImageZipper;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.model.Location;
@@ -88,8 +89,10 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
 
         Glide
                 .with(RestaurantSignUpActivity.this)
+                .asBitmap()
                 .load(R.drawable.ic_default_avatar)
-//                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
+                .apply(new RequestOptions().signature(new ObjectKey(System.currentTimeMillis())))
+//                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
                 .apply(new RequestOptions().circleCropTransform())
                 .into(ivUser);
     }
@@ -252,8 +255,10 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
                 Log.d("MatisseImage: ", mData.get(0));
                 Glide
                         .with(RestaurantSignUpActivity.this)
+                        .asBitmap()
                         .load(mData.get(0))
-//                        .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
+                        .apply(new RequestOptions().signature(new ObjectKey(System.currentTimeMillis())))
+//                        .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
                         .apply(new RequestOptions().circleCropTransform())
                         .into(ivUser);
 
