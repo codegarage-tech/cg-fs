@@ -8,6 +8,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.model.RestaurantLoginData;
 import com.rc.foodsignal.util.AppUtils;
@@ -26,6 +29,8 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
     ImageView ivBack;
     LinearLayout llDone;
     RestaurantLoginData restaurantLoginData;
+
+    ImageView ivRestaurantMenu;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,6 +52,16 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
 
         tvTitle = (TextView) findViewById(R.id.text_title);
         tvTitle.setText(getString(R.string.title_activity_add_restaurant_menu));
+
+        ivRestaurantMenu = (ImageView) findViewById(R.id.iv_restaurant_menu);
+        Glide
+                .with(AddRestaurantMenuActivity.this)
+                .asBitmap()
+                .load(R.drawable.ic_default_avatar)
+                .apply(new RequestOptions().signature(new ObjectKey(System.currentTimeMillis())))
+//                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
+                .apply(new RequestOptions().circleCropTransform())
+                .into(ivRestaurantMenu);
     }
 
     private void initActions() {
