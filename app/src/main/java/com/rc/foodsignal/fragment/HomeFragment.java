@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.ArraySet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,21 +21,24 @@ import com.rc.foodsignal.R;
 import com.rc.foodsignal.activity.HomeActivity;
 import com.rc.foodsignal.adapter.RestaurantAdapter;
 import com.rc.foodsignal.interfaces.OnFragmentBackPressedListener;
+import com.rc.foodsignal.model.DataFoodCategory;
 import com.rc.foodsignal.model.FoodCategory;
 import com.rc.foodsignal.model.Location;
 import com.rc.foodsignal.model.ResponseFoodCategory;
 import com.rc.foodsignal.model.ResponseRestaurantItem;
-import com.rc.foodsignal.model.Restaurant;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.HttpRequestManager;
 import com.reversecoder.library.network.NetworkManager;
 import com.reversecoder.library.storage.SessionManager;
+import com.reversecoder.library.util.AllSettingsManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.rc.foodsignal.util.AllConstants.DEFAULT_FOOD_CATEGORY;
+import static com.rc.foodsignal.util.AllConstants.SESSION_FOOD_CATEGORY;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_LOCATION;
 
 /**
@@ -88,6 +90,13 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
 
         if (!NetworkManager.isConnected(getActivity())) {
             Toast.makeText(getActivity(), getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
+
+            if (!AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(getActivity(), SESSION_FOOD_CATEGORY))) {
+                initFabulousFilter(DataFoodCategory.getResponseObject(SessionManager.getStringSetting(getActivity(), SESSION_FOOD_CATEGORY), DataFoodCategory.class).getData());
+            }else{
+                initFabulousFilter(DataFoodCategory.getResponseObject(DEFAULT_FOOD_CATEGORY, DataFoodCategory.class).getData());
+            }
+
         } else {
             getAllFoodCategory = new GetAllFoodCategory(getActivity());
             getAllFoodCategory.execute();
@@ -243,6 +252,10 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
 
                 if (responseFoodCategory.getStatus().equalsIgnoreCase("1") && (responseFoodCategory.getData().size() > 0)) {
                     Log.d(TAG, "success response from web: " + responseFoodCategory.toString());
+
+                    //Save food category into session
+                    DataFoodCategory dataFoodCategory = new DataFoodCategory(responseFoodCategory.getData());
+                    SessionManager.setStringSetting(getActivity(), SESSION_FOOD_CATEGORY, DataFoodCategory.getResponseString(dataFoodCategory));
 
                     initFabulousFilter(responseFoodCategory.getData());
 
