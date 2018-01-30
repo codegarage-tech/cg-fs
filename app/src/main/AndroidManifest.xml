@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.rc.foodsignal">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -92,6 +91,12 @@
         <activity
             android:name="com.rc.foodsignal.activity.RestaurantMenuListActivity"
             android:label="@string/title_activity_restaurant_menu"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name="com.rc.foodsignal.activity.AddRestaurantMenuActivity"
+            android:label="@string/title_activity_add_restaurant_menu"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 

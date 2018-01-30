@@ -89,8 +89,8 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
         llAddRestaurantMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intentAddress = new Intent(RestaurantMenuListActivity.this, AddLocationActivity.class);
-//                startActivityForResult(intentAddress, INTENT_REQUEST_CODE_ADDRESS_LIST);
+                Intent intentAddress = new Intent(RestaurantMenuListActivity.this, AddRestaurantMenuActivity.class);
+                startActivityForResult(intentAddress, INTENT_REQUEST_CODE_RESTAURANT_MENU_LIST);
             }
         });
     }
