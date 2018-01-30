@@ -216,20 +216,20 @@ public class AllUrls {
         return params;
     }
 
-    public static String getAllRestaurantsUrl() {
-        String url = BASE_URL + "restaurants/list_via_lat_lng";
-        Log.d(TAG, "getAllRestaurantUrl: " + url);
-        return url;
-    }
-
-    public static JSONObject getAllRestaurantsParameters(double latitude, double longitude) {
-        JSONObject params = HttpRequestManager.HttpParameter.getInstance()
-                .addJSONParam("lat", latitude)
-                .addJSONParam("lng", longitude)
-                .getJSONParam();
-        Log.d(TAG, "getAllRestaurantsParameters: " + params.toString());
-        return params;
-    }
+//    public static String getAllRestaurantsUrl() {
+//        String url = BASE_URL + "restaurants/list_via_lat_lng";
+//        Log.d(TAG, "getAllRestaurantUrl: " + url);
+//        return url;
+//    }
+//
+//    public static JSONObject getAllRestaurantsParameters(double latitude, double longitude) {
+//        JSONObject params = HttpRequestManager.HttpParameter.getInstance()
+//                .addJSONParam("lat", latitude)
+//                .addJSONParam("lng", longitude)
+//                .getJSONParam();
+//        Log.d(TAG, "getAllRestaurantsParameters: " + params.toString());
+//        return params;
+//    }
 
     public static String getAllUserLocationsUrl(String userId) {
         String url = BASE_URL + "signup/all_user_location/" + userId;

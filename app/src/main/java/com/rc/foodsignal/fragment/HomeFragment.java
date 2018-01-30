@@ -26,6 +26,7 @@ import com.rc.foodsignal.model.FoodCategory;
 import com.rc.foodsignal.model.Location;
 import com.rc.foodsignal.model.ResponseFoodCategory;
 import com.rc.foodsignal.model.ResponseRestaurantItem;
+import com.rc.foodsignal.model.Restaurant;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.HttpRequestManager;
@@ -50,7 +51,6 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
     String TAG = AppUtils.getTagName(HomeFragment.class);
     private View parentView;
     GetAllFoodCategory getAllFoodCategory;
-    GetRestaurants getRestaurants;
     Location mLocation;
     RecyclerView recyclerViewFood;
     RestaurantAdapter restaurantAdapter;
@@ -93,7 +93,7 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
 
             if (!AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(getActivity(), SESSION_FOOD_CATEGORY))) {
                 initFabulousFilter(DataFoodCategory.getResponseObject(SessionManager.getStringSetting(getActivity(), SESSION_FOOD_CATEGORY), DataFoodCategory.class).getData());
-            }else{
+            } else {
                 initFabulousFilter(DataFoodCategory.getResponseObject(DEFAULT_FOOD_CATEGORY, DataFoodCategory.class).getData());
             }
 
@@ -101,8 +101,7 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
             getAllFoodCategory = new GetAllFoodCategory(getActivity());
             getAllFoodCategory.execute();
 
-            getRestaurants = new GetRestaurants(getActivity(), Double.parseDouble(mLocation.getLat()), Double.parseDouble(mLocation.getLng()));
-            getRestaurants.execute();
+            searchRestaurant(mLocation, getSelectedFoodCategory(selectedCategory).getId());
         }
     }
 
@@ -129,51 +128,6 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
     @Override
     public void onFragmentBackPressed() {
         getActivity().finish();
-    }
-
-    private class GetRestaurants extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
-
-        private Context mContext;
-        private double mLat = 0.00;
-        private double mLng = 0.00;
-
-        public GetRestaurants(Context context, double lat, double lng) {
-            this.mContext = context;
-            this.mLat = lat;
-            this.mLng = lng;
-        }
-
-        @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
-        protected HttpRequestManager.HttpResponse doInBackground(String... params) {
-            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getAllRestaurantsUrl(), AllUrls.getAllRestaurantsParameters(mLat, mLng), null);
-            return response;
-        }
-
-        @Override
-        protected void onPostExecute(HttpRequestManager.HttpResponse result) {
-
-            if (result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
-                Log.d(TAG, "success response from web: " + result.getResult().toString());
-                ResponseRestaurantItem responseData = ResponseRestaurantItem.getResponseObject(result.getResult().toString(), ResponseRestaurantItem.class);
-
-                if (responseData.getStatus().equalsIgnoreCase("1") && (responseData.getData().size() > 0)) {
-                    Log.d(TAG, "success wrapper: " + responseData.toString());
-
-                    restaurantAdapter.addAll(responseData.getData());
-                    restaurantAdapter.notifyDataSetChanged();
-
-                } else {
-                    Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
-                }
-
-            } else {
-                Toast.makeText(getActivity(), getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     private class DoSearchRestaurants extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
@@ -208,12 +162,15 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
                 if (responseData.getStatus().equalsIgnoreCase("1") && (responseData.getData().size() > 0)) {
                     Log.d(TAG, "success wrapper: " + responseData.toString());
 
+                    if (restaurantAdapter.getAllData().size() > 0) {
+                        restaurantAdapter.removeAll();
+                    }
                     restaurantAdapter.addAll(responseData.getData());
                     restaurantAdapter.notifyDataSetChanged();
 
                 } else {
-//                    restaurantAdapter.addAll(new ArraySet<Restaurant>());
-//                    restaurantAdapter.notifyDataSetChanged();
+                    restaurantAdapter.removeAll();
+                    restaurantAdapter.notifyDataSetChanged();
 
                     Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
                 }
@@ -341,6 +298,8 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
                 return foodCategory;
             }
         }
-        return new FoodCategory("", "", "");
+
+        //Selected category 0 is for nothing
+        return new FoodCategory("0", "", "");
     }
 }

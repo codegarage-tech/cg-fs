@@ -42,18 +42,19 @@ public class RestaurantViewHolder extends BaseViewHolder<Restaurant> {
     @Override
     public void setData(final Restaurant data) {
 
-        llPriceLabel.setVisibility((data.getItem_details().size() > 0) ? View.VISIBLE : View.GONE);
+//        llPriceLabel.setVisibility((data.getMenu_details().size() > 0) ? View.VISIBLE : View.GONE);
 
-        Log.d("setData",(data.getItem_details().size() > 0) ? data.getItem_details().get(0).getImage() : data.getImage());
+//        Log.d("setData",(data.getMenu_details().size() > 0) ? data.getMenu_details().get(0).getImage() : data.getImage());
         Glide
                 .with(getContext())
                 .asBitmap()
-                .load((data.getItem_details().size() > 0) ? data.getItem_details().get(0).getImage() : data.getImage())
+//                .load((data.getMenu_details().size() > 0) ? data.getMenu_details().get(0).getImage() : data.getImage())
+                .load(data.getImage())
 //                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
                 .apply(new RequestOptions().signature(new ObjectKey(System.currentTimeMillis())))
                 .into(ivFoodImage);
 
-        tvFoodPrice.setText((data.getItem_details().size() > 0) ? ("$" + data.getItem_details().get(0).getPrice()) : "");
+//        tvFoodPrice.setText((data.getMenu_details().size() > 0) ? ("$" + data.getMenu_details().get(0).getPrice()) : "");
         tvRestaurantName.setText(data.getName());
         tvRestaurantAddress.setText("Address: " + data.getAddress());
         tvRestaurantReview.setText("Review: " + "---");
