@@ -91,17 +91,21 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
         if (!NetworkManager.isConnected(getActivity())) {
             Toast.makeText(getActivity(), getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
 
-            if (!AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(getActivity(), SESSION_FOOD_CATEGORY))) {
-                initFabulousFilter(DataFoodCategory.getResponseObject(SessionManager.getStringSetting(getActivity(), SESSION_FOOD_CATEGORY), DataFoodCategory.class).getData());
-            } else {
-                initFabulousFilter(DataFoodCategory.getResponseObject(DEFAULT_FOOD_CATEGORY, DataFoodCategory.class).getData());
-            }
+            setDefaultFoodCategory();
 
         } else {
             getAllFoodCategory = new GetAllFoodCategory(getActivity());
             getAllFoodCategory.execute();
 
             searchRestaurant(mLocation, getSelectedFoodCategory(selectedCategory).getId());
+        }
+    }
+
+    private void setDefaultFoodCategory(){
+        if (!AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(getActivity(), SESSION_FOOD_CATEGORY))) {
+            initFabulousFilter(DataFoodCategory.getResponseObject(SessionManager.getStringSetting(getActivity(), SESSION_FOOD_CATEGORY), DataFoodCategory.class).getData());
+        } else {
+            initFabulousFilter(DataFoodCategory.getResponseObject(DEFAULT_FOOD_CATEGORY, DataFoodCategory.class).getData());
         }
     }
 
@@ -217,10 +221,14 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
                     initFabulousFilter(responseFoodCategory.getData());
 
                 } else {
-                    Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
+
+                    setDefaultFoodCategory();
+//                    Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(getActivity(), getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
+
+                setDefaultFoodCategory();
+//                Toast.makeText(getActivity(), getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
             }
         }
     }

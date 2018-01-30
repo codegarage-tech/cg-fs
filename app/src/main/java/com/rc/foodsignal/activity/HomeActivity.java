@@ -189,7 +189,8 @@ public class HomeActivity extends BaseActivity implements AAH_FabulousFragment.C
             Intent intentRestaurant = new Intent(HomeActivity.this, AboutRestaurantActivity.class);
             startActivity(intentRestaurant);
         } else if (id == R.id.nav_menu) {
-
+            Intent intentRestaurantMenu = new Intent(HomeActivity.this, RestaurantMenuListActivity.class);
+            startActivity(intentRestaurantMenu);
         } else if (id == R.id.nav_menu_gallery) {
 
         } else if (id == R.id.nav_social_activity) {

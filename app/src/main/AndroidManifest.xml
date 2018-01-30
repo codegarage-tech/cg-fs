@@ -89,6 +89,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name="com.rc.foodsignal.activity.RestaurantMenuListActivity"
+            android:label="@string/title_activity_restaurant_menu"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>

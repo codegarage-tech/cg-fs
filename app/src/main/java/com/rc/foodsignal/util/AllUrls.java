@@ -236,4 +236,10 @@ public class AllUrls {
         Log.d(TAG, "getAllUserLocationsUrl: " + url);
         return url;
     }
+
+    public static String getRestaurantMenuUrl(String restaurantId) {
+        String url = BASE_URL + "food_menu/getRestaurantMenu/" + restaurantId;
+        Log.d(TAG, "getRestaurantMenuUrl: " + url);
+        return url;
+    }
 }
