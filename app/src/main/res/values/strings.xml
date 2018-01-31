@@ -28,6 +28,9 @@
     <string name="toast_empty_address_field">Please fill address</string>
     <string name="toast_empty_name_field">Please fill name</string>
     <string name="toast_empty_phone_field">Please fill phone</string>
+    <string name="toast_empty_price_field">Please fill price</string>
+    <string name="toast_empty_ingredient_field">Please fill ingredient</string>
+    <string name="toast_empty_category_field">Please fill category</string>
     <string name="toast_under_development">Under development</string>
 
     <!-- Message -->

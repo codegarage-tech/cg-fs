@@ -108,7 +108,7 @@ public class AboutRestaurantActivity extends AppCompatActivity {
         Glide
                 .with(AboutRestaurantActivity.this)
                 .asBitmap()
-                .load((!AllSettingsManager.isNullOrEmpty(restaurantLoginInfo.getImage())) ? restaurantLoginInfo.getImage() : R.drawable.ic_default_avatar)
+                .load((!AllSettingsManager.isNullOrEmpty(restaurantLoginInfo.getImage())) ? restaurantLoginInfo.getImage() : R.drawable.ic_default_restaurant)
                 .apply(new RequestOptions().signature(new ObjectKey(System.currentTimeMillis())))
 //                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
                 .apply(new RequestOptions().circleCropTransform())

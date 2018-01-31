@@ -1,11 +1,15 @@
 package com.rc.foodsignal.activity;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,6 +18,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
+import com.developers.imagezipper.ImageZipper;
 import com.nex3z.flowlayout.FlowLayout;
 import com.nex3z.flowlayout.FlowLayoutManager;
 import com.rc.foodsignal.R;
@@ -27,12 +32,18 @@ import com.rc.foodsignal.util.HttpRequestManager;
 import com.reversecoder.library.network.NetworkManager;
 import com.reversecoder.library.storage.SessionManager;
 import com.reversecoder.library.util.AllSettingsManager;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.engine.impl.GlideEngine;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static com.rc.foodsignal.util.AllConstants.DEFAULT_FOOD_CATEGORY;
+import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_IMAGE_PICKER;
+import static com.rc.foodsignal.util.AllConstants.PREFIX_BASE64_STRING;
 import static com.rc.foodsignal.util.AllConstants.SESSION_FOOD_CATEGORY;
 import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_LOGIN_DATA;
 
@@ -49,6 +60,8 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
     RestaurantLoginData restaurantLoginData;
 
     ImageView ivRestaurantMenu;
+    EditText edtName, edtPrice, edtIngredient;
+    String mBase64 = "";
 
     // Flow Layout
     GetAllFoodCategory getAllFoodCategory;
@@ -56,7 +69,7 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
     List<String> mCategoryKey = new ArrayList<>();
     FlowLayout flowLayout;
     FlowLayoutManager flowLayoutManager;
-    TextView tvSelectedFoodCategory;
+    TextView tvCategory;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,6 +88,7 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
 
         ivBack = (ImageView) findViewById(R.id.iv_back);
         llDone = (LinearLayout) findViewById(R.id.ll_done);
+        llDone.setVisibility(View.VISIBLE);
 
         tvTitle = (TextView) findViewById(R.id.text_title);
         tvTitle.setText(getString(R.string.title_activity_add_restaurant_menu));
@@ -83,20 +97,21 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
         Glide
                 .with(AddRestaurantMenuActivity.this)
                 .asBitmap()
-                .load(R.drawable.ic_default_avatar)
+                .load(R.drawable.ic_default_restaurant_menu)
                 .apply(new RequestOptions().signature(new ObjectKey(System.currentTimeMillis())))
 //                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
                 .apply(new RequestOptions().circleCropTransform())
                 .into(ivRestaurantMenu);
 
+        edtName = (EditText) findViewById(R.id.edt_name);
+        edtPrice = (EditText) findViewById(R.id.edt_price);
+        edtIngredient = (EditText) findViewById(R.id.edt_ingredient);
+
         flowLayout = (FlowLayout) findViewById(R.id.fl_food_category);
-        tvSelectedFoodCategory = (TextView) findViewById(R.id.tv_selected_food_category);
+        tvCategory = (TextView) findViewById(R.id.tv_selected_food_category);
 
         if (!NetworkManager.isConnected(AddRestaurantMenuActivity.this)) {
-            Toast.makeText(AddRestaurantMenuActivity.this, getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
-
             setDefaultFoodCategory();
-
         } else {
             getAllFoodCategory = new GetAllFoodCategory(AddRestaurantMenuActivity.this);
             getAllFoodCategory.execute();
@@ -111,9 +126,55 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
             }
         });
 
+        ivRestaurantMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Matisse.from(AddRestaurantMenuActivity.this)
+                        .choose(MimeType.ofImage())
+                        .theme(R.style.Matisse_Dracula)
+                        .capture(true)
+                        .setDefaultCaptureStrategy()
+                        .countable(false)
+                        .maxSelectable(1)
+                        .imageEngine(new GlideEngine())
+                        .forResult(INTENT_REQUEST_CODE_IMAGE_PICKER);
+            }
+        });
+
         llDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String mCategory = tvCategory.getText().toString(),
+                        mName = edtName.getText().toString(),
+                        mPrice = edtPrice.getText().toString(),
+                        mIngredient = edtIngredient.getText().toString();
+
+                if (mCategory.equalsIgnoreCase("")) {
+                    Toast.makeText(AddRestaurantMenuActivity.this, getResources().getString(R.string.toast_empty_category_field), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (mName.equalsIgnoreCase("")) {
+                    Toast.makeText(AddRestaurantMenuActivity.this, getResources().getString(R.string.toast_empty_name_field), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (mPrice.equalsIgnoreCase("")) {
+                    Toast.makeText(AddRestaurantMenuActivity.this, getResources().getString(R.string.toast_empty_price_field), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (mIngredient.equalsIgnoreCase("")) {
+                    Toast.makeText(AddRestaurantMenuActivity.this, getResources().getString(R.string.toast_empty_ingredient_field), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!NetworkManager.isConnected(AddRestaurantMenuActivity.this)) {
+                    Toast.makeText(AddRestaurantMenuActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (mBase64.equalsIgnoreCase("")) {
+                    Bitmap bmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_default_restaurant_menu);
+                    mBase64 = PREFIX_BASE64_STRING + ImageZipper.getBase64forImage(bmap);
+                    Log.d("Default(base64): ", mBase64);
+                }
+
 
             }
         });
@@ -131,7 +192,7 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
                 @Override
                 public void flowViewClick(TextView updatedTextView) {
                     List<TextView> selectedCategory = flowLayoutManager.getSelectedFlowViews();
-                    tvSelectedFoodCategory.setText((selectedCategory.size() > 0) ? selectedCategory.get(0).getText().toString() : "");
+                    tvCategory.setText((selectedCategory.size() > 0) ? selectedCategory.get(0).getText().toString() : "");
                 }
             })
                     .setSingleChoice(true)
@@ -200,6 +261,40 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
 
                 setDefaultFoodCategory();
 //                Toast.makeText(getActivity(), getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == INTENT_REQUEST_CODE_IMAGE_PICKER && resultCode == RESULT_OK) {
+//            mAdapter.setData(Matisse.obtainResult(data), Matisse.obtainPathResult(data));
+            List<String> mData = Matisse.obtainPathResult(data);
+
+            if (mData.size() == 1) {
+                Log.d("MatisseImage: ", mData.get(0));
+                Glide
+                        .with(AddRestaurantMenuActivity.this)
+                        .asBitmap()
+                        .load(mData.get(0))
+                        .apply(new RequestOptions().signature(new ObjectKey(System.currentTimeMillis())))
+//                        .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
+                        .apply(new RequestOptions().circleCropTransform())
+                        .into(ivRestaurantMenu);
+
+                try {
+                    File imageZipperFile = new ImageZipper(AddRestaurantMenuActivity.this)
+                            .setQuality(100)
+                            .setMaxWidth(200)
+                            .setMaxHeight(200)
+                            .setCompressFormat(Bitmap.CompressFormat.JPEG)
+                            .compressToFile(new File(mData.get(0)));
+                    mBase64 = PREFIX_BASE64_STRING + ImageZipper.getBase64forImage(imageZipperFile);
+                    Log.d("MatisseImage(base64): ", mBase64);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         }
     }

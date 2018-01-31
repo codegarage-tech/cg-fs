@@ -91,7 +91,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_marginBottom="15dp"
                     android:layout_marginLeft="12dp"
-                    android:background="@drawable/ic_name" />
+                    android:background="@drawable/ic_price" />
 
                 <EditText
                     android:id="@+id/edt_price"
@@ -133,7 +133,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_marginBottom="15dp"
                     android:layout_marginLeft="12dp"
-                    android:background="@drawable/ic_name" />
+                    android:background="@drawable/ic_vector_default_restaurant_ingredient_empty_rose" />
 
                 <EditText
                     android:id="@+id/edt_ingredient"

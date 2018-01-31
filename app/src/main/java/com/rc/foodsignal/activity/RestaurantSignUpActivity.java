@@ -90,7 +90,7 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
         Glide
                 .with(RestaurantSignUpActivity.this)
                 .asBitmap()
-                .load(R.drawable.ic_default_avatar)
+                .load(R.drawable.ic_default_restaurant)
                 .apply(new RequestOptions().signature(new ObjectKey(System.currentTimeMillis())))
 //                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
                 .apply(new RequestOptions().circleCropTransform())
@@ -165,7 +165,7 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
                 }
 
                 if (mBase64.equalsIgnoreCase("")) {
-                    Bitmap bmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_default_avatar);;
+                    Bitmap bmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_default_restaurant);;
                     mBase64 = PREFIX_BASE64_STRING + ImageZipper.getBase64forImage(bmap);
                     Log.d("Default(base64): ", mBase64);
                 }
