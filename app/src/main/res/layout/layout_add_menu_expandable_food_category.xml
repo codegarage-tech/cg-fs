@@ -14,8 +14,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:background="@android:color/white"
+            android:layout_height="60dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp">
 
@@ -24,10 +23,12 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="Category:"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="@dimen/medium_font_size"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tv_selected_food_category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"

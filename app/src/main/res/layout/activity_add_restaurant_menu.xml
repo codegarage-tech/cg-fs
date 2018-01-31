@@ -10,22 +10,157 @@
 
     <include layout="@layout/toolbar_done" />
 
-    <ImageView
-        android:id="@+id/iv_restaurant_menu"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:adjustViewBounds="true" />
+        android:layout_height="wrap_content">
 
-    <com.github.florent37.expansionpanel.viewgroup.ExpansionsViewGroupLinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:expansion_openOnlyOne="true">
+        <com.github.florent37.expansionpanel.viewgroup.ExpansionsViewGroupLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:orientation="vertical"
+            app:expansion_openOnlyOne="true">
 
-        <include layout="@layout/layout_add_menu_expandable_food_category" />
+            <ImageView
+                android:id="@+id/iv_restaurant_menu"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:adjustViewBounds="true" />
 
-    </com.github.florent37.expansionpanel.viewgroup.ExpansionsViewGroupLinearLayout>
+            <include layout="@layout/layout_add_menu_expandable_food_category" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimaryDark" />
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:id="@+id/iv_name"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_above="@+id/line_name"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="12dp"
+                    android:background="@drawable/ic_name" />
+
+                <EditText
+                    android:id="@+id/edt_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_above="@+id/line_name"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toRightOf="@+id/iv_name"
+                    android:background="@null"
+                    android:gravity="bottom"
+                    android:hint="Name"
+                    android:paddingLeft="20dp"
+                    android:textColor="@color/textColorSecondary"
+                    android:textColorHint="@color/textColorSecondary" />
+
+                <View
+                    android:id="@+id/line_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/colorPrimaryDark" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="10dp"
+                android:background="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:id="@+id/iv_price"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_above="@+id/line_price"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="12dp"
+                    android:background="@drawable/ic_name" />
+
+                <EditText
+                    android:id="@+id/edt_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_above="@+id/line_price"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toRightOf="@+id/iv_price"
+                    android:background="@null"
+                    android:gravity="bottom"
+                    android:hint="Price"
+                    android:inputType="numberDecimal"
+                    android:paddingLeft="20dp"
+                    android:textColor="@color/textColorSecondary"
+                    android:textColorHint="@color/textColorSecondary" />
+
+                <View
+                    android:id="@+id/line_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/colorPrimaryDark" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="10dp"
+                android:background="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:id="@+id/iv_ingredient"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_above="@+id/line_ingredient"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="12dp"
+                    android:background="@drawable/ic_name" />
+
+                <EditText
+                    android:id="@+id/edt_ingredient"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_above="@+id/line_ingredient"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toRightOf="@+id/iv_ingredient"
+                    android:background="@null"
+                    android:gravity="bottom"
+                    android:hint="Ingredient"
+                    android:paddingLeft="20dp"
+                    android:textColor="@color/textColorSecondary"
+                    android:textColorHint="@color/textColorSecondary" />
+
+                <View
+                    android:id="@+id/line_ingredient"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/colorPrimaryDark" />
+
+            </RelativeLayout>
+
+        </com.github.florent37.expansionpanel.viewgroup.ExpansionsViewGroupLinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

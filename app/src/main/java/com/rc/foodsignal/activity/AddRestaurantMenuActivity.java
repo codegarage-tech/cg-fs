@@ -56,6 +56,7 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
     List<String> mCategoryKey = new ArrayList<>();
     FlowLayout flowLayout;
     FlowLayoutManager flowLayoutManager;
+    TextView tvSelectedFoodCategory;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,6 +90,7 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
                 .into(ivRestaurantMenu);
 
         flowLayout = (FlowLayout) findViewById(R.id.fl_food_category);
+        tvSelectedFoodCategory = (TextView) findViewById(R.id.tv_selected_food_category);
 
         if (!NetworkManager.isConnected(AddRestaurantMenuActivity.this)) {
             Toast.makeText(AddRestaurantMenuActivity.this, getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
@@ -128,6 +130,8 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
             flowLayoutManager = new FlowLayoutManager.FlowViewBuilder(AddRestaurantMenuActivity.this, flowLayout, mCategoryKey, new FlowLayoutManager.onFlowViewClick() {
                 @Override
                 public void flowViewClick(TextView updatedTextView) {
+                    List<TextView> selectedCategory = flowLayoutManager.getSelectedFlowViews();
+                    tvSelectedFoodCategory.setText((selectedCategory.size() > 0) ? selectedCategory.get(0).getText().toString() : "");
                 }
             })
                     .setSingleChoice(true)

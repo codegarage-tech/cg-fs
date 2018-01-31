@@ -53,7 +53,6 @@ public class FlowLayoutManager {
                 } else {
                     updatedTextView = selectFlowView(textView);
                 }
-                onFlowViewClick.flowViewClick(updatedTextView);
 
                 //For single choice we need to clear all selection before update
                 if (isSingleChoice) {
@@ -61,7 +60,7 @@ public class FlowLayoutManager {
                 }
 
                 //Update list for both single choice and multi choice
-                updateTextView(updatedTextView);
+                onFlowViewClick.flowViewClick(updateTextView(updatedTextView));
             }
         });
 
