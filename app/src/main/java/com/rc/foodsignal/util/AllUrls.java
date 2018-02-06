@@ -242,4 +242,44 @@ public class AllUrls {
         Log.d(TAG, "getRestaurantMenuUrl: " + url);
         return url;
     }
+
+    public static String getAddFoodItemUrl() {
+        String url = BASE_URL + "restaurants/addFoodItem";
+        Log.d(TAG, "getAddFoodItemUrl: " + url);
+        return url;
+    }
+
+    public static JSONObject getAddFoodItemParameters(String name, String menuId, String price, String restaurantId, String ingredients, String images) {
+        JSONObject params = HttpRequestManager.HttpParameter.getInstance()
+                .addJSONParam("name", name)
+                .addJSONParam("menu_id", menuId)
+                .addJSONParam("price", price)
+                .addJSONParam("restaurant_id", restaurantId)
+                .addJSONParam("id", "0")
+                .addJSONParam("ingredients", ingredients)
+                .addJSONParam("images", images)
+                .getJSONParam();
+        Log.d(TAG, "getAddFoodItemParameters: " + params.toString());
+        return params;
+    }
+
+    public static String getUpdateFoodItemUrl() {
+        String url = BASE_URL + "restaurants/addFoodItem";
+        Log.d(TAG, "getUpdateFoodItemUrl: " + url);
+        return url;
+    }
+
+    public static JSONObject getUpdateFoodItemParameters(String name, String menuId, String price, String restaurantId, String foodId, String ingredients, String images) {
+        JSONObject params = HttpRequestManager.HttpParameter.getInstance()
+                .addJSONParam("name", name)
+                .addJSONParam("menu_id", menuId)
+                .addJSONParam("price", price)
+                .addJSONParam("restaurant_id", restaurantId)
+                .addJSONParam("id", foodId)
+                .addJSONParam("ingredients", ingredients)
+                .addJSONParam("images", images)
+                .getJSONParam();
+        Log.d(TAG, "getUpdateFoodItemParameters: " + params.toString());
+        return params;
+    }
 }

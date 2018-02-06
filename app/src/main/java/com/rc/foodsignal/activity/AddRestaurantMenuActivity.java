@@ -1,6 +1,8 @@
 package com.rc.foodsignal.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,6 +27,7 @@ import com.rc.foodsignal.R;
 import com.rc.foodsignal.model.DataFoodCategory;
 import com.rc.foodsignal.model.FoodCategory;
 import com.rc.foodsignal.model.ResponseFoodCategory;
+import com.rc.foodsignal.model.ResponseRestaurantMenu;
 import com.rc.foodsignal.model.RestaurantLoginData;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
@@ -58,6 +61,7 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
     ImageView ivBack;
     LinearLayout llDone;
     RestaurantLoginData restaurantLoginData;
+    ProgressDialog loadingDialog;
 
     ImageView ivRestaurantMenu;
     EditText edtName, edtPrice, edtIngredient;
@@ -178,6 +182,79 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private class GetRestaurantMenuList extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
+
+        private Context mContext;
+        private String mName = "";
+        private String mMenuId = "";
+        private String mPrice = "";
+        private String mRestaurantId = "";
+        private String mIngredients = "";
+        private String mImage = "";
+
+        public GetRestaurantMenuList(Context context, String name, String menuId, String price, String restaurantId, String ingredients, String image) {
+            mContext = context;
+            mName = name;
+            mMenuId = menuId;
+            mPrice = price;
+            mRestaurantId = restaurantId;
+            mIngredients = ingredients;
+            mImage = image;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            loadingDialog = new ProgressDialog(mContext);
+            loadingDialog.setMessage(getResources().getString(R.string.txt_loading));
+            loadingDialog.setIndeterminate(false);
+            loadingDialog.setCancelable(true);
+            loadingDialog.setCanceledOnTouchOutside(false);
+            loadingDialog.show();
+            loadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface arg0) {
+                    if (loadingDialog != null
+                            && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
+                }
+            });
+        }
+
+        @Override
+        protected HttpRequestManager.HttpResponse doInBackground(String... params) {
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doGetRequest(AllUrls.getRestaurantMenuUrl("6"));
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(HttpRequestManager.HttpResponse result) {
+
+            if (loadingDialog != null
+                    && loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
+            }
+
+            if (result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
+                Log.d(TAG, "success response from web: " + result.getResult().toString());
+                ResponseRestaurantMenu responseData = ResponseRestaurantMenu.getResponseObject(result.getResult().toString(), ResponseRestaurantMenu.class);
+                Log.d(TAG, "success response from object: " + responseData.toString());
+
+                if (responseData.getStatus().equalsIgnoreCase("success") && (responseData.getData().size() > 0)) {
+                    Log.d(TAG, "success wrapper: " + responseData.getData().get(0).toString());
+
+                    //Update list view
+                    restaurantMenuListViewAdapter.setData(responseData.getData());
+                } else {
+                    Toast.makeText(RestaurantMenuListActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
+                }
+
+            } else {
+                Toast.makeText(RestaurantMenuListActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     /**********************
