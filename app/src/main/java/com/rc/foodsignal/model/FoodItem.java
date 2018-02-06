@@ -1,5 +1,7 @@
 package com.rc.foodsignal.model;
 
+import java.util.ArrayList;
+
 /**
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
@@ -10,18 +12,20 @@ public class FoodItem extends ResponseBase {
     private String name = "";
     private String menu_id = "";
     private String price = "";
-    private String image = "";
     private String restaurant_id = "";
-    private String menu_name = "";
+    private String ingredients = "";
+    private String category_name = "";
+    private ArrayList<FoodImage> images = new ArrayList<>();
 
-    public FoodItem(String id, String name, String menu_id, String price, String image, String restaurant_id, String menu_name) {
+    public FoodItem(String id, String name, String menu_id, String price, String restaurant_id, String ingredients, String category_name, ArrayList<FoodImage> images) {
         this.id = id;
         this.name = name;
         this.menu_id = menu_id;
         this.price = price;
-        this.image = image;
         this.restaurant_id = restaurant_id;
-        this.menu_name = menu_name;
+        this.ingredients = ingredients;
+        this.category_name = category_name;
+        this.images = images;
     }
 
     public String getId() {
@@ -56,14 +60,6 @@ public class FoodItem extends ResponseBase {
         this.price = price;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
     public String getRestaurant_id() {
         return restaurant_id;
     }
@@ -72,12 +68,28 @@ public class FoodItem extends ResponseBase {
         this.restaurant_id = restaurant_id;
     }
 
-    public String getMenu_name() {
-        return menu_name;
+    public String getIngredients() {
+        return ingredients;
     }
 
-    public void setMenu_name(String menu_name) {
-        this.menu_name = menu_name;
+    public void setIngredients(String ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public String getCategory_name() {
+        return category_name;
+    }
+
+    public void setCategory_name(String category_name) {
+        this.category_name = category_name;
+    }
+
+    public ArrayList<FoodImage> getImages() {
+        return images;
+    }
+
+    public void setImages(ArrayList<FoodImage> images) {
+        this.images = images;
     }
 
     @Override
@@ -87,9 +99,10 @@ public class FoodItem extends ResponseBase {
                 ", name='" + name + '\'' +
                 ", menu_id='" + menu_id + '\'' +
                 ", price='" + price + '\'' +
-                ", image='" + image + '\'' +
                 ", restaurant_id='" + restaurant_id + '\'' +
-                ", menu_name='" + menu_name + '\'' +
+                ", ingredients='" + ingredients + '\'' +
+                ", category_name='" + category_name + '\'' +
+                ", images=" + images +
                 '}';
     }
 }

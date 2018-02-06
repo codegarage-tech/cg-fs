@@ -146,7 +146,7 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
                 if (responseData.getStatus().equalsIgnoreCase("success") && (responseData.getData().size() > 0)) {
                     Log.d(TAG, "success wrapper: " + responseData.getData().get(0).toString());
 
-                    //Update listview
+                    //Update list view
                     restaurantMenuListViewAdapter.setData(responseData.getData());
                 } else {
                     Toast.makeText(RestaurantMenuListActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();

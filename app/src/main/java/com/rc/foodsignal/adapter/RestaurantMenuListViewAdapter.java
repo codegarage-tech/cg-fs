@@ -57,7 +57,6 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
         return -1;
     }
 
-
     @Override
     public int getCount() {
         return mData.size();
@@ -86,7 +85,7 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
         Glide
                 .with(mActivity)
                 .asBitmap()
-                .load(R.drawable.ic_default_restaurant_menu)
+                .load((foodItem.getImages().size() > 0) ? foodItem.getImages().get(0).getImage() : R.drawable.ic_default_restaurant_menu)
                 .apply(new RequestOptions().signature(new ObjectKey(System.currentTimeMillis())))
 //                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
                 .apply(new RequestOptions().circleCropTransform())
