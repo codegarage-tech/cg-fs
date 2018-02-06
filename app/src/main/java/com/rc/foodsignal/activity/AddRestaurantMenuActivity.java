@@ -27,7 +27,6 @@ import com.rc.foodsignal.R;
 import com.rc.foodsignal.model.DataFoodCategory;
 import com.rc.foodsignal.model.FoodCategory;
 import com.rc.foodsignal.model.ResponseFoodCategory;
-import com.rc.foodsignal.model.ResponseRestaurantMenu;
 import com.rc.foodsignal.model.RestaurantLoginData;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
@@ -179,12 +178,12 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
                     Log.d("Default(base64): ", mBase64);
                 }
 
-
+                new DoAddFoodItem(AddRestaurantMenuActivity.this, mName, getFoodCategory(mCategory).getId(), mPrice, restaurantLoginData.getId(), mIngredient, mBase64).execute();
             }
         });
     }
 
-    private class GetRestaurantMenuList extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
+    private class DoAddFoodItem extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
 
         private Context mContext;
         private String mName = "";
@@ -194,7 +193,7 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
         private String mIngredients = "";
         private String mImage = "";
 
-        public GetRestaurantMenuList(Context context, String name, String menuId, String price, String restaurantId, String ingredients, String image) {
+        public DoAddFoodItem(Context context, String name, String menuId, String price, String restaurantId, String ingredients, String image) {
             mContext = context;
             mName = name;
             mMenuId = menuId;
@@ -225,7 +224,7 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
 
         @Override
         protected HttpRequestManager.HttpResponse doInBackground(String... params) {
-            HttpRequestManager.HttpResponse response = HttpRequestManager.doGetRequest(AllUrls.getRestaurantMenuUrl("6"));
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getAddFoodItemUrl(), AllUrls.getAddFoodItemParameters(mName, mMenuId, mPrice, mRestaurantId, mIngredients, mImage), null);
             return response;
         }
 
@@ -239,20 +238,20 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
 
             if (result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
                 Log.d(TAG, "success response from web: " + result.getResult().toString());
-                ResponseRestaurantMenu responseData = ResponseRestaurantMenu.getResponseObject(result.getResult().toString(), ResponseRestaurantMenu.class);
-                Log.d(TAG, "success response from object: " + responseData.toString());
-
-                if (responseData.getStatus().equalsIgnoreCase("success") && (responseData.getData().size() > 0)) {
-                    Log.d(TAG, "success wrapper: " + responseData.getData().get(0).toString());
-
-                    //Update list view
-                    restaurantMenuListViewAdapter.setData(responseData.getData());
-                } else {
-                    Toast.makeText(RestaurantMenuListActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
-                }
+//                ResponseRestaurantMenu responseData = ResponseRestaurantMenu.getResponseObject(result.getResult().toString(), ResponseRestaurantMenu.class);
+//                Log.d(TAG, "success response from object: " + responseData.toString());
+//
+//                if (responseData.getStatus().equalsIgnoreCase("success") && (responseData.getData().size() > 0)) {
+//                    Log.d(TAG, "success wrapper: " + responseData.getData().get(0).toString());
+//
+//                    //Update list view
+//                    restaurantMenuListViewAdapter.setData(responseData.getData());
+//                } else {
+//                    Toast.makeText(AddRestaurantMenuActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
+//                }
 
             } else {
-                Toast.makeText(RestaurantMenuListActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddRestaurantMenuActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -275,6 +274,17 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
                     .setSingleChoice(true)
                     .build();
         }
+    }
+
+    private FoodCategory getFoodCategory(String name) {
+        if (mCategory != null && mCategory.size() > 0) {
+            for (FoodCategory foodCategory : mCategory) {
+                if (foodCategory.getName().equalsIgnoreCase(name)) {
+                    return foodCategory;
+                }
+            }
+        }
+        return null;
     }
 
     public List<String> getUniqueCategoryKeys(ArrayList<FoodCategory> foodCategories) {
