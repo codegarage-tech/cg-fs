@@ -224,7 +224,7 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
 
         @Override
         protected HttpRequestManager.HttpResponse doInBackground(String... params) {
-            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getAddFoodItemUrl(), AllUrls.getAddFoodItemParameters(mName, mMenuId, mPrice, mRestaurantId, mIngredients, mImage), null);
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getAddFoodItemUrl(), AllUrls.getAddFoodItemParameters(mName, mMenuId, mPrice, mRestaurantId, mIngredients, "["+mImage+"]"), null);
             return response;
         }
 

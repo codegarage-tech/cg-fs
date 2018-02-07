@@ -92,13 +92,13 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
                 .into(ivMenu);
 
         TextView tvMenuName = (TextView) vi.findViewById(R.id.tv_menu_name);
-        tvMenuName.setText("Name: " + foodItem.getName());
+        tvMenuName.setText(foodItem.getName());
 
         TextView tvMenuPrice = (TextView) vi.findViewById(R.id.tv_menu_price);
-        tvMenuPrice.setText("Price: " + foodItem.getName());
+        tvMenuPrice.setText("Price: " + "$" + foodItem.getPrice());
 
         TextView tvMenuIngredient = (TextView) vi.findViewById(R.id.tv_menu_ingredient);
-        tvMenuIngredient.setText("Ingredient: " + foodItem.getName());
+        tvMenuIngredient.setText("Ingredient: " + foodItem.getIngredients());
 
 //        vi.setOnClickListener(new View.OnClickListener() {
 //            @Override
