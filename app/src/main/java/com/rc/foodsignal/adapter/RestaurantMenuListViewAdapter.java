@@ -2,6 +2,7 @@ package com.rc.foodsignal.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +14,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
 import com.rc.foodsignal.R;
+import com.rc.foodsignal.activity.AboutRestaurantMenuActivity;
 import com.rc.foodsignal.model.FoodItem;
 
 import java.util.ArrayList;
+
+import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_FOOD_ITEM;
+import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_RESTAURANT_MENU_DETAIL;
 
 /**
  * @author Md. Rashadul Alam
@@ -45,6 +50,15 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
 
     public void addData(FoodItem foodItem) {
         if (getCount() > 0) {
+            mData.add(foodItem);
+            notifyDataSetChanged();
+        }
+    }
+
+    public void updateData(FoodItem foodItem) {
+        if (getCount() > 0) {
+            int itemPosition = getItemPosition(foodItem);
+            mData.remove(itemPosition);
             mData.add(foodItem);
             notifyDataSetChanged();
         }
@@ -90,6 +104,8 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
                 .load((foodItem.getImages().size() > 0) ? foodItem.getImages().get(0).getImage() : R.drawable.ic_default_restaurant_menu)
                 .apply(new RequestOptions().signature(new ObjectKey(System.currentTimeMillis())))
 //                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
+                .apply(new RequestOptions().placeholder(R.drawable.ic_default_restaurant_menu))
+                .apply(new RequestOptions().error(R.drawable.ic_default_restaurant_menu))
                 .apply(new RequestOptions().circleCropTransform())
                 .into(ivMenu);
 
@@ -102,32 +118,15 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
         TextView tvMenuIngredient = (TextView) vi.findViewById(R.id.tv_menu_ingredient);
         tvMenuIngredient.setText("Ingredient: " + foodItem.getIngredients());
 
-//        vi.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mLocation = location;
-//                SessionManager.setStringSetting(mActivity, SESSION_SELECTED_LOCATION, mLocation.toString());
-//                SessionManager.setBooleanSetting(mActivity, SESSION_IS_LOCATION_ADDED, true);
-//                notifyDataSetChanged();
-//            }
-//        });
+        vi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentMenuDetail = new Intent(mActivity, AboutRestaurantMenuActivity.class);
+                intentMenuDetail.putExtra(INTENT_KEY_FOOD_ITEM, foodItem);
+                mActivity.startActivityForResult(intentMenuDetail, INTENT_REQUEST_CODE_RESTAURANT_MENU_DETAIL);
+            }
+        });
 
         return vi;
     }
-
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        Log.d(TAG, "onActivityResult");
-//
-//        switch (requestCode) {
-//            case REQUEST_CODE_PAYPAL: {
-//                if (resultCode == RESULT_OK) {
-//                    Music music = data.getParcelableExtra(INTENT_KEY_PAYPAL_UPDATE_MUSIC_ITEM);
-//                    Log.d(TAG, "updated music: " + music.toString());
-//
-//                    updateMusic(music);
-//                }
-//                break;
-//            }
-//        }
-//    }
 }

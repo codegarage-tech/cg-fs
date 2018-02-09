@@ -26,6 +26,7 @@ import com.nex3z.flowlayout.FlowLayoutManager;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.model.DataFoodCategory;
 import com.rc.foodsignal.model.FoodCategory;
+import com.rc.foodsignal.model.FoodItem;
 import com.rc.foodsignal.model.ResponseFoodCategory;
 import com.rc.foodsignal.model.ResponseRestaurantMenu;
 import com.rc.foodsignal.model.RestaurantLoginData;
@@ -55,14 +56,15 @@ import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_LOGIN_DATA;
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
  */
-public class AddRestaurantMenuActivity extends AppCompatActivity {
+public class AboutRestaurantMenuActivity extends AppCompatActivity {
 
-    String TAG = AppUtils.getTagName(AddRestaurantMenuActivity.class);
+    String TAG = AppUtils.getTagName(AboutRestaurantMenuActivity.class);
     TextView tvTitle;
     ImageView ivBack;
     LinearLayout llDone;
     RestaurantLoginData restaurantLoginData;
     ProgressDialog loadingDialog;
+    FoodItem foodItem;
 
     ImageView ivRestaurantMenu;
     EditText edtName, edtPrice, edtIngredient;
@@ -79,30 +81,54 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_restaurant_menu);
+        setContentView(R.layout.activity_about_restaurant_menu);
 
         initUI();
         initActions();
     }
 
     private void initUI() {
-        if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(AddRestaurantMenuActivity.this, SESSION_RESTAURANT_LOGIN_DATA))) {
-            Log.d(TAG, "Session data: " + SessionManager.getStringSetting(AddRestaurantMenuActivity.this, SESSION_RESTAURANT_LOGIN_DATA));
-            restaurantLoginData = RestaurantLoginData.getResponseObject(SessionManager.getStringSetting(AddRestaurantMenuActivity.this, SESSION_RESTAURANT_LOGIN_DATA), RestaurantLoginData.class);
-        }
-
         ivBack = (ImageView) findViewById(R.id.iv_back);
         llDone = (LinearLayout) findViewById(R.id.ll_done);
         llDone.setVisibility(View.VISIBLE);
-
         tvTitle = (TextView) findViewById(R.id.text_title);
-        tvTitle.setText(getString(R.string.title_activity_add_restaurant_menu));
+        tvTitle.setText(getString(R.string.title_activity_about_restaurant_menu));
 
         ivRestaurantMenu = (ImageView) findViewById(R.id.iv_restaurant_menu);
+        flowLayout = (FlowLayout) findViewById(R.id.fl_food_category);
+        tvCategory = (TextView) findViewById(R.id.tv_selected_food_category);
+        edtName = (EditText) findViewById(R.id.edt_name);
+        edtName = (EditText) findViewById(R.id.edt_name);
+        edtPrice = (EditText) findViewById(R.id.edt_price);
+        edtIngredient = (EditText) findViewById(R.id.edt_ingredient);
+
+        if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(AboutRestaurantMenuActivity.this, SESSION_RESTAURANT_LOGIN_DATA))) {
+            Log.d(TAG, "Session data: " + SessionManager.getStringSetting(AboutRestaurantMenuActivity.this, SESSION_RESTAURANT_LOGIN_DATA));
+            restaurantLoginData = RestaurantLoginData.getResponseObject(SessionManager.getStringSetting(AboutRestaurantMenuActivity.this, SESSION_RESTAURANT_LOGIN_DATA), RestaurantLoginData.class);
+        }
+
+        // Get current menu data
+        Intent intent = getIntent();
+        if (intent.getParcelableExtra(INTENT_KEY_FOOD_ITEM) != null) {
+            foodItem = intent.getParcelableExtra(INTENT_KEY_FOOD_ITEM);
+        }
+
+        if (!NetworkManager.isConnected(AboutRestaurantMenuActivity.this)) {
+            setDefaultFoodCategory();
+
+            // Set menu detail
+            setMenuDetail(foodItem);
+        } else {
+            getAllFoodCategory = new GetAllFoodCategory(AboutRestaurantMenuActivity.this);
+            getAllFoodCategory.execute();
+        }
+    }
+
+    private void setMenuDetail(FoodItem mFoodItem) {
         Glide
-                .with(AddRestaurantMenuActivity.this)
+                .with(AboutRestaurantMenuActivity.this)
                 .asBitmap()
-                .load(R.drawable.ic_default_restaurant_menu)
+                .load((mFoodItem.getImages().size() > 0) ? mFoodItem.getImages().get(0).getImage() : R.drawable.ic_default_restaurant_menu)
                 .apply(new RequestOptions().signature(new ObjectKey(System.currentTimeMillis())))
 //                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
                 .apply(new RequestOptions().placeholder(R.drawable.ic_default_restaurant_menu))
@@ -110,19 +136,12 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
                 .apply(new RequestOptions().circleCropTransform())
                 .into(ivRestaurantMenu);
 
-        edtName = (EditText) findViewById(R.id.edt_name);
-        edtPrice = (EditText) findViewById(R.id.edt_price);
-        edtIngredient = (EditText) findViewById(R.id.edt_ingredient);
+        flowLayoutManager.clickFlowView(mFoodItem.getCategory_name());
+//            tvCategory.setText(mFoodItem.getCategory_name());
+        edtName.setText(mFoodItem.getName());
+        edtPrice.setText("$" + mFoodItem.getPrice());
+        edtIngredient.setText(mFoodItem.getIngredients());
 
-        flowLayout = (FlowLayout) findViewById(R.id.fl_food_category);
-        tvCategory = (TextView) findViewById(R.id.tv_selected_food_category);
-
-        if (!NetworkManager.isConnected(AddRestaurantMenuActivity.this)) {
-            setDefaultFoodCategory();
-        } else {
-            getAllFoodCategory = new GetAllFoodCategory(AddRestaurantMenuActivity.this);
-            getAllFoodCategory.execute();
-        }
     }
 
     private void initActions() {
@@ -136,7 +155,7 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
         ivRestaurantMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Matisse.from(AddRestaurantMenuActivity.this)
+                Matisse.from(AboutRestaurantMenuActivity.this)
                         .choose(MimeType.ofImage())
                         .theme(R.style.Matisse_Dracula)
                         .capture(true)
@@ -157,52 +176,63 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
                         mIngredient = edtIngredient.getText().toString();
 
                 if (mCategory.equalsIgnoreCase("")) {
-                    Toast.makeText(AddRestaurantMenuActivity.this, getResources().getString(R.string.toast_empty_category_field), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AboutRestaurantMenuActivity.this, getResources().getString(R.string.toast_empty_category_field), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (mName.equalsIgnoreCase("")) {
-                    Toast.makeText(AddRestaurantMenuActivity.this, getResources().getString(R.string.toast_empty_name_field), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AboutRestaurantMenuActivity.this, getResources().getString(R.string.toast_empty_name_field), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (mPrice.equalsIgnoreCase("")) {
-                    Toast.makeText(AddRestaurantMenuActivity.this, getResources().getString(R.string.toast_empty_price_field), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AboutRestaurantMenuActivity.this, getResources().getString(R.string.toast_empty_price_field), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (mIngredient.equalsIgnoreCase("")) {
-                    Toast.makeText(AddRestaurantMenuActivity.this, getResources().getString(R.string.toast_empty_ingredient_field), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AboutRestaurantMenuActivity.this, getResources().getString(R.string.toast_empty_ingredient_field), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (!NetworkManager.isConnected(AddRestaurantMenuActivity.this)) {
-                    Toast.makeText(AddRestaurantMenuActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
+                if (!NetworkManager.isConnected(AboutRestaurantMenuActivity.this)) {
+                    Toast.makeText(AboutRestaurantMenuActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                //Select final param for update
+//                String finalName = mName.equalsIgnoreCase(foodItem.getName()) ? null : mName;
+//                String finalCategory = mCategory.equalsIgnoreCase(foodItem.getCategory_name()) ? null : mCategory;
+//                String finalPrice = mPrice.substring(1,mPrice.length()).equalsIgnoreCase(foodItem.getPrice()) ? null : mPrice.substring(1,mPrice.length());
+//                String finalRestaurantId = restaurantLoginData.getId().equalsIgnoreCase(foodItem.getRestaurant_id()) ? null : restaurantLoginData.getId();
+//                String finalFoodId = mName.equalsIgnoreCase(foodItem.getName()) ? null : mName;
+//                String finalName = mName.equalsIgnoreCase(foodItem.getName()) ? null : mName;
+
                 if (mBase64.equalsIgnoreCase("")) {
                     Bitmap bmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_default_restaurant_menu);
                     mBase64 = PREFIX_BASE64_STRING + ImageZipper.getBase64forImage(bmap);
                     Log.d("Default(base64): ", mBase64);
                 }
 
-                new DoAddFoodItem(AddRestaurantMenuActivity.this, mName, getFoodCategory(mCategory).getId(), mPrice, restaurantLoginData.getId(), mIngredient, new String[]{mBase64}).execute();
+                new DoUpdateFoodItem(AboutRestaurantMenuActivity.this, mName, getFoodCategory(mCategory).getId(), mPrice, restaurantLoginData.getId(), foodItem.getId(), mIngredient, new String[]{mBase64}).execute();
             }
         });
     }
 
-    private class DoAddFoodItem extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
+    private class DoUpdateFoodItem extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
 
         private Context mContext;
         private String mName = "";
         private String mMenuId = "";
         private String mPrice = "";
         private String mRestaurantId = "";
+        private String mFoodId = "";
         private String mIngredients = "";
         private String mImages[] = new String[]{};
 
-        public DoAddFoodItem(Context context, String name, String menuId, String price, String restaurantId, String ingredients, String images[]) {
+        public DoUpdateFoodItem(Context context, String name, String menuId, String price, String restaurantId, String foodId, String ingredients, String images[]) {
             mContext = context;
             mName = name;
             mMenuId = menuId;
             mPrice = price;
             mRestaurantId = restaurantId;
+            mFoodId = foodId;
             mIngredients = ingredients;
             mImages = images;
         }
@@ -228,7 +258,7 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
 
         @Override
         protected HttpRequestManager.HttpResponse doInBackground(String... params) {
-            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getAddFoodItemUrl(), AllUrls.getAddFoodItemParameters(mName, mMenuId, mPrice, mRestaurantId, mIngredients, mImages), null);
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getUpdateFoodItemUrl(), AllUrls.getUpdateFoodItemParameters(mName, mMenuId, mPrice, mRestaurantId, mFoodId, mIngredients, mImages), null);
             return response;
         }
 
@@ -249,17 +279,17 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
                     Log.d(TAG, "success wrapper: " + responseData.getData().get(0).toString());
 
                     //Send added menu to the restaurant menu list
-                    Intent intent = new Intent();
-                    intent.putExtra(INTENT_KEY_FOOD_ITEM, responseData.getData().get(0));
-                    setResult(RESULT_OK, intent);
-                    finish();
+//                    Intent intent = new Intent();
+//                    intent.putExtra(INTENT_KEY_FOOD_ITEM, responseData.getData().get(0));
+//                    setResult(RESULT_OK, intent);
+//                    finish();
 
                 } else {
-                    Toast.makeText(AddRestaurantMenuActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AboutRestaurantMenuActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
                 }
 
             } else {
-                Toast.makeText(AddRestaurantMenuActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AboutRestaurantMenuActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -272,7 +302,7 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
         mCategoryKey = getUniqueCategoryKeys(foodCategories);
 
         if (mCategoryKey.size() > 0) {
-            flowLayoutManager = new FlowLayoutManager.FlowViewBuilder(AddRestaurantMenuActivity.this, flowLayout, mCategoryKey, new FlowLayoutManager.onFlowViewClick() {
+            flowLayoutManager = new FlowLayoutManager.FlowViewBuilder(AboutRestaurantMenuActivity.this, flowLayout, mCategoryKey, new FlowLayoutManager.onFlowViewClick() {
                 @Override
                 public void flowViewClick(TextView updatedTextView) {
                     List<TextView> selectedCategory = flowLayoutManager.getSelectedFlowViews();
@@ -285,7 +315,7 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
     }
 
     private FoodCategory getFoodCategory(String name) {
-        if (mCategory != null && mCategory.size() > 0) {
+        if (name != null && mCategory != null && mCategory.size() > 0) {
             for (FoodCategory foodCategory : mCategory) {
                 if (foodCategory.getName().equalsIgnoreCase(name)) {
                     return foodCategory;
@@ -305,8 +335,8 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
     }
 
     private void setDefaultFoodCategory() {
-        if (!AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(AddRestaurantMenuActivity.this, SESSION_FOOD_CATEGORY))) {
-            initFilter(DataFoodCategory.getResponseObject(SessionManager.getStringSetting(AddRestaurantMenuActivity.this, SESSION_FOOD_CATEGORY), DataFoodCategory.class).getData());
+        if (!AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(AboutRestaurantMenuActivity.this, SESSION_FOOD_CATEGORY))) {
+            initFilter(DataFoodCategory.getResponseObject(SessionManager.getStringSetting(AboutRestaurantMenuActivity.this, SESSION_FOOD_CATEGORY), DataFoodCategory.class).getData());
         } else {
             initFilter(DataFoodCategory.getResponseObject(DEFAULT_FOOD_CATEGORY, DataFoodCategory.class).getData());
         }
@@ -343,9 +373,12 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
 
                     //Save food category into session
                     DataFoodCategory dataFoodCategory = new DataFoodCategory(responseFoodCategory.getData());
-                    SessionManager.setStringSetting(AddRestaurantMenuActivity.this, SESSION_FOOD_CATEGORY, DataFoodCategory.getResponseString(dataFoodCategory));
+                    SessionManager.setStringSetting(AboutRestaurantMenuActivity.this, SESSION_FOOD_CATEGORY, DataFoodCategory.getResponseString(dataFoodCategory));
 
                     initFilter(responseFoodCategory.getData());
+
+                    // Set menu detail
+                    setMenuDetail(foodItem);
 
                 } else {
 
@@ -370,7 +403,7 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
             if (mData.size() == 1) {
                 Log.d("MatisseImage: ", mData.get(0));
                 Glide
-                        .with(AddRestaurantMenuActivity.this)
+                        .with(AboutRestaurantMenuActivity.this)
                         .asBitmap()
                         .load(mData.get(0))
                         .apply(new RequestOptions().signature(new ObjectKey(System.currentTimeMillis())))
@@ -381,7 +414,7 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
                         .into(ivRestaurantMenu);
 
                 try {
-                    File imageZipperFile = new ImageZipper(AddRestaurantMenuActivity.this)
+                    File imageZipperFile = new ImageZipper(AboutRestaurantMenuActivity.this)
                             .setQuality(100)
                             .setMaxWidth(200)
                             .setMaxHeight(200)

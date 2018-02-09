@@ -27,7 +27,8 @@ import com.reversecoder.library.network.NetworkManager;
 import com.reversecoder.library.storage.SessionManager;
 
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_FOOD_ITEM;
-import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_RESTAURANT_MENU_LIST;
+import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_RESTAURANT_ADD_MENU;
+import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_RESTAURANT_MENU_DETAIL;
 import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_LOGIN_DATA;
 
 /**
@@ -92,7 +93,7 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intentAddress = new Intent(RestaurantMenuListActivity.this, AddRestaurantMenuActivity.class);
-                startActivityForResult(intentAddress, INTENT_REQUEST_CODE_RESTAURANT_MENU_LIST);
+                startActivityForResult(intentAddress, INTENT_REQUEST_CODE_RESTAURANT_ADD_MENU);
             }
         });
     }
@@ -165,7 +166,7 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case INTENT_REQUEST_CODE_RESTAURANT_MENU_LIST: {
+            case INTENT_REQUEST_CODE_RESTAURANT_ADD_MENU: {
                 if (data != null && resultCode == RESULT_OK) {
 
                     FoodItem foodItem = data.getParcelableExtra(INTENT_KEY_FOOD_ITEM);
@@ -175,6 +176,18 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
                 }
                 break;
             }
+
+            case INTENT_REQUEST_CODE_RESTAURANT_MENU_DETAIL: {
+                if (data != null && resultCode == RESULT_OK) {
+
+                    FoodItem foodItem = data.getParcelableExtra(INTENT_KEY_FOOD_ITEM);
+                    if(foodItem !=null){
+                        restaurantMenuListViewAdapter.updateData(foodItem);
+                    }
+                }
+                break;
+            }
+
             default:
                 break;
         }

@@ -22,7 +22,8 @@ public class AllConstants {
     public static final int INTENT_REQUEST_CODE_ADDRESS_LIST = 4200;
     public static final int INTENT_REQUEST_CODE_IMAGE_PICKER = 42000;
     public static final int INTENT_REQUEST_CODE_ADDRESS_SEARCH = 42001;
-    public static final int INTENT_REQUEST_CODE_RESTAURANT_MENU_LIST = 42002;
+    public static final int INTENT_REQUEST_CODE_RESTAURANT_ADD_MENU = 42002;
+    public static final int INTENT_REQUEST_CODE_RESTAURANT_MENU_DETAIL = 42003;
 
     //Intent key
     public static final String INTENT_KEY_LOGIN = "INTENT_KEY_LOGIN";

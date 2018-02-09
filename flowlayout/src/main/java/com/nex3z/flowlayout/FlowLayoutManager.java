@@ -47,24 +47,46 @@ public class FlowLayoutManager {
             @Override
             public void onClick(View v) {
 
-                TextView updatedTextView;
-                if (textView.getTag().toString().equalsIgnoreCase(TEXT_TYPE.SELECTED.name())) {
-                    updatedTextView = unSelectFlowView(textView);
-                } else {
-                    updatedTextView = selectFlowView(textView);
-                }
-
-                //For single choice we need to clear all selection before update
-                if (isSingleChoice) {
-                    clearAllSelectionExceptCurrent(updatedTextView.getText().toString());
-                }
-
-                //Update list for both single choice and multi choice
-                onFlowViewClick.flowViewClick(updateTextView(updatedTextView));
+                clickFlowView(textView);
             }
         });
 
         return textView;
+    }
+
+    private void clickFlowView(TextView textView) {
+        TextView updatedTextView;
+        if (textView.getTag().toString().equalsIgnoreCase(TEXT_TYPE.SELECTED.name())) {
+            updatedTextView = unSelectFlowView(textView);
+        } else {
+            updatedTextView = selectFlowView(textView);
+        }
+
+        //For single choice we need to clear all selection before update
+        if (isSingleChoice) {
+            clearAllSelectionExceptCurrent(updatedTextView.getText().toString());
+        }
+
+        //Update list for both single choice and multi choice
+        onFlowViewClick.flowViewClick(updateTextView(updatedTextView));
+    }
+
+    public void clickFlowView(String itemName) {
+        TextView textView = getFlowView(itemName);
+        TextView updatedTextView;
+        if (textView.getTag().toString().equalsIgnoreCase(TEXT_TYPE.SELECTED.name())) {
+            updatedTextView = unSelectFlowView(textView);
+        } else {
+            updatedTextView = selectFlowView(textView);
+        }
+
+        //For single choice we need to clear all selection before update
+        if (isSingleChoice) {
+            clearAllSelectionExceptCurrent(updatedTextView.getText().toString());
+        }
+
+        //Update list for both single choice and multi choice
+        onFlowViewClick.flowViewClick(updateTextView(updatedTextView));
     }
 
     private FlowLayoutManager buildFlowView() {
@@ -116,6 +138,17 @@ public class FlowLayoutManager {
             }
         }
         return -1;
+    }
+
+    private TextView getFlowView(String value) {
+        if (flowViews != null && flowViews.size() > 0) {
+            for (int i = 0; i < flowViews.size(); i++) {
+                if (flowViews.get(i).getText().toString().equalsIgnoreCase(value)) {
+                    return flowViews.get(i);
+                }
+            }
+        }
+        return null;
     }
 
     public List<TextView> getAllFlowViews() {
