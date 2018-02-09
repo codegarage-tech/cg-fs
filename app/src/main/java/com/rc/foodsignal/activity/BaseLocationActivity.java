@@ -40,6 +40,7 @@ public abstract class BaseLocationActivity extends AppCompatActivity {
     public LocationSettingsRequest mLocationSettingsRequest;
     public Location mCurrentLocation;
     public LocationListener mLocationListener;
+
     public abstract void onLocationFound(Location location);
 
     public static final long UPDATE_INTERVAL_LOCATION_IN_MILLISECONDS = 10 * 1000;
@@ -138,7 +139,9 @@ public abstract class BaseLocationActivity extends AppCompatActivity {
                         if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && isLocationSettingsEnabled()) {
                             Log.d(TAG, "Requesting for last location.");
                             mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                            Log.d(TAG, "Last Location found: " + mCurrentLocation.toString());
+                            if (mCurrentLocation != null) {
+                                Log.d(TAG, "Last Location found: " + mCurrentLocation.toString());
+                            }
                         }
                     }
 
@@ -172,11 +175,12 @@ public abstract class BaseLocationActivity extends AppCompatActivity {
             @Override
             public void onLocationChanged(Location location) {
                 mCurrentLocation = location;
-                Log.d(TAG, "onLocationChanged: " + mCurrentLocation.toString());
 
                 //Stop requesting update if location is found
-                onLocationFound(mCurrentLocation);
                 if (mCurrentLocation != null) {
+                    Log.d(TAG, "onLocationChanged: " + mCurrentLocation.toString());
+                    onLocationFound(mCurrentLocation);
+
                     Log.d(TAG, "Location data found, stopping location update request");
                     stopUpdate(mGoogleApiClient, mLocationListener);
                 }

@@ -139,7 +139,7 @@ public class AboutRestaurantMenuActivity extends AppCompatActivity {
         flowLayoutManager.clickFlowView(mFoodItem.getCategory_name());
 //            tvCategory.setText(mFoodItem.getCategory_name());
         edtName.setText(mFoodItem.getName());
-        edtPrice.setText("$" + mFoodItem.getPrice());
+        edtPrice.setText(mFoodItem.getPrice());
         edtIngredient.setText(mFoodItem.getIngredients());
 
     }
@@ -195,14 +195,6 @@ public class AboutRestaurantMenuActivity extends AppCompatActivity {
                     Toast.makeText(AboutRestaurantMenuActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                //Select final param for update
-//                String finalName = mName.equalsIgnoreCase(foodItem.getName()) ? null : mName;
-//                String finalCategory = mCategory.equalsIgnoreCase(foodItem.getCategory_name()) ? null : mCategory;
-//                String finalPrice = mPrice.substring(1,mPrice.length()).equalsIgnoreCase(foodItem.getPrice()) ? null : mPrice.substring(1,mPrice.length());
-//                String finalRestaurantId = restaurantLoginData.getId().equalsIgnoreCase(foodItem.getRestaurant_id()) ? null : restaurantLoginData.getId();
-//                String finalFoodId = mName.equalsIgnoreCase(foodItem.getName()) ? null : mName;
-//                String finalName = mName.equalsIgnoreCase(foodItem.getName()) ? null : mName;
 
                 if (mBase64.equalsIgnoreCase("")) {
                     Bitmap bmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_default_restaurant_menu);
@@ -279,10 +271,10 @@ public class AboutRestaurantMenuActivity extends AppCompatActivity {
                     Log.d(TAG, "success wrapper: " + responseData.getData().get(0).toString());
 
                     //Send added menu to the restaurant menu list
-//                    Intent intent = new Intent();
-//                    intent.putExtra(INTENT_KEY_FOOD_ITEM, responseData.getData().get(0));
-//                    setResult(RESULT_OK, intent);
-//                    finish();
+                    Intent intent = new Intent();
+                    intent.putExtra(INTENT_KEY_FOOD_ITEM, responseData.getData().get(0));
+                    setResult(RESULT_OK, intent);
+                    finish();
 
                 } else {
                     Toast.makeText(AboutRestaurantMenuActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
