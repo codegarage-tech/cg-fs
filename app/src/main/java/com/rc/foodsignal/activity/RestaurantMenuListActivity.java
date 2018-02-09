@@ -128,7 +128,7 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
 
         @Override
         protected HttpRequestManager.HttpResponse doInBackground(String... params) {
-            HttpRequestManager.HttpResponse response = HttpRequestManager.doGetRequest(AllUrls.getRestaurantMenuUrl("6"));
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doGetRequest(AllUrls.getRestaurantMenuUrl(mRestaurantId));
             return response;
         }
 
