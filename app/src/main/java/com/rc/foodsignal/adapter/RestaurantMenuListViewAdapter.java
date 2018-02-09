@@ -44,8 +44,10 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
     }
 
     public void addData(FoodItem foodItem) {
-        mData.add(foodItem);
-        notifyDataSetChanged();
+        if (getCount() > 0) {
+            mData.add(foodItem);
+            notifyDataSetChanged();
+        }
     }
 
     public int getItemPosition(FoodItem foodItem) {

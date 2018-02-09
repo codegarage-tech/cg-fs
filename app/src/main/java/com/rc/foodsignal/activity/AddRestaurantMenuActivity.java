@@ -27,6 +27,7 @@ import com.rc.foodsignal.R;
 import com.rc.foodsignal.model.DataFoodCategory;
 import com.rc.foodsignal.model.FoodCategory;
 import com.rc.foodsignal.model.ResponseFoodCategory;
+import com.rc.foodsignal.model.ResponseRestaurantMenu;
 import com.rc.foodsignal.model.RestaurantLoginData;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
@@ -44,6 +45,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.rc.foodsignal.util.AllConstants.DEFAULT_FOOD_CATEGORY;
+import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_FOOD_ITEM;
 import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_IMAGE_PICKER;
 import static com.rc.foodsignal.util.AllConstants.PREFIX_BASE64_STRING;
 import static com.rc.foodsignal.util.AllConstants.SESSION_FOOD_CATEGORY;
@@ -178,7 +180,7 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
                     Log.d("Default(base64): ", mBase64);
                 }
 
-                new DoAddFoodItem(AddRestaurantMenuActivity.this, mName, getFoodCategory(mCategory).getId(), mPrice, restaurantLoginData.getId(), mIngredient, mBase64).execute();
+                new DoAddFoodItem(AddRestaurantMenuActivity.this, mName, getFoodCategory(mCategory).getId(), mPrice, restaurantLoginData.getId(), mIngredient, new String[]{mBase64}).execute();
             }
         });
     }
@@ -191,16 +193,16 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
         private String mPrice = "";
         private String mRestaurantId = "";
         private String mIngredients = "";
-        private String mImage = "";
+        private String mImages[] = new String[]{};
 
-        public DoAddFoodItem(Context context, String name, String menuId, String price, String restaurantId, String ingredients, String image) {
+        public DoAddFoodItem(Context context, String name, String menuId, String price, String restaurantId, String ingredients, String images[]) {
             mContext = context;
             mName = name;
             mMenuId = menuId;
             mPrice = price;
             mRestaurantId = restaurantId;
             mIngredients = ingredients;
-            mImage = image;
+            mImages = images;
         }
 
         @Override
@@ -224,7 +226,7 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
 
         @Override
         protected HttpRequestManager.HttpResponse doInBackground(String... params) {
-            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getAddFoodItemUrl(), AllUrls.getAddFoodItemParameters(mName, mMenuId, mPrice, mRestaurantId, mIngredients, "["+mImage+"]"), null);
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getAddFoodItemUrl(), AllUrls.getAddFoodItemParameters(mName, mMenuId, mPrice, mRestaurantId, mIngredients, mImages), null);
             return response;
         }
 
@@ -238,17 +240,21 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
 
             if (result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
                 Log.d(TAG, "success response from web: " + result.getResult().toString());
-//                ResponseRestaurantMenu responseData = ResponseRestaurantMenu.getResponseObject(result.getResult().toString(), ResponseRestaurantMenu.class);
-//                Log.d(TAG, "success response from object: " + responseData.toString());
-//
-//                if (responseData.getStatus().equalsIgnoreCase("success") && (responseData.getData().size() > 0)) {
-//                    Log.d(TAG, "success wrapper: " + responseData.getData().get(0).toString());
-//
-//                    //Update list view
-//                    restaurantMenuListViewAdapter.setData(responseData.getData());
-//                } else {
-//                    Toast.makeText(AddRestaurantMenuActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
-//                }
+                ResponseRestaurantMenu responseData = ResponseRestaurantMenu.getResponseObject(result.getResult().toString(), ResponseRestaurantMenu.class);
+                Log.d(TAG, "success response from object: " + responseData.toString());
+
+                if (responseData.getStatus().equalsIgnoreCase("1") && (responseData.getData().size() > 0)) {
+                    Log.d(TAG, "success wrapper: " + responseData.getData().get(0).toString());
+
+                    //Send added menu to the restaurant menu list
+                    Intent intent = new Intent();
+                    intent.putExtra(INTENT_KEY_FOOD_ITEM, responseData.getData().get(0));
+                    setResult(RESULT_OK, intent);
+                    finish();
+
+                } else {
+                    Toast.makeText(AddRestaurantMenuActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
+                }
 
             } else {
                 Toast.makeText(AddRestaurantMenuActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();

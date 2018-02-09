@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.adapter.RestaurantMenuListViewAdapter;
+import com.rc.foodsignal.model.FoodItem;
 import com.rc.foodsignal.model.ResponseRestaurantMenu;
 import com.rc.foodsignal.model.RestaurantLoginData;
 import com.rc.foodsignal.util.AllUrls;
@@ -25,6 +26,7 @@ import com.rc.foodsignal.util.HttpRequestManager;
 import com.reversecoder.library.network.NetworkManager;
 import com.reversecoder.library.storage.SessionManager;
 
+import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_FOOD_ITEM;
 import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_RESTAURANT_MENU_LIST;
 import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_LOGIN_DATA;
 
@@ -165,12 +167,11 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
         switch (requestCode) {
             case INTENT_REQUEST_CODE_RESTAURANT_MENU_LIST: {
                 if (data != null && resultCode == RESULT_OK) {
-//                    if (data.getBooleanExtra(INTENT_KEY_ADDRESS_LIST, false)) {
-//
-//                        //Update address list
-//                        Location mLocation = Location.getResponseObject(SessionManager.getStringSetting(RestaurantMenuListActivity.this, SESSION_SELECTED_LOCATION), Location.class);
-//                        restaurantMenuListViewAdapter.addData(mLocation);
-//                    }
+
+                    FoodItem foodItem = data.getParcelableExtra(INTENT_KEY_FOOD_ITEM);
+                    if(foodItem !=null){
+                        restaurantMenuListViewAdapter.addData(foodItem);
+                    }
                 }
                 break;
             }

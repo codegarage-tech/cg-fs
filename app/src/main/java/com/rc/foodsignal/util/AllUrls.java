@@ -2,6 +2,7 @@ package com.rc.foodsignal.util;
 
 import android.util.Log;
 
+import com.rc.foodsignal.model.ParamFoodItem;
 import com.reversecoder.library.util.AllSettingsManager;
 
 import org.json.JSONObject;
@@ -249,16 +250,16 @@ public class AllUrls {
         return url;
     }
 
-    public static JSONObject getAddFoodItemParameters(String name, String menuId, String price, String restaurantId, String ingredients, String images) {
-        JSONObject params = HttpRequestManager.HttpParameter.getInstance()
-                .addJSONParam("name", name)
-                .addJSONParam("menu_id", menuId)
-                .addJSONParam("price", price)
-                .addJSONParam("restaurant_id", restaurantId)
-                .addJSONParam("id", "0")
-                .addJSONParam("ingredients", ingredients)
-                .addJSONParam("images", images)
-                .getJSONParam();
+    public static JSONObject getAddFoodItemParameters(String name, String menuId, String price, String restaurantId, String ingredients, String images[]) {
+        ParamFoodItem paramFoodItem = new ParamFoodItem("0", name, menuId, price, restaurantId, ingredients, images);
+        JSONObject params;
+        try {
+            params = new JSONObject(ParamFoodItem.getResponseString(paramFoodItem));
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            params = new JSONObject();
+        }
+
         Log.d(TAG, "getAddFoodItemParameters: " + params.toString());
         return params;
     }
@@ -277,7 +278,7 @@ public class AllUrls {
                 .addJSONParam("restaurant_id", restaurantId)
                 .addJSONParam("id", foodId)
                 .addJSONParam("ingredients", ingredients)
-                .addJSONParam("images", images)
+                .addJSONParam("images", "[" + images + "]")
                 .getJSONParam();
         Log.d(TAG, "getUpdateFoodItemParameters: " + params.toString());
         return params;

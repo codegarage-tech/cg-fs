@@ -1,12 +1,15 @@
 package com.rc.foodsignal.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
 /**
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
  */
-public class FoodItem extends ResponseBase {
+public class FoodItem extends ResponseBase implements Parcelable {
 
     private String id = "";
     private String name = "";
@@ -104,5 +107,48 @@ public class FoodItem extends ResponseBase {
                 ", category_name='" + category_name + '\'' +
                 ", images=" + images +
                 '}';
+    }
+
+    /**************************
+     * Methods for parcelable *
+     **************************/
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(menu_id);
+        dest.writeString(price);
+        dest.writeString(restaurant_id);
+        dest.writeString(ingredients);
+        dest.writeString(category_name);
+        dest.writeList(images);
+    }
+
+    // Creator
+    public static final Creator CREATOR = new Creator() {
+        public FoodItem createFromParcel(Parcel in) {
+            return new FoodItem(in);
+        }
+
+        public FoodItem[] newArray(int size) {
+            return new FoodItem[size];
+        }
+    };
+
+    // "De-parcel object
+    public FoodItem(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        menu_id = in.readString();
+        price = in.readString();
+        restaurant_id = in.readString();
+        ingredients = in.readString();
+        category_name = in.readString();
+        images = in.readArrayList(FoodImage.class.getClassLoader());
     }
 }
