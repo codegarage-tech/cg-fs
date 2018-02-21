@@ -104,6 +104,12 @@ public class AllUrls {
         return url;
     }
 
+    public static String getAllRestaurantCategoryUrl() {
+        String url = BASE_URL + "category/all";
+        Log.d(TAG, "getAllRestaurantCategoryUrl: " + url);
+        return url;
+    }
+
 //    public static String getAddFoodItemUrl() {
 //        String url = BASE_URL + "restaurants/addFoodItem";
 //        Log.d(TAG, "getAddFoodItemUrl: " + url);
@@ -162,11 +168,12 @@ public class AllUrls {
         return url;
     }
 
-    public static JSONObject getSearchRestaurantParameters(double lat, double lng, String categoryId) {
+    public static JSONObject getSearchRestaurantParameters(double lat, double lng, String foodCategoryId, String restaurantCategoryId) {
         JSONObject params = HttpRequestManager.HttpParameter.getInstance()
                 .addJSONParam("lat", lat)
                 .addJSONParam("lng", lng)
-                .addJSONParam("category_id", categoryId)
+                .addJSONParam("category_id", foodCategoryId)
+                .addJSONParam("restaurant_category_id", restaurantCategoryId)
                 .getJSONParam();
         Log.d(TAG, "getSearchRestaurantParameters: " + params.toString());
         return params;

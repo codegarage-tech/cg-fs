@@ -22,11 +22,13 @@ import com.rc.foodsignal.activity.HomeActivity;
 import com.rc.foodsignal.adapter.RestaurantAdapter;
 import com.rc.foodsignal.interfaces.OnFragmentBackPressedListener;
 import com.rc.foodsignal.model.DataFoodCategory;
+import com.rc.foodsignal.model.DataRestaurantCategory;
 import com.rc.foodsignal.model.FoodCategory;
 import com.rc.foodsignal.model.Location;
 import com.rc.foodsignal.model.ResponseFoodCategory;
+import com.rc.foodsignal.model.ResponseRestaurantCategory;
 import com.rc.foodsignal.model.ResponseRestaurantItem;
-import com.rc.foodsignal.model.Restaurant;
+import com.rc.foodsignal.model.RestaurantCategory;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.HttpRequestManager;
@@ -40,6 +42,7 @@ import java.util.List;
 
 import static com.rc.foodsignal.util.AllConstants.DEFAULT_FOOD_CATEGORY;
 import static com.rc.foodsignal.util.AllConstants.SESSION_FOOD_CATEGORY;
+import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_CATEGORY;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_LOCATION;
 
 /**
@@ -51,6 +54,7 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
     String TAG = AppUtils.getTagName(HomeFragment.class);
     private View parentView;
     GetAllFoodCategory getAllFoodCategory;
+    GetAllRestaurantCategory getAllRestaurantCategory;
     Location mLocation;
     RecyclerView recyclerViewFood;
     RestaurantAdapter restaurantAdapter;
@@ -59,9 +63,12 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
     private ArrayMap<String, List<String>> appliedFilters = new ArrayMap<>();
     FilterFragment dialogFrag;
     FloatingActionButton fabFilter;
-    ArrayList<FoodCategory> mCategory = new ArrayList<>();
-    List<String> mCategoryKey = new ArrayList<>();
-    String selectedCategory = "";
+    ArrayList<FoodCategory> mFoodCategory = new ArrayList<>();
+    List<String> mFoodCategoryKey = new ArrayList<>();
+    String selectedFoodCategory = "";
+    ArrayList<RestaurantCategory> mRestaurantCategory = new ArrayList<>();
+    List<String> mRestaurantCategoryKey = new ArrayList<>();
+    String selectedRestaurantCategory = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -97,11 +104,14 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
             getAllFoodCategory = new GetAllFoodCategory(getActivity());
             getAllFoodCategory.execute();
 
-            searchRestaurant(mLocation, getSelectedFoodCategory(selectedCategory).getId());
+            getAllRestaurantCategory = new GetAllRestaurantCategory(getActivity());
+            getAllRestaurantCategory.execute();
+
+            searchRestaurant(mLocation, getSelectedFoodCategory(selectedFoodCategory).getId(), getSelectedRestaurantCategory(selectedRestaurantCategory).getId());
         }
     }
 
-    private void setDefaultFoodCategory(){
+    private void setDefaultFoodCategory() {
         if (!AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(getActivity(), SESSION_FOOD_CATEGORY))) {
             initFabulousFilter(DataFoodCategory.getResponseObject(SessionManager.getStringSetting(getActivity(), SESSION_FOOD_CATEGORY), DataFoodCategory.class).getData());
         } else {
@@ -110,8 +120,8 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
     }
 
     private void initFabulousFilter(ArrayList<FoodCategory> foodCategories) {
-        mCategory = foodCategories;
-        mCategoryKey = getUniqueCategoryKeys(foodCategories);
+        mFoodCategory = foodCategories;
+        mFoodCategoryKey = getUniqueCategoryKeys(foodCategories);
     }
 
     private void initHomeFragmentActions() {
@@ -138,12 +148,14 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
 
         private Context mContext;
         private Location mLocation;
-        private String mCategoryId;
+        private String mFoodCategoryId;
+        private String mRestaurantCategoryId;
 
-        public DoSearchRestaurants(Context context, Location location, String categoryId) {
+        public DoSearchRestaurants(Context context, Location location, String foodCategoryId, String restaurantCategoryId) {
             this.mContext = context;
             this.mLocation = location;
-            this.mCategoryId = categoryId;
+            this.mFoodCategoryId = foodCategoryId;
+            this.mRestaurantCategoryId = restaurantCategoryId;
         }
 
         @Override
@@ -152,7 +164,7 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
 
         @Override
         protected HttpRequestManager.HttpResponse doInBackground(String... params) {
-            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getSearchRestaurantUrl(), AllUrls.getSearchRestaurantParameters(Double.parseDouble(mLocation.getLat()), Double.parseDouble(mLocation.getLng()), mCategoryId), null);
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getSearchRestaurantUrl(), AllUrls.getSearchRestaurantParameters(Double.parseDouble(mLocation.getLat()), Double.parseDouble(mLocation.getLng()), mFoodCategoryId, mRestaurantCategoryId), null);
             return response;
         }
 
@@ -233,13 +245,59 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
         }
     }
 
-    private void searchRestaurant(Location location, String categoryId) {
+    private class GetAllRestaurantCategory extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
+
+        private Context mContext;
+
+        public GetAllRestaurantCategory(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected HttpRequestManager.HttpResponse doInBackground(String... params) {
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doGetRequest(AllUrls.getAllRestaurantCategoryUrl());
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(HttpRequestManager.HttpResponse result) {
+
+            if (result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
+                Log.d(TAG, "success response from web: " + result.getResult().toString());
+
+                ResponseRestaurantCategory responseRestaurantCategory = ResponseRestaurantCategory.getResponseObject(result.getResult().toString(), ResponseRestaurantCategory.class);
+
+                if (responseRestaurantCategory.getStatus().equalsIgnoreCase("1") && (responseRestaurantCategory.getData().size() > 0)) {
+                    Log.d(TAG, "success response from object: " + responseRestaurantCategory.toString());
+
+                    //Save restaurant category into session
+                    DataRestaurantCategory dataRestaurantCategory = new DataRestaurantCategory(responseRestaurantCategory.getData());
+                    SessionManager.setStringSetting(getActivity(), SESSION_RESTAURANT_CATEGORY, dataRestaurantCategory.getResponseString(dataRestaurantCategory));
+
+//                    initFabulousFilter(dataRestaurantCategory.getData());
+
+                } else {
+
+//                    setDefaultFoodCategory();
+                }
+            } else {
+
+//                setDefaultFoodCategory();
+            }
+        }
+    }
+
+    private void searchRestaurant(Location location, String foodCategoryId, String restaurantCategoryId) {
         if (!NetworkManager.isConnected(getActivity())) {
             Toast.makeText(getActivity(), getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        new DoSearchRestaurants(getActivity(), location, categoryId).execute();
+        new DoSearchRestaurants(getActivity(), location, foodCategoryId, restaurantCategoryId).execute();
     }
 
     /***************************
@@ -260,15 +318,15 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
 
                     if (appliedFilters.get("category") != null) {
                         if (appliedFilters.get("category").size() == 1) {
-                            selectedCategory = appliedFilters.get("category").get(0);
+                            selectedFoodCategory = appliedFilters.get("category").get(0);
                         } else {
-                            selectedCategory = "";
+                            selectedFoodCategory = "";
                         }
                     } else {
-                        selectedCategory = "";
+                        selectedFoodCategory = "";
                     }
 
-                    searchRestaurant(mLocation, getSelectedFoodCategory(selectedCategory).getId());
+                    searchRestaurant(mLocation, getSelectedFoodCategory(selectedFoodCategory).getId(), getSelectedRestaurantCategory(selectedRestaurantCategory).getId());
                 }
             }
         }
@@ -293,21 +351,32 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
     }
 
     public ArrayList<FoodCategory> getCategory() {
-        return mCategory;
+        return mFoodCategory;
     }
 
     public List<String> getCategoryKey() {
-        return mCategoryKey;
+        return mFoodCategoryKey;
     }
 
-    public FoodCategory getSelectedFoodCategory(String category) {
-        for (FoodCategory foodCategory : mCategory) {
-            if (foodCategory.getName().equalsIgnoreCase(category)) {
-                return foodCategory;
+    public FoodCategory getSelectedFoodCategory(String foodCategory) {
+        for (FoodCategory category : mFoodCategory) {
+            if (category.getName().equalsIgnoreCase(foodCategory)) {
+                return category;
             }
         }
 
         //Selected category 0 is for nothing
-        return new FoodCategory("0", "", "");
+        return new FoodCategory("0", "");
+    }
+
+    public RestaurantCategory getSelectedRestaurantCategory(String restaurantCategory) {
+        for (RestaurantCategory category : mRestaurantCategory) {
+            if (category.getName().equalsIgnoreCase(restaurantCategory)) {
+                return category;
+            }
+        }
+
+        //Selected category 0 is for nothing
+        return new RestaurantCategory("0", "");
     }
 }

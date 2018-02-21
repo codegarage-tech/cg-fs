@@ -4,12 +4,12 @@ package com.rc.foodsignal.model;
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
  */
-public class FoodCategory extends ResponseBase {
+public class RestaurantCategory extends ResponseBase {
 
     private String id = "";
     private String name = "";
 
-    public FoodCategory(String id, String name) {
+    public RestaurantCategory(String id, String name) {
         this.id = id;
         this.name = name;
     }

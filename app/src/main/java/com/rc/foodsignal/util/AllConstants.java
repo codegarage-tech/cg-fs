@@ -16,6 +16,7 @@ public class AllConstants {
     public static final String SESSION_IS_RESTAURANT_LOGGED_IN = "SESSION_IS_RESTAURANT_LOGGED_IN";
     public static final String SESSION_RESTAURANT_LOGIN_DATA = "SESSION_RESTAURANT_LOGIN_DATA";
     public static final String SESSION_FOOD_CATEGORY = "SESSION_FOOD_CATEGORY";
+    public static final String SESSION_RESTAURANT_CATEGORY = "SESSION_RESTAURANT_CATEGORY";
 
     //Intent request code
     public static final int INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN = 420;
