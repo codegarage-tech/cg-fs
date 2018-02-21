@@ -85,8 +85,8 @@ public class FilterFragment extends AAH_FabulousFragment {
             @Override
             public void onClick(View v) {
                 ArrayMap<String, List<String>> selectedItem = getSelectedData(new ArrayList<String>() {{
-                    add("category");
-//                    add("state");
+                    add("food_category");
+                    add("restaurant_category");
                 }});
 
                 Log.d(TAG, "=====================Saving======================");
@@ -138,11 +138,11 @@ public class FilterFragment extends AAH_FabulousFragment {
 //            ll_scroll.setLayoutParams(lp);
             switch (position) {
                 case 0:
-                    inflateLayoutWithFilters("category", fbl);
+                    inflateLayoutWithFilters("food_category", fbl);
                     break;
-//                case 1:
-//                    inflateLayoutWithFilters("state", fbl);
-//                    break;
+                case 1:
+                    inflateLayoutWithFilters("restaurant_category", fbl);
+                    break;
             }
             collection.addView(layout);
             return layout;
@@ -156,16 +156,16 @@ public class FilterFragment extends AAH_FabulousFragment {
 
         @Override
         public int getCount() {
-            return 1;
+            return 2;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "   CATEGORY";
-//                case 1:
-//                    return "   STATE";
+                    return "   FOOD";
+                case 1:
+                    return "   RESTAURANT";
             }
             return "";
         }
@@ -180,11 +180,11 @@ public class FilterFragment extends AAH_FabulousFragment {
     private void inflateLayoutWithFilters(final String filter_category, FlexboxLayout fbl) {
         List<String> keys = new ArrayList<>();
         switch (filter_category) {
-//            case "state":
-//                keys = ((RibbleActivity) getActivity()).getStateKey();
-//                break;
-            case "category":
-                keys = ((HomeFragment) FragmentUtilsManager.getVisibleSupportFragment((HomeActivity) getActivity(), getString(R.string.title_fragment_home))).getCategoryKey();
+            case "food_category":
+                keys = ((HomeFragment) FragmentUtilsManager.getVisibleSupportFragment((HomeActivity) getActivity(), getString(R.string.title_fragment_home))).getFoodCategoryKey();
+                break;
+            case "restaurant_category":
+                keys = ((HomeFragment) FragmentUtilsManager.getVisibleSupportFragment((HomeActivity) getActivity(), getString(R.string.title_fragment_home))).getRestaurantCategoryKey();
                 break;
         }
 
@@ -234,11 +234,11 @@ public class FilterFragment extends AAH_FabulousFragment {
         for (int i = 0; i < filterKeys.size(); i++) {
             List<String> keys = null;
             switch (filterKeys.get(i)) {
-//                case "state":
-//                    keys = ((RibbleActivity) getActivity()).getStateKey();
-//                    break;
-                case "category":
-                    keys = ((HomeFragment) FragmentUtilsManager.getVisibleSupportFragment((HomeActivity) getActivity(), getString(R.string.title_fragment_home))).getCategoryKey();
+                case "food_category":
+                    keys = ((HomeFragment) FragmentUtilsManager.getVisibleSupportFragment((HomeActivity) getActivity(), getString(R.string.title_fragment_home))).getFoodCategoryKey();
+                    break;
+                case "restaurant_category":
+                    keys = ((HomeFragment) FragmentUtilsManager.getVisibleSupportFragment((HomeActivity) getActivity(), getString(R.string.title_fragment_home))).getRestaurantCategoryKey();
                     break;
             }
 
@@ -339,11 +339,11 @@ public class FilterFragment extends AAH_FabulousFragment {
     private void clearAllSelectedDataExceptCurrent(String filterKey, TextView textView) {
         List<String> keys = null;
         switch (filterKey) {
-//            case "state":
-//                keys = ((RibbleActivity) getActivity()).getStateKey();
-//                break;
-            case "category":
-                keys = ((HomeFragment) FragmentUtilsManager.getVisibleSupportFragment((HomeActivity) getActivity(), getString(R.string.title_fragment_home))).getCategoryKey();
+            case "food_category":
+                keys = ((HomeFragment) FragmentUtilsManager.getVisibleSupportFragment((HomeActivity) getActivity(), getString(R.string.title_fragment_home))).getFoodCategoryKey();
+                break;
+            case "restaurant_category":
+                keys = ((HomeFragment) FragmentUtilsManager.getVisibleSupportFragment((HomeActivity) getActivity(), getString(R.string.title_fragment_home))).getRestaurantCategoryKey();
                 break;
         }
 
@@ -372,11 +372,11 @@ public class FilterFragment extends AAH_FabulousFragment {
     private void clearAllSelectedData(String filterKey) {
         List<String> keys = null;
         switch (filterKey) {
-//            case "state":
-//                keys = ((RibbleActivity) getActivity()).getStateKey();
-//                break;
-            case "category":
-                keys = ((HomeFragment) FragmentUtilsManager.getVisibleSupportFragment((HomeActivity) getActivity(), getString(R.string.title_fragment_home))).getCategoryKey();
+            case "food_category":
+                keys = ((HomeFragment) FragmentUtilsManager.getVisibleSupportFragment((HomeActivity) getActivity(), getString(R.string.title_fragment_home))).getFoodCategoryKey();
+                break;
+            case "restaurant_category":
+                keys = ((HomeFragment) FragmentUtilsManager.getVisibleSupportFragment((HomeActivity) getActivity(), getString(R.string.title_fragment_home))).getRestaurantCategoryKey();
                 break;
         }
 

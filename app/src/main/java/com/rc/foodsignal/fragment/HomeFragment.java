@@ -41,6 +41,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.rc.foodsignal.util.AllConstants.DEFAULT_FOOD_CATEGORY;
+import static com.rc.foodsignal.util.AllConstants.DEFAULT_RESTAURANT_CATEGORY;
 import static com.rc.foodsignal.util.AllConstants.SESSION_FOOD_CATEGORY;
 import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_CATEGORY;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_LOCATION;
@@ -99,6 +100,7 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
             Toast.makeText(getActivity(), getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
 
             setDefaultFoodCategory();
+            setDefaultRestaurantCategory();
 
         } else {
             getAllFoodCategory = new GetAllFoodCategory(getActivity());
@@ -113,15 +115,28 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
 
     private void setDefaultFoodCategory() {
         if (!AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(getActivity(), SESSION_FOOD_CATEGORY))) {
-            initFabulousFilter(DataFoodCategory.getResponseObject(SessionManager.getStringSetting(getActivity(), SESSION_FOOD_CATEGORY), DataFoodCategory.class).getData());
+            initFilterFoodCategory(DataFoodCategory.getResponseObject(SessionManager.getStringSetting(getActivity(), SESSION_FOOD_CATEGORY), DataFoodCategory.class).getData());
         } else {
-            initFabulousFilter(DataFoodCategory.getResponseObject(DEFAULT_FOOD_CATEGORY, DataFoodCategory.class).getData());
+            initFilterFoodCategory(DataFoodCategory.getResponseObject(DEFAULT_FOOD_CATEGORY, DataFoodCategory.class).getData());
         }
     }
 
-    private void initFabulousFilter(ArrayList<FoodCategory> foodCategories) {
+    private void setDefaultRestaurantCategory() {
+        if (!AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(getActivity(), SESSION_RESTAURANT_CATEGORY))) {
+            initFilterRestaurantCategory(DataRestaurantCategory.getResponseObject(SessionManager.getStringSetting(getActivity(), SESSION_RESTAURANT_CATEGORY), DataRestaurantCategory.class).getData());
+        } else {
+            initFilterRestaurantCategory(DataRestaurantCategory.getResponseObject(DEFAULT_RESTAURANT_CATEGORY, DataRestaurantCategory.class).getData());
+        }
+    }
+
+    private void initFilterFoodCategory(ArrayList<FoodCategory> foodCategories) {
         mFoodCategory = foodCategories;
-        mFoodCategoryKey = getUniqueCategoryKeys(foodCategories);
+        mFoodCategoryKey = getUniqueFoodCategoryKeys(foodCategories);
+    }
+
+    private void initFilterRestaurantCategory(ArrayList<RestaurantCategory> restaurantCategories) {
+        mRestaurantCategory = restaurantCategories;
+        mRestaurantCategoryKey = getUniqueRestaurantCategoryKeys(restaurantCategories);
     }
 
     private void initHomeFragmentActions() {
@@ -230,7 +245,7 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
                     DataFoodCategory dataFoodCategory = new DataFoodCategory(responseFoodCategory.getData());
                     SessionManager.setStringSetting(getActivity(), SESSION_FOOD_CATEGORY, DataFoodCategory.getResponseString(dataFoodCategory));
 
-                    initFabulousFilter(responseFoodCategory.getData());
+                    initFilterFoodCategory(responseFoodCategory.getData());
 
                 } else {
 
@@ -278,15 +293,15 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
                     DataRestaurantCategory dataRestaurantCategory = new DataRestaurantCategory(responseRestaurantCategory.getData());
                     SessionManager.setStringSetting(getActivity(), SESSION_RESTAURANT_CATEGORY, dataRestaurantCategory.getResponseString(dataRestaurantCategory));
 
-//                    initFabulousFilter(dataRestaurantCategory.getData());
+                    initFilterRestaurantCategory(dataRestaurantCategory.getData());
 
                 } else {
 
-//                    setDefaultFoodCategory();
+                    setDefaultRestaurantCategory();
                 }
             } else {
 
-//                setDefaultFoodCategory();
+                setDefaultRestaurantCategory();
             }
         }
     }
@@ -316,9 +331,9 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
                 ArrayMap<String, List<String>> appliedFilters = (ArrayMap<String, List<String>>) result;
                 if (appliedFilters.size() != 0) {
 
-                    if (appliedFilters.get("category") != null) {
-                        if (appliedFilters.get("category").size() == 1) {
-                            selectedFoodCategory = appliedFilters.get("category").get(0);
+                    if (appliedFilters.get("food_category") != null) {
+                        if (appliedFilters.get("food_category").size() == 1) {
+                            selectedFoodCategory = appliedFilters.get("food_category").get(0);
                         } else {
                             selectedFoodCategory = "";
                         }
@@ -326,8 +341,21 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
                         selectedFoodCategory = "";
                     }
 
-                    searchRestaurant(mLocation, getSelectedFoodCategory(selectedFoodCategory).getId(), getSelectedRestaurantCategory(selectedRestaurantCategory).getId());
+                    if (appliedFilters.get("restaurant_category") != null) {
+                        if (appliedFilters.get("restaurant_category").size() == 1) {
+                            selectedRestaurantCategory = appliedFilters.get("restaurant_category").get(0);
+                        } else {
+                            selectedRestaurantCategory = "";
+                        }
+                    } else {
+                        selectedRestaurantCategory = "";
+                    }
+                } else {
+                    selectedFoodCategory = "";
+                    selectedRestaurantCategory = "";
                 }
+
+                searchRestaurant(mLocation, getSelectedFoodCategory(selectedFoodCategory).getId(), getSelectedRestaurantCategory(selectedRestaurantCategory).getId());
             }
         }
     }
@@ -341,7 +369,7 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
         }
     }
 
-    public List<String> getUniqueCategoryKeys(ArrayList<FoodCategory> foodCategories) {
+    public List<String> getUniqueFoodCategoryKeys(ArrayList<FoodCategory> foodCategories) {
         List<String> categories = new ArrayList<>();
         for (FoodCategory foodCategory : foodCategories) {
             categories.add(foodCategory.getName());
@@ -350,12 +378,21 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
         return categories;
     }
 
-    public ArrayList<FoodCategory> getCategory() {
-        return mFoodCategory;
+    public List<String> getUniqueRestaurantCategoryKeys(ArrayList<RestaurantCategory> restaurantCategories) {
+        List<String> categories = new ArrayList<>();
+        for (RestaurantCategory restaurantCategory : restaurantCategories) {
+            categories.add(restaurantCategory.getName());
+        }
+        Collections.sort(categories);
+        return categories;
     }
 
-    public List<String> getCategoryKey() {
+    public List<String> getFoodCategoryKey() {
         return mFoodCategoryKey;
+    }
+
+    public List<String> getRestaurantCategoryKey() {
+        return mRestaurantCategoryKey;
     }
 
     public FoodCategory getSelectedFoodCategory(String foodCategory) {
