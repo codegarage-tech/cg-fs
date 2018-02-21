@@ -16,7 +16,7 @@ import java.security.InvalidParameterException;
  */
 public class RestaurantAdapter extends RecyclerArrayAdapter<Restaurant> {
 
-    public static final int TYPE_FOOD = 1;
+    public static final int TYPE_RESTAURANT = 1;
 
     public RestaurantAdapter(Context context) {
         super(context);
@@ -24,13 +24,13 @@ public class RestaurantAdapter extends RecyclerArrayAdapter<Restaurant> {
 
     @Override
     public int getViewType(int position) {
-        return TYPE_FOOD;
+        return TYPE_RESTAURANT;
     }
 
     @Override
     public BaseViewHolder OnCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
-            case TYPE_FOOD:
+            case TYPE_RESTAURANT:
                 return new RestaurantViewHolder(parent);
             default:
                 throw new InvalidParameterException();
