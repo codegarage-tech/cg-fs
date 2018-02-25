@@ -8,6 +8,10 @@ import java.util.ArrayList;
  */
 public class Restaurant {
 
+
+    public static final transient int TYPE_RESTAURANT = 1;
+    public static final transient int TYPE_IMAGE = 2;
+
     private String id = "";
     private String name = "";
     private String image = "";
@@ -38,6 +42,10 @@ public class Restaurant {
         this.push_notification = push_notification;
         this.distance = distance;
         this.menu_details = menu_details;
+    }
+
+    public int getTypeRestaurant() {
+        return ((menu_details.size() > 0 ? TYPE_RESTAURANT : TYPE_IMAGE));
     }
 
     public String getId() {

@@ -188,7 +188,7 @@ public class BubblePageIndicator extends MotionIndicator implements ViewPager.On
 
     @Override
     protected int getCount() {
-        return viewPager.getAdapter().getCount();
+        return ((viewPager != null) ? viewPager.getAdapter().getCount() : 0);
     }
 
     @Override
@@ -300,16 +300,23 @@ public class BubblePageIndicator extends MotionIndicator implements ViewPager.On
         if (viewPager != null) {
             viewPager.removeOnPageChangeListener(this);
             viewPager.removeOnAdapterChangeListener(this);
-            viewPager.getAdapter().unregisterDataSetObserver(dataSetObserver);
+//            if (viewPager.getAdapter() != null) {
+//                viewPager.getAdapter().unregisterDataSetObserver(dataSetObserver);
+//            }
+            viewPager = null;
         }
-        if (view.getAdapter() == null) {
-            throw new IllegalStateException("ViewPager does not have adapter instance.");
-        }
+
         viewPager = view;
-        viewPager.getAdapter().registerDataSetObserver(dataSetObserver);
-        viewPager.addOnAdapterChangeListener(this);
-        viewPager.addOnPageChangeListener(this);
-        forceLayoutChanges();
+        if (viewPager != null) {
+            if (viewPager.getAdapter() == null) {
+                throw new IllegalStateException("ViewPager does not have adapter instance.");
+            } else {
+                viewPager.getAdapter().registerDataSetObserver(dataSetObserver);
+                viewPager.addOnAdapterChangeListener(this);
+                viewPager.addOnPageChangeListener(this);
+                forceLayoutChanges();
+            }
+        }
     }
 
     @Override

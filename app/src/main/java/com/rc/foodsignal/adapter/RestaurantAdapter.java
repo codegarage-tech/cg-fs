@@ -6,9 +6,13 @@ import android.view.ViewGroup;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 import com.rc.foodsignal.model.Restaurant;
+import com.rc.foodsignal.viewholder.ImageViewHolder;
 import com.rc.foodsignal.viewholder.RestaurantViewHolder;
 
 import java.security.InvalidParameterException;
+
+import static com.rc.foodsignal.model.Restaurant.TYPE_IMAGE;
+import static com.rc.foodsignal.model.Restaurant.TYPE_RESTAURANT;
 
 /**
  * @author Md. Rashadul Alam
@@ -16,15 +20,13 @@ import java.security.InvalidParameterException;
  */
 public class RestaurantAdapter extends RecyclerArrayAdapter<Restaurant> {
 
-    public static final int TYPE_RESTAURANT = 1;
-
     public RestaurantAdapter(Context context) {
         super(context);
     }
 
     @Override
     public int getViewType(int position) {
-        return TYPE_RESTAURANT;
+        return getAllData().get(position).getTypeRestaurant();
     }
 
     @Override
@@ -32,6 +34,8 @@ public class RestaurantAdapter extends RecyclerArrayAdapter<Restaurant> {
         switch (viewType) {
             case TYPE_RESTAURANT:
                 return new RestaurantViewHolder(parent);
+            case TYPE_IMAGE:
+                return new ImageViewHolder(parent);
             default:
                 throw new InvalidParameterException();
         }

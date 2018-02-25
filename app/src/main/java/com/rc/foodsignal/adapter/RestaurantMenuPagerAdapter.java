@@ -7,14 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.signature.ObjectKey;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.interfaces.OnPagerItemClickListener;
 import com.rc.foodsignal.model.FoodItem;
 import com.rc.foodsignal.model.Restaurant;
+import com.reversecoder.library.random.RandomManager;
 
 import java.util.List;
 
@@ -28,13 +30,12 @@ public class RestaurantMenuPagerAdapter extends PagerAdapter {
     private Context mContext;
     private Restaurant mRestaurant;
     private final List<FoodItem> mItems;
-    private final LayoutInflater mLayoutInflater;
+    private LayoutInflater mLayoutInflater;
     private OnPagerItemClickListener mOnItemClickListener;
 
     public RestaurantMenuPagerAdapter(@NonNull Context context, @NonNull Restaurant restaurant) {
         super();
         mContext = context;
-        mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mRestaurant = restaurant;
         mItems = restaurant.getMenu_details();
     }
@@ -51,16 +52,33 @@ public class RestaurantMenuPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, final int position) {
+        mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View itemView = mLayoutInflater.inflate(R.layout.viewpager_item_restaurant_menu, container, false);
 
+        //Initialize view
         ImageView ivFoodImage = (ImageView) itemView.findViewById(R.id.iv_food_image);
+        TextView tvFoodPrice = itemView.findViewById(R.id.tv_food_price);
+        TextView tvFoodName = itemView.findViewById(R.id.tv_food_name);
+        TextView tvFoodIngredient = itemView.findViewById(R.id.tv_food_ingredient);
+        TextView tvRestaurantName = itemView.findViewById(R.id.tv_restaurant_name);
+        TextView tvRestaurantAddress = itemView.findViewById(R.id.tv_restaurant_address);
+        LinearLayout llPriceLabel = itemView.findViewById(R.id.ll_price_label);
+
         Glide
                 .with(mContext)
                 .asBitmap()
-                .load((mItems.size() > 0) ? ((mItems.get(0).getImages().size() > 0) ? mItems.get(0).getImages().get(0).getImage() : R.drawable.ic_default_food) : mRestaurant.getImage())
+                .load((mItems.get(position).getImages().size() > 0) ? mItems.get(position).getImages().get(RandomManager.getRandom((mItems.get(position).getImages().size() - 1))).getImage() : mRestaurant.getImage())
 //                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
-                .apply(new RequestOptions().signature(new ObjectKey(System.currentTimeMillis())))
+//                .apply(new RequestOptions().signature(new ObjectKey(System.currentTimeMillis())))
+//                .apply(new RequestOptions().placeholder(R.drawable.ic_default_food))
+                .apply(new RequestOptions().error(R.drawable.ic_default_food))
                 .into(ivFoodImage);
+        llPriceLabel.setVisibility((mItems.size() > 0) ? View.VISIBLE : View.GONE);
+        tvFoodPrice.setText((mItems.size() > 0) ? "$" + mItems.get(position).getPrice() : "");
+        tvFoodName.setText((mItems.size() > 0) ? mItems.get(position).getName() : "");
+        tvFoodIngredient.setText("Ingredient: " + ((mItems.size() > 0) ? mItems.get(position).getIngredients() : ""));
+        tvRestaurantName.setText("Restaurant: " + mRestaurant.getName());
+        tvRestaurantAddress.setText("Address: " + mRestaurant.getAddress());
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
