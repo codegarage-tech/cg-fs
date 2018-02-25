@@ -24,6 +24,10 @@ import com.rc.foodsignal.fragment.HomeFragment;
 import com.rc.foodsignal.util.AllConstants;
 import com.rc.foodsignal.util.FragmentUtilsManager;
 import com.rc.foodsignal.view.CanaroTextView;
+import com.reversecoder.gcm.listener.RegisterAppListener;
+import com.reversecoder.gcm.task.RegisterAppTask;
+import com.reversecoder.gcm.util.HttpRequestManager;
+import com.reversecoder.library.network.NetworkManager;
 import com.reversecoder.library.storage.SessionManager;
 
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_LOGIN;
@@ -255,5 +259,19 @@ public class HomeActivity extends BaseActivity implements AAH_FabulousFragment.C
     @Override
     public void onCloseAnimationEnd() {
         Log.d("aah_animation", "onCloseAnimationEnd: ");
+    }
+
+    /*****************************************
+     * Register device for push notification *
+     *****************************************/
+    private void initPushNotification() {
+        if (NetworkManager.isConnected(HomeActivity.this)) {
+            new RegisterAppTask(HomeActivity.this, new RegisterAppListener() {
+                @Override
+                public void registerApp(HttpRequestManager.HttpResponse result) {
+                    //Do whatever you want with the response
+                }
+            }).execute();
+        }
     }
 }

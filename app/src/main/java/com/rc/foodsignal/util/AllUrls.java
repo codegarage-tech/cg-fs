@@ -292,4 +292,34 @@ public class AllUrls {
         Log.d(TAG, "getUpdateFoodItemParameters: " + params.toString());
         return params;
     }
+
+    public static String getRegisterDeviceUrl() {
+        String url = BASE_URL + "signup/register_device";
+        Log.d(TAG, "getRegisterDeviceUrl: " + url);
+        return url;
+    }
+
+    public static JSONObject getRegisterDeviceParameters(String uniqueId, String pushId) {
+        JSONObject params = HttpRequestManager.HttpParameter.getInstance()
+                .addJSONParam("deviceId", pushId)
+                .addJSONParam("device_type", "android")
+                .addJSONParam("device_unique_id", uniqueId)
+                .getJSONParam();
+        Log.d(TAG, "getRegisterDeviceParameters: " + params.toString());
+        return params;
+    }
+
+    public static String getRemoveDeviceUrl() {
+        String url = BASE_URL + "signup/remove_device";
+        Log.d(TAG, "getRemoveDeviceUrl: " + url);
+        return url;
+    }
+
+    public static JSONObject getRemoveDeviceParameters(String uniqueId) {
+        JSONObject params = HttpRequestManager.HttpParameter.getInstance()
+                .addJSONParam("device_unique_id", uniqueId)
+                .getJSONParam();
+        Log.d(TAG, "getRemoveDeviceParameters: " + params.toString());
+        return params;
+    }
 }
