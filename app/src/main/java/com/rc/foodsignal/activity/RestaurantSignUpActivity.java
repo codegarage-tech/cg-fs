@@ -176,7 +176,6 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
                     Toast.makeText(RestaurantSignUpActivity.this, getResources().getString(R.string.toast_empty_category_field), Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 if (mName.equalsIgnoreCase("")) {
                     Toast.makeText(RestaurantSignUpActivity.this, getResources().getString(R.string.toast_empty_name_field), Toast.LENGTH_SHORT).show();
                     return;

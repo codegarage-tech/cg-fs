@@ -63,7 +63,7 @@ public class AllUrls {
     }
 
     public static JSONObject getRestaurantUpdateParameters(String id, String name, double lat, String address, String phone,
-                                                           double lng, String email, String password, String image) {
+                                                           double lng, String email, String password, String restaurantCategoryId, String image) {
         HttpRequestManager.HttpParameter httpParameter = HttpRequestManager.HttpParameter.getInstance();
 
         if (!AllSettingsManager.isNullOrEmpty(id)) {
@@ -89,6 +89,9 @@ public class AllUrls {
         }
         if (!AllSettingsManager.isNullOrEmpty(password)) {
             httpParameter.addJSONParam("password", password);
+        }
+        if (!AllSettingsManager.isNullOrEmpty(password)) {
+            httpParameter.addJSONParam("restaurant_category_id", restaurantCategoryId);
         }
         if (!AllSettingsManager.isNullOrEmpty(image)) {
             httpParameter.addJSONParam("image", image);
