@@ -114,6 +114,7 @@ public class AddRestaurantMenuActivity extends AppCompatActivity {
         edtPrice = (EditText) findViewById(R.id.edt_price);
         edtIngredient = (EditText) findViewById(R.id.edt_ingredient);
 
+        //Flow layout
         flowLayout = (FlowLayout) findViewById(R.id.fl_food_category);
         tvCategory = (TextView) findViewById(R.id.tv_selected_food_category);
 

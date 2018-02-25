@@ -38,7 +38,7 @@ public class AllUrls {
     }
 
     public static JSONObject getRestaurantSignUpParameters(String name, double lat, String address, String phone,
-                                                           double lng, String email, String password, String image) {
+                                                           double lng, String email, String password, String restaurantCategoryId, String image) {
         JSONObject params = HttpRequestManager.HttpParameter.getInstance()
                 .addJSONParam("id", 0)
                 .addJSONParam("name", name)
@@ -48,6 +48,7 @@ public class AllUrls {
                 .addJSONParam("lng", lng)
                 .addJSONParam("email", email)
                 .addJSONParam("password", password)
+                .addJSONParam("restaurant_category_id", restaurantCategoryId)
                 .addJSONParam("is_restaurant", 1)
                 .addJSONParam("image", image)
                 .getJSONParam();

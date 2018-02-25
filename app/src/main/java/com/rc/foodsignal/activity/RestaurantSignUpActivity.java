@@ -19,28 +19,38 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
 import com.developers.imagezipper.ImageZipper;
+import com.nex3z.flowlayout.FlowLayout;
+import com.nex3z.flowlayout.FlowLayoutManager;
 import com.rc.foodsignal.R;
+import com.rc.foodsignal.model.DataRestaurantCategory;
 import com.rc.foodsignal.model.Location;
+import com.rc.foodsignal.model.ResponseRestaurantCategory;
 import com.rc.foodsignal.model.ResponseRestaurantLoginData;
+import com.rc.foodsignal.model.RestaurantCategory;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.HttpRequestManager;
 import com.reversecoder.library.network.NetworkManager;
+import com.reversecoder.library.storage.SessionManager;
+import com.reversecoder.library.util.AllSettingsManager;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import static com.rc.foodsignal.util.AllConstants.DEFAULT_RESTAURANT_CATEGORY;
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_SEARCH_ADDRESS;
 import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_ADDRESS_SEARCH;
 import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_IMAGE_PICKER;
 import static com.rc.foodsignal.util.AllConstants.PREFIX_BASE64_STRING;
+import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_CATEGORY;
 
 /**
  * @author Md. Rashadul Alam
@@ -62,6 +72,14 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
     LinearLayout llDone;
     String mBase64 = "";
     Location mLocation;
+
+    // Flow Layout
+    List<String> mCategoryKey = new ArrayList<>();
+    FlowLayout flowLayout;
+    FlowLayoutManager flowLayoutManager;
+    TextView tvCategory;
+    ArrayList<RestaurantCategory> mCategory = new ArrayList<>();
+    GetAllRestaurantCategory getAllRestaurantCategory;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,6 +113,20 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
 //                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
                 .apply(new RequestOptions().circleCropTransform())
                 .into(ivUser);
+
+        //Flow layout
+        flowLayout = (FlowLayout) findViewById(R.id.fl_food_category);
+        tvCategory = (TextView) findViewById(R.id.tv_selected_food_category);
+
+        if (!NetworkManager.isConnected(RestaurantSignUpActivity.this)) {
+            Toast.makeText(RestaurantSignUpActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
+
+            setDefaultRestaurantCategory();
+
+        } else {
+            getAllRestaurantCategory = new GetAllRestaurantCategory(RestaurantSignUpActivity.this);
+            getAllRestaurantCategory.execute();
+        }
     }
 
     private void initRegistrationAction() {
@@ -133,11 +165,17 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String mName = edtName.getText().toString(),
+                String mCategory = tvCategory.getText().toString(),
+                        mName = edtName.getText().toString(),
                         mEmail = edtEmail.getText().toString(),
                         mAddress = tvAddress.getText().toString(),
                         mPhone = edtPhone.getText().toString(),
                         mPassword = edtPassword.getText().toString();
+
+                if (mCategory.equalsIgnoreCase("")) {
+                    Toast.makeText(RestaurantSignUpActivity.this, getResources().getString(R.string.toast_empty_category_field), Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 if (mName.equalsIgnoreCase("")) {
                     Toast.makeText(RestaurantSignUpActivity.this, getResources().getString(R.string.toast_empty_name_field), Toast.LENGTH_SHORT).show();
@@ -165,12 +203,13 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
                 }
 
                 if (mBase64.equalsIgnoreCase("")) {
-                    Bitmap bmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_default_restaurant);;
+                    Bitmap bmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_default_restaurant);
+                    ;
                     mBase64 = PREFIX_BASE64_STRING + ImageZipper.getBase64forImage(bmap);
                     Log.d("Default(base64): ", mBase64);
                 }
 
-                doRestaurantSignUpUser = new DoRestaurantSignUp(RestaurantSignUpActivity.this, mName, Double.parseDouble(mLocation.getLat()), mAddress, mPhone, Double.parseDouble(mLocation.getLng()), mEmail, mPassword, mBase64);
+                doRestaurantSignUpUser = new DoRestaurantSignUp(RestaurantSignUpActivity.this, mName, Double.parseDouble(mLocation.getLat()), mAddress, mPhone, Double.parseDouble(mLocation.getLng()), mEmail, mPassword, getRestaurantCategory(mCategory).getId(), mBase64);
                 doRestaurantSignUpUser.execute();
             }
         });
@@ -180,9 +219,9 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
 
         private Context mContext;
         private double mLat, mLng;
-        private String mName = "", mAddress = "", mPhone = "", mEmail = "", mPassword = "", mImage = "";
+        private String mName = "", mAddress = "", mPhone = "", mEmail = "", mPassword = "", mRestaurantCategoryId = "", mImage = "";
 
-        public DoRestaurantSignUp(Context context, String name, double lat, String address, String phone, double lng, String email, String password, String image) {
+        public DoRestaurantSignUp(Context context, String name, double lat, String address, String phone, double lng, String email, String password, String restaurantCategoryId, String image) {
             this.mContext = context;
             this.mName = name;
             this.mLat = lat;
@@ -191,6 +230,7 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
             this.mLng = lng;
             this.mEmail = email;
             this.mPassword = password;
+            this.mRestaurantCategoryId = restaurantCategoryId;
             this.mImage = image;
         }
 
@@ -215,7 +255,7 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
 
         @Override
         protected HttpRequestManager.HttpResponse doInBackground(String... params) {
-            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getRestaurantSignUpUrl(), AllUrls.getRestaurantSignUpParameters(mName, mLat, mAddress, mPhone, mLng, mEmail, mPassword, mImage), null);
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getRestaurantSignUpUrl(), AllUrls.getRestaurantSignUpParameters(mName, mLat, mAddress, mPhone, mLng, mEmail, mPassword, mRestaurantCategoryId, mImage), null);
             return response;
         }
 
@@ -240,6 +280,99 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
                 }
             } else {
                 Toast.makeText(RestaurantSignUpActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**********************
+     * Methods for filter *
+     **********************/
+    private void initFilter(ArrayList<RestaurantCategory> foodCategories) {
+        mCategory = foodCategories;
+        mCategoryKey = getUniqueRestaurantCategoryKeys(foodCategories);
+
+        if (mCategoryKey.size() > 0) {
+            flowLayoutManager = new FlowLayoutManager.FlowViewBuilder(RestaurantSignUpActivity.this, flowLayout, mCategoryKey, new FlowLayoutManager.onFlowViewClick() {
+                @Override
+                public void flowViewClick(TextView updatedTextView) {
+                    List<TextView> selectedCategory = flowLayoutManager.getSelectedFlowViews();
+                    tvCategory.setText((selectedCategory.size() > 0) ? selectedCategory.get(0).getText().toString() : "");
+                }
+            })
+                    .setSingleChoice(true)
+                    .build();
+        }
+    }
+
+    private RestaurantCategory getRestaurantCategory(String name) {
+        if (mCategory != null && mCategory.size() > 0) {
+            for (RestaurantCategory restaurantCategory : mCategory) {
+                if (restaurantCategory.getName().equalsIgnoreCase(name)) {
+                    return restaurantCategory;
+                }
+            }
+        }
+        return null;
+    }
+
+    public List<String> getUniqueRestaurantCategoryKeys(ArrayList<RestaurantCategory> restaurantCategories) {
+        List<String> categories = new ArrayList<>();
+        for (RestaurantCategory restaurantCategory : restaurantCategories) {
+            categories.add(restaurantCategory.getName());
+        }
+        Collections.sort(categories);
+        return categories;
+    }
+
+    private void setDefaultRestaurantCategory() {
+        if (!AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(RestaurantSignUpActivity.this, SESSION_RESTAURANT_CATEGORY))) {
+            initFilter(DataRestaurantCategory.getResponseObject(SessionManager.getStringSetting(RestaurantSignUpActivity.this, SESSION_RESTAURANT_CATEGORY), DataRestaurantCategory.class).getData());
+        } else {
+            initFilter(DataRestaurantCategory.getResponseObject(DEFAULT_RESTAURANT_CATEGORY, DataRestaurantCategory.class).getData());
+        }
+    }
+
+    private class GetAllRestaurantCategory extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
+
+        private Context mContext;
+
+        public GetAllRestaurantCategory(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected HttpRequestManager.HttpResponse doInBackground(String... params) {
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doGetRequest(AllUrls.getAllRestaurantCategoryUrl());
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(HttpRequestManager.HttpResponse result) {
+
+            if (result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
+                Log.d(TAG, "success response from web: " + result.getResult().toString());
+
+                ResponseRestaurantCategory responseRestaurantCategory = ResponseRestaurantCategory.getResponseObject(result.getResult().toString(), ResponseRestaurantCategory.class);
+
+                if (responseRestaurantCategory.getStatus().equalsIgnoreCase("1") && (responseRestaurantCategory.getData().size() > 0)) {
+                    Log.d(TAG, "success response from object: " + responseRestaurantCategory.toString());
+
+                    //Save restaurant category into session
+                    DataRestaurantCategory dataRestaurantCategory = new DataRestaurantCategory(responseRestaurantCategory.getData());
+                    SessionManager.setStringSetting(RestaurantSignUpActivity.this, SESSION_RESTAURANT_CATEGORY, dataRestaurantCategory.getResponseString(dataRestaurantCategory));
+
+                    initFilter(responseRestaurantCategory.getData());
+                } else {
+
+                    setDefaultRestaurantCategory();
+                }
+            } else {
+
+                setDefaultRestaurantCategory();
             }
         }
     }

@@ -18,9 +18,11 @@ public class RestaurantLoginData extends ResponseBase {
     private String is_restaurant = "";
     private String sms_notification = "";
     private String push_notification = "";
+    private String restaurant_category_id = "";
     private int is_address_added = 0;
+    private String restaurant_category_name = "";
 
-    public RestaurantLoginData(String id, String name, String image, String lat, String lng, String email, String phone, String address, String password, String is_restaurant, String sms_notification, String push_notification, int is_address_added) {
+    public RestaurantLoginData(String id, String name, String image, String lat, String lng, String email, String phone, String address, String password, String is_restaurant, String sms_notification, String push_notification, String restaurant_category_id, int is_address_added, String restaurant_category_name) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -33,7 +35,9 @@ public class RestaurantLoginData extends ResponseBase {
         this.is_restaurant = is_restaurant;
         this.sms_notification = sms_notification;
         this.push_notification = push_notification;
+        this.restaurant_category_id = restaurant_category_id;
         this.is_address_added = is_address_added;
+        this.restaurant_category_name = restaurant_category_name;
     }
 
     public String getId() {
@@ -132,12 +136,28 @@ public class RestaurantLoginData extends ResponseBase {
         this.push_notification = push_notification;
     }
 
+    public String getRestaurant_category_id() {
+        return restaurant_category_id;
+    }
+
+    public void setRestaurant_category_id(String restaurant_category_id) {
+        this.restaurant_category_id = restaurant_category_id;
+    }
+
     public int getIs_address_added() {
         return is_address_added;
     }
 
     public void setIs_address_added(int is_address_added) {
         this.is_address_added = is_address_added;
+    }
+
+    public String getRestaurant_category_name() {
+        return restaurant_category_name;
+    }
+
+    public void setRestaurant_category_name(String restaurant_category_name) {
+        this.restaurant_category_name = restaurant_category_name;
     }
 
     @Override
@@ -155,7 +175,9 @@ public class RestaurantLoginData extends ResponseBase {
                 ", is_restaurant='" + is_restaurant + '\'' +
                 ", sms_notification='" + sms_notification + '\'' +
                 ", push_notification='" + push_notification + '\'' +
+                ", restaurant_category_id='" + restaurant_category_id + '\'' +
                 ", is_address_added=" + is_address_added +
+                ", restaurant_category_name='" + restaurant_category_name + '\'' +
                 '}';
     }
 }
