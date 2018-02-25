@@ -1,2 +1,2 @@
 include ':app', ':ribblemenu', ':placesautocomplete', ':easyrecyclerview', ':matisse',
-        ':imagezipper', ':fabulousfilter', ':expansionpanel', ':flowlayout'
+        ':imagezipper', ':fabulousfilter', ':expansionpanel', ':flowlayout', ':bubblepagerindicator'

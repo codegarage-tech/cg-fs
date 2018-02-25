@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BubblePagerIndicator">
+        <attr name="BubblePageIndicatorDefaultStyle" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="BubblePageIndicator">
+        <!-- Color of the filled circle that represents the current page. -->
+        <attr name="fillColor" format="color" />
+        <!-- Color of the filled circles that represents pages. -->
+        <attr name="pageColor" format="color" />
+        <!-- Radius of the circles. -->
+        <attr name="radius" format="dimension" />
+        <!-- Margin between the circles. -->
+        <attr name="marginBetweenCircles" format="dimension" />
+    </declare-styleable>
+</resources>
