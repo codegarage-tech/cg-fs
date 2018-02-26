@@ -65,6 +65,9 @@ public class HomeActivity extends BaseActivity implements AAH_FabulousFragment.C
             //Check navigation menu item()
             checkNavigationMenuItem(navigationView.getMenu().findItem(R.id.nav_home));
         }
+
+        //initialize push notification
+        initPushNotification();
     }
 
     private void goFragmentScreen(String currentTag, Fragment fragment) {

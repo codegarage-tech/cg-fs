@@ -12,8 +12,12 @@ import com.google.gson.Gson;
 public class RegisterApp implements Parcelable {
 
     private String id = "";
-    private String push_id = "";
+    private String device_id = "";
+    private String name = "";
+    private String phone = "";
+    private String email = "";
     private String unique_id = "";
+    private String type = "";
 
     public RegisterApp() {
     }
@@ -26,12 +30,36 @@ public class RegisterApp implements Parcelable {
         this.id = id;
     }
 
-    public String getPush_id() {
-        return push_id;
+    public String getDevice_id() {
+        return device_id;
     }
 
-    public void setPush_id(String push_id) {
-        this.push_id = push_id;
+    public void setDevice_id(String device_id) {
+        this.device_id = device_id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getUnique_id() {
@@ -42,12 +70,24 @@ public class RegisterApp implements Parcelable {
         this.unique_id = unique_id;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "{" +
                 "id='" + id + '\'' +
-                ", push_id='" + push_id + '\'' +
+                ", device_id='" + device_id + '\'' +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
                 ", unique_id='" + unique_id + '\'' +
+                ", type='" + type + '\'' +
                 '}';
     }
 
@@ -62,8 +102,12 @@ public class RegisterApp implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
-        dest.writeString(push_id);
+        dest.writeString(device_id);
+        dest.writeString(name);
+        dest.writeString(phone);
+        dest.writeString(email);
         dest.writeString(unique_id);
+        dest.writeString(type);
     }
 
     // Creator
@@ -81,8 +125,12 @@ public class RegisterApp implements Parcelable {
     // "De-parcel object
     public RegisterApp(Parcel in) {
         id = in.readString();
-        push_id = in.readString();
+        device_id = in.readString();
+        name = in.readString();
+        phone = in.readString();
+        email = in.readString();
         unique_id = in.readString();
+        type = in.readString();
     }
 
     /**************************
