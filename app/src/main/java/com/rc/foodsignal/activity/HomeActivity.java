@@ -32,6 +32,7 @@ import com.reversecoder.library.storage.SessionManager;
 
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_LOGIN;
 import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN;
+import static com.rc.foodsignal.util.AllConstants.SESSION_IS_NOTIFICATION;
 import static com.rc.foodsignal.util.AllConstants.SESSION_IS_RESTAURANT_LOGGED_IN;
 import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_LOGIN_DATA;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_NAVIGATION_MENU;
@@ -67,7 +68,9 @@ public class HomeActivity extends BaseActivity implements AAH_FabulousFragment.C
         }
 
         //initialize push notification
-        initPushNotification();
+        if(SessionManager.getBooleanSetting(HomeActivity.this,SESSION_IS_NOTIFICATION,true)){
+            initPushNotification();
+        }
     }
 
     private void goFragmentScreen(String currentTag, Fragment fragment) {
@@ -182,7 +185,8 @@ public class HomeActivity extends BaseActivity implements AAH_FabulousFragment.C
             Intent intentAddress = new Intent(HomeActivity.this, LocationListActivity.class);
             startActivity(intentAddress);
         } else if (id == R.id.nav_notification) {
-
+            Intent intentNotification = new Intent(HomeActivity.this, NotificationActivity.class);
+            startActivity(intentNotification);
         } else if (id == R.id.nav_google_pay) {
 
         } else if (id == R.id.nav_add_restaurants) {

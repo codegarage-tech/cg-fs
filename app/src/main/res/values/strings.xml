@@ -19,6 +19,7 @@
     <string name="title_activity_restaurant_menu">Restaurant Menu</string>
     <string name="title_activity_add_restaurant_menu">Add Restaurant Menu</string>
     <string name="title_activity_about_restaurant_menu">About Restaurant Menu</string>
+    <string name="title_activity_notification">Notification</string>
 
     <!-- Toast message -->
     <string name="toast_could_not_retrieve_info">Could not retrieve info</string>
