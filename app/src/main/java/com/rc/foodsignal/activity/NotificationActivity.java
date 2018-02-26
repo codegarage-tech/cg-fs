@@ -12,6 +12,7 @@ import com.rc.foodsignal.util.AppUtils;
 import com.reversecoder.gcm.listener.GcmResultListener;
 import com.reversecoder.gcm.task.RegisterAppTask;
 import com.reversecoder.gcm.task.UnregisterAppTask;
+import com.reversecoder.library.network.NetworkManager;
 import com.reversecoder.library.storage.SessionManager;
 
 import in.shadowfax.proswipebutton.ProSwipeButton;
@@ -47,11 +48,11 @@ public class NotificationActivity extends AppCompatActivity {
 
         //Pro Swipe Button
         proSwipeButton = (ProSwipeButton) findViewById(R.id.proswipebutton_notification);
-        setProSwipeButton();
+        setProSwipeButtonText();
         tvNotificationStatus = (TextView) findViewById(R.id.tv_notification_status);
     }
 
-    private void setProSwipeButton(){
+    private void setProSwipeButtonText() {
         if (SessionManager.getBooleanSetting(NotificationActivity.this, SESSION_IS_NOTIFICATION, true)) {
             //Off notification
             proSwipeButton.setText(getString(R.string.txt_off_notification));
@@ -72,56 +73,66 @@ public class NotificationActivity extends AppCompatActivity {
         proSwipeButton.setOnSwipeListener(new ProSwipeButton.OnSwipeListener() {
             @Override
             public void onSwipeConfirm() {
-                if (SessionManager.getBooleanSetting(NotificationActivity.this, SESSION_IS_NOTIFICATION, true)) {
-                    //Off notification
-                    new UnregisterAppTask(NotificationActivity.this, new GcmResultListener() {
-                        @Override
-                        public void onGcmResult(Object result) {
-                            boolean isUnregistered = (boolean) result;
-                            if (isUnregistered) {
-                                proSwipeButton.showResultIcon(true);
-                                tvNotificationStatus.setText(getString(R.string.txt_notification_setting_is_disabled));
+                if (NetworkManager.isConnected(NotificationActivity.this)) {
 
+                    if (SessionManager.getBooleanSetting(NotificationActivity.this, SESSION_IS_NOTIFICATION, true)) {
+                        //Off notification
+                        new UnregisterAppTask(NotificationActivity.this, new GcmResultListener() {
+                            @Override
+                            public void onGcmResult(final Object result) {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        proSwipeButton.showResultIcon(false);
-                                        setProSwipeButton();
+                                        boolean isUnregistered = (boolean) result;
+                                        if (isUnregistered) {
+                                            proSwipeButton.showResultIcon(true);
+                                            tvNotificationStatus.setText(getString(R.string.txt_notification_setting_is_disabled));
+                                        } else {
+                                            proSwipeButton.showResultIcon(false);
+                                            tvNotificationStatus.setText(getString(R.string.txt_notification_setting_is_enabled));
+                                        }
+
+                                        setProSwipeButtonText();
                                     }
                                 }, 2000);
-                            } else {
-                                proSwipeButton.showResultIcon(false);
-                                tvNotificationStatus.setText(getString(R.string.txt_notification_setting_is_enabled));
                             }
-                        }
-                    }).execute();
+                        }).execute();
+                    } else {
+                        //On notification
+                        new RegisterAppTask(NotificationActivity.this, new GcmResultListener() {
+                            @Override
+                            public void onGcmResult(final Object result) {
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        boolean isRegistered = (boolean) result;
+                                        if (isRegistered) {
+                                            proSwipeButton.showResultIcon(true);
+                                            tvNotificationStatus.setText(getString(R.string.txt_notification_setting_is_enabled));
+                                        } else {
+                                            proSwipeButton.showResultIcon(false);
+                                            tvNotificationStatus.setText(getString(R.string.txt_notification_setting_is_disabled));
+                                        }
+
+                                        setProSwipeButtonText();
+                                    }
+                                }, 2000);
+
+                            }
+                        }).execute();
+                    }
                 } else {
-                    //On notification
-                    new RegisterAppTask(NotificationActivity.this, new GcmResultListener() {
+                    new Handler().postDelayed(new Runnable() {
                         @Override
-                        public void onGcmResult(Object result) {
-                            boolean isRegistered = (boolean) result;
-                            if (isRegistered) {
-                                proSwipeButton.showResultIcon(true);
-                                tvNotificationStatus.setText(getString(R.string.txt_notification_setting_is_enabled));
+                        public void run() {
+                            proSwipeButton.showResultIcon(false);
+                            tvNotificationStatus.setText(getString(R.string.toast_network_error));
 
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        proSwipeButton.showResultIcon(false);
-                                        setProSwipeButton();
-                                    }
-                                }, 2000);
-                            } else {
-                                proSwipeButton.showResultIcon(false);
-                                tvNotificationStatus.setText(getString(R.string.txt_notification_setting_is_disabled));
-                            }
+                            setProSwipeButtonText();
                         }
-                    }).execute();
+                    }, 2000);
                 }
             }
         });
     }
-
-
 }

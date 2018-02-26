@@ -345,7 +345,7 @@ public class ProSwipeButton extends RelativeLayout {
         contentContainer.addView(failureIcon);
         animateFadeShow(context, failureIcon);
 
-        if (!isSuccess) {
+//        if (!isSuccess) {
             // expand the btn again
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -357,7 +357,7 @@ public class ProSwipeButton extends RelativeLayout {
                     animateFadeShow(context, contentTv);
                 }
             }, 1000);
-        }
+//        }
     }
 
     private void tintArrowHint() {
