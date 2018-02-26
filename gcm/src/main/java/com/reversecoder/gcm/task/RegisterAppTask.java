@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.reversecoder.gcm.listener.RegisterAppListener;
+import com.reversecoder.gcm.listener.GcmResultListener;
 import com.reversecoder.gcm.model.RegisterApp;
 import com.reversecoder.gcm.model.ResponseRegisterApp;
 import com.reversecoder.gcm.util.GcmConfig;
@@ -22,11 +22,11 @@ public class RegisterAppTask extends AsyncTask<String, String, HttpRequestManage
 
     private static final String TAG = RegisterAppTask.class.getSimpleName();
     private Context mContext;
-    private RegisterAppListener mRegisterAppListener;
+    private GcmResultListener mGcmResultListener;
 
-    public RegisterAppTask(Context context, RegisterAppListener registerAppListener) {
+    public RegisterAppTask(Context context, GcmResultListener gcmResultListener) {
         this.mContext = context;
-        this.mRegisterAppListener = registerAppListener;
+        this.mGcmResultListener = gcmResultListener;
     }
 
     @Override
@@ -67,13 +67,21 @@ public class RegisterAppTask extends AsyncTask<String, String, HttpRequestManage
 //                Log.d(TAG, "success response(web): " + result.getResult().toString());
                 ResponseRegisterApp responseRegisterApp = ResponseRegisterApp.convertFromStringToObject(result.getResult().toString(), ResponseRegisterApp.class);
 
-                if (responseRegisterApp.getStatus().equalsIgnoreCase("success") && responseRegisterApp.getData().size() > 0) {
+                if (responseRegisterApp != null) {
+
+                    boolean isRegistered = false;
+
+                    if (responseRegisterApp.getStatus().equalsIgnoreCase("success") && responseRegisterApp.getData().size() > 0) {
 
 //                    Log.d(TAG, "success response: " + responseRegisterApp.toString());
-                    GcmConfig.setStringSetting(mContext, GcmConfig.SESSION_GCM_REGISTER_DATA, RegisterApp.convertFromObjectToString(responseRegisterApp.getData().get(0)));
+                        isRegistered = true;
+                        GcmConfig.setBooleanSetting(mContext, GcmConfig.SESSION_IS_NOTIFICATION, true);
+                        GcmConfig.setStringSetting(mContext, GcmConfig.SESSION_GCM_REGISTER_DATA, RegisterApp.convertFromObjectToString(responseRegisterApp.getData().get(0)));
 //                    Log.d(TAG, "Session data: " + GcmConfig.getStringSetting(mContext, GcmConfig.SESSION_GCM_REGISTER_DATA));
+                    }
+
                     //Send response to the parent activity
-                    mRegisterAppListener.registerApp(result);
+                    mGcmResultListener.onGcmResult(isRegistered);
                 }
             }
         } else {

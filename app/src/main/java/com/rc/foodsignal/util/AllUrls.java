@@ -311,7 +311,7 @@ public class AllUrls {
 
     public static String getRemoveDeviceUrl() {
         String url = BASE_URL + "signup/remove_device";
-        Log.d(TAG, "getRemoveDeviceUrl: " + url);
+        Log.d(TAG, "getUnregisterDeviceUrl: " + url);
         return url;
     }
 
@@ -319,7 +319,7 @@ public class AllUrls {
         JSONObject params = HttpRequestManager.HttpParameter.getInstance()
                 .addJSONParam("device_unique_id", uniqueId)
                 .getJSONParam();
-        Log.d(TAG, "getRemoveDeviceParameters: " + params.toString());
+        Log.d(TAG, "getUnregisterDeviceParameters: " + params.toString());
         return params;
     }
 }

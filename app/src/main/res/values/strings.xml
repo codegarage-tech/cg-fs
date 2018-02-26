@@ -40,6 +40,12 @@
     <string name="txt_no_data_found">No data found.</string>
     <string name="txt_loading">Loading...</string>
 
+    <!-- Pro Swipe Button -->
+    <string name="txt_off_notification">Off Notification</string>
+    <string name="txt_on_notification">On Notification</string>
+    <string name="txt_notification_setting_is_enabled">Notification setting is enabled.</string>
+    <string name="txt_notification_setting_is_disabled">Notification setting is disabled.</string>
+
     <!-- Google map key -->
     <string name="google_maps_api_key">AIzaSyAxLN8Fj9BuW8Tep-chDcZGa-5jeMkMVcc</string>
 
