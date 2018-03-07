@@ -61,6 +61,7 @@ dependencies {
     compile project(":bubblepagerindicator")
     compile project(":gcm")
     compile project(":proswipebutton")
+    compile project(":cardslider")
 
     compile 'com.reversecoder.permission:rc-permission:1.0.1-SNAPSHOT'
     compile 'com.reversecoder.library:rc-library:1.0.1-SNAPSHOT'
