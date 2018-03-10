@@ -1,13 +1,19 @@
 package com.rc.foodsignal.viewholder;
 
+import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 import com.rc.foodsignal.R;
+import com.rc.foodsignal.activity.RestaurantDetailActivity;
 import com.rc.foodsignal.adapter.RestaurantMenuPagerAdapter;
+import com.rc.foodsignal.interfaces.OnPagerItemClickListener;
 import com.rc.foodsignal.model.Restaurant;
 import com.shuhart.bubblepagerindicator.BubblePageIndicator;
+
+import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_RESTAURANT_ITEM;
+import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_RESTAURANT_ITEM_POSITION;
 
 /**
  * @author Md. Rashadul Alam
@@ -30,6 +36,15 @@ public class RestaurantViewHolder extends BaseViewHolder<Restaurant> {
     public void setData(final Restaurant data) {
 
         restaurantMenuPagerAdapter = new RestaurantMenuPagerAdapter(getContext(), data);
+        restaurantMenuPagerAdapter.setOnItemClickListener(new OnPagerItemClickListener() {
+            @Override
+            public void onItemClicked(int position) {
+                Intent intentRestaurantDetail = new Intent(getContext(), RestaurantDetailActivity.class);
+                intentRestaurantDetail.putExtra(INTENT_KEY_RESTAURANT_ITEM, data);
+                intentRestaurantDetail.putExtra(INTENT_KEY_RESTAURANT_ITEM_POSITION, position);
+                getContext().startActivity(intentRestaurantDetail);
+            }
+        });
         vpRestaurantMenu.setAdapter(restaurantMenuPagerAdapter);
         vpRestaurantMenu.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

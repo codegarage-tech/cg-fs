@@ -20,6 +20,7 @@
     <string name="title_activity_add_restaurant_menu">Add Restaurant Menu</string>
     <string name="title_activity_about_restaurant_menu">About Restaurant Menu</string>
     <string name="title_activity_notification">Notification</string>
+    <string name="title_activity_restaurant_detail">Restaurant Detail</string>
 
     <!-- Toast message -->
     <string name="toast_could_not_retrieve_info">Could not retrieve info</string>
@@ -34,6 +35,7 @@
     <string name="toast_empty_ingredient_field">Please fill ingredient</string>
     <string name="toast_empty_category_field">Please fill category</string>
     <string name="toast_under_development">Under development</string>
+    <string name="toast_your_sim_card_is_absent">Your sim card is absent</string>
 
     <!-- Message -->
     <string name="txt_loading_message">Loading, please wait.</string>

@@ -3,6 +3,7 @@
     package="com.rc.foodsignal">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
@@ -109,6 +110,12 @@
         <activity
             android:name="com.rc.foodsignal.activity.NotificationActivity"
             android:label="@string/title_activity_notification"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name="com.rc.foodsignal.activity.RestaurantDetailActivity"
+            android:label="@string/title_activity_restaurant_detail"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 

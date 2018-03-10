@@ -2,6 +2,7 @@ package com.rc.foodsignal.util;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.telephony.TelephonyManager;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 
@@ -32,5 +33,11 @@ public class AppUtils {
             }
         }
         return false;
+    }
+
+    public static boolean isSimSupport(Context context) {
+        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        return !(tm.getSimState() == TelephonyManager.SIM_STATE_ABSENT);
+
     }
 }

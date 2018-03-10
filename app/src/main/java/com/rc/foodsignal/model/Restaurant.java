@@ -1,13 +1,15 @@
 package com.rc.foodsignal.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
 /**
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
  */
-public class Restaurant {
-
+public class Restaurant implements Parcelable {
 
     public static final transient int TYPE_RESTAURANT = 1;
     public static final transient int TYPE_IMAGE = 2;
@@ -178,5 +180,60 @@ public class Restaurant {
                 ", distance='" + distance + '\'' +
                 ", menu_details=" + menu_details +
                 '}';
+    }
+
+    /**************************
+     * Methods for parcelable *
+     **************************/
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(image);
+        dest.writeString(lat);
+        dest.writeString(lng);
+        dest.writeString(email);
+        dest.writeString(phone);
+        dest.writeString(address);
+        dest.writeString(password);
+        dest.writeString(is_restaurant);
+        dest.writeString(sms_notification);
+        dest.writeString(push_notification);
+        dest.writeString(distance);
+        dest.writeList(menu_details);
+    }
+
+    // Creator
+    public static final Creator CREATOR = new Creator() {
+        public Restaurant createFromParcel(Parcel in) {
+            return new Restaurant(in);
+        }
+
+        public Restaurant[] newArray(int size) {
+            return new Restaurant[size];
+        }
+    };
+
+    // "De-parcel object
+    public Restaurant(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        image = in.readString();
+        lat = in.readString();
+        lng = in.readString();
+        email = in.readString();
+        phone = in.readString();
+        address = in.readString();
+        password = in.readString();
+        is_restaurant = in.readString();
+        sms_notification = in.readString();
+        push_notification = in.readString();
+        distance = in.readString();
+        menu_details = in.readArrayList(FoodImage.class.getClassLoader());
     }
 }

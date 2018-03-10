@@ -31,6 +31,8 @@ public class AllConstants {
     public static final String INTENT_KEY_ADDRESS_LIST = "INTENT_KEY_ADDRESS_LIST";
     public static final String INTENT_KEY_SEARCH_ADDRESS = "INTENT_KEY_SEARCH_ADDRESS";
     public static final String INTENT_KEY_FOOD_ITEM = "INTENT_KEY_FOOD_ITEM";
+    public static final String INTENT_KEY_RESTAURANT_ITEM = "INTENT_KEY_RESTAURANT_ITEM";
+    public static final String INTENT_KEY_RESTAURANT_ITEM_POSITION = "INTENT_KEY_RESTAURANT_ITEM_POSITION";
 
     public static final int NAVIGATION_DRAWER_CLOSE_DELAY = 200;
 
