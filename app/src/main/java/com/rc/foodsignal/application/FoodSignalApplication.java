@@ -5,7 +5,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatDelegate;
 
-import com.rc.foodsignal.activity.HomeActivity;
+import com.rc.foodsignal.activity.RestaurantDetailActivity;
 import com.reversecoder.gcm.GcmManager;
 
 /**
@@ -29,7 +29,7 @@ public class FoodSignalApplication extends Application {
         initTypeface();
 
         //Initialize GCM content class
-        GcmManager.initGcmManager(mContext, new GcmManager.GcmBuilder().setContentClass(HomeActivity.class).buildGcmManager());
+        GcmManager.initGcmManager(mContext, new GcmManager.GcmBuilder().setContentClass(RestaurantDetailActivity.class).buildGcmManager());
     }
 
     private void initTypeface() {

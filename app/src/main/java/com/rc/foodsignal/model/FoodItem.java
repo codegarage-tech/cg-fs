@@ -14,21 +14,28 @@ public class FoodItem extends ResponseBase implements Parcelable {
     private String id = "";
     private String name = "";
     private String menu_id = "";
+    private String menu_image = "";
     private String price = "";
     private String restaurant_id = "";
     private String ingredients = "";
     private String category_name = "";
     private ArrayList<FoodImage> images = new ArrayList<>();
+    //For offer
+    private String offer_title = "";
+    private String offer_price = "";
 
-    public FoodItem(String id, String name, String menu_id, String price, String restaurant_id, String ingredients, String category_name, ArrayList<FoodImage> images) {
+    public FoodItem(String id, String name, String menu_id, String menu_image, String price, String restaurant_id, String ingredients, String category_name, ArrayList<FoodImage> images, String offer_title, String offer_price) {
         this.id = id;
         this.name = name;
         this.menu_id = menu_id;
+        this.menu_image = menu_image;
         this.price = price;
         this.restaurant_id = restaurant_id;
         this.ingredients = ingredients;
         this.category_name = category_name;
         this.images = images;
+        this.offer_title = offer_title;
+        this.offer_price = offer_price;
     }
 
     public String getId() {
@@ -53,6 +60,14 @@ public class FoodItem extends ResponseBase implements Parcelable {
 
     public void setMenu_id(String menu_id) {
         this.menu_id = menu_id;
+    }
+
+    public String getMenu_image() {
+        return menu_image;
+    }
+
+    public void setMenu_image(String menu_image) {
+        this.menu_image = menu_image;
     }
 
     public String getPrice() {
@@ -95,17 +110,36 @@ public class FoodItem extends ResponseBase implements Parcelable {
         this.images = images;
     }
 
+    public String getOffer_title() {
+        return offer_title;
+    }
+
+    public void setOffer_title(String offer_title) {
+        this.offer_title = offer_title;
+    }
+
+    public String getOffer_price() {
+        return offer_price;
+    }
+
+    public void setOffer_price(String offer_price) {
+        this.offer_price = offer_price;
+    }
+
     @Override
     public String toString() {
         return "{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", menu_id='" + menu_id + '\'' +
+                ", menu_image='" + menu_image + '\'' +
                 ", price='" + price + '\'' +
                 ", restaurant_id='" + restaurant_id + '\'' +
                 ", ingredients='" + ingredients + '\'' +
                 ", category_name='" + category_name + '\'' +
                 ", images=" + images +
+                ", offer_title='" + offer_title + '\'' +
+                ", offer_price='" + offer_price + '\'' +
                 '}';
     }
 
@@ -122,11 +156,14 @@ public class FoodItem extends ResponseBase implements Parcelable {
         dest.writeString(id);
         dest.writeString(name);
         dest.writeString(menu_id);
+        dest.writeString(menu_image);
         dest.writeString(price);
         dest.writeString(restaurant_id);
         dest.writeString(ingredients);
         dest.writeString(category_name);
         dest.writeList(images);
+        dest.writeString(offer_price);
+        dest.writeString(offer_title);
     }
 
     // Creator
@@ -145,10 +182,13 @@ public class FoodItem extends ResponseBase implements Parcelable {
         id = in.readString();
         name = in.readString();
         menu_id = in.readString();
+        menu_image = in.readString();
         price = in.readString();
         restaurant_id = in.readString();
         ingredients = in.readString();
         category_name = in.readString();
         images = in.readArrayList(FoodImage.class.getClassLoader());
+        offer_price = in.readString();
+        offer_title = in.readString();
     }
 }

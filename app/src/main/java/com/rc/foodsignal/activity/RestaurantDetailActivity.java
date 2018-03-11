@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,8 +25,11 @@ import com.rc.foodsignal.R;
 import com.rc.foodsignal.adapter.FoodItemSliderAdapter;
 import com.rc.foodsignal.factory.TextViewFactory;
 import com.rc.foodsignal.model.FoodItem;
+import com.rc.foodsignal.model.ResponseGcmRestaurantItem;
 import com.rc.foodsignal.model.Restaurant;
 import com.rc.foodsignal.util.AppUtils;
+import com.reversecoder.gcm.model.GcmData;
+import com.reversecoder.gcm.util.DetailIntentType;
 import com.reversecoder.library.event.OnSingleClickListener;
 import com.reversecoder.library.util.AllSettingsManager;
 
@@ -34,6 +38,8 @@ import java.util.ArrayList;
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_RESTAURANT_ITEM;
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_RESTAURANT_ITEM_POSITION;
 import static com.rc.foodsignal.util.AppUtils.isSimSupport;
+import static com.reversecoder.gcm.util.GcmConfig.INTENT_KEY_GCM_DATA_CONTENT;
+import static com.reversecoder.gcm.util.GcmConfig.INTENT_KEY_INTENT_DETAIL_TYPE;
 
 /**
  * @author Md. Rashadul Alam
@@ -48,6 +54,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     Restaurant mRestaurant;
     int mSelectedPosition = -1;
+    DetailIntentType mDetailIntentType = DetailIntentType.OTHER;
+    GcmData mGcmData;
 
     TextSwitcher tsFoodItemName, tsFoodItemIngredient, tsFoodItemPrice, tsFoodItemOffer;
     private int lastPagePosition = 0;
@@ -69,6 +77,27 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     private void initUI() {
+        //Intent data
+        if (getIntent().getStringExtra(INTENT_KEY_INTENT_DETAIL_TYPE) != null) {
+            mDetailIntentType = DetailIntentType.valueOf(getIntent().getStringExtra(INTENT_KEY_INTENT_DETAIL_TYPE));
+
+            switch (mDetailIntentType) {
+                case OTHER:
+                    mRestaurant = getIntent().getParcelableExtra(INTENT_KEY_RESTAURANT_ITEM);
+                    mSelectedPosition = getIntent().getIntExtra(INTENT_KEY_RESTAURANT_ITEM_POSITION, -1);
+                    break;
+                case GCM:
+                    mGcmData = getIntent().getParcelableExtra(INTENT_KEY_GCM_DATA_CONTENT);
+                    ResponseGcmRestaurantItem responseGcmRestaurantItem = ResponseGcmRestaurantItem.getResponseObject(mGcmData.getMessage(), ResponseGcmRestaurantItem.class);
+
+                    if (responseGcmRestaurantItem.getStatus().equalsIgnoreCase("1")) {
+                        mRestaurant = responseGcmRestaurantItem.getData();
+                        mSelectedPosition = 0;
+                    }
+                    break;
+            }
+        }
+
         //Toolbar
         ivBack = (ImageView) findViewById(R.id.iv_back);
         tvTitle = (TextView) findViewById(R.id.text_title);
@@ -80,13 +109,11 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         tvRestaurantPhone = (TextView) findViewById(R.id.tv_restaurant_phone);
         tvRestaurantAddress = (TextView) findViewById(R.id.tv_restaurant_address);
 
-        mRestaurant = getIntent().getParcelableExtra(INTENT_KEY_RESTAURANT_ITEM);
-        mSelectedPosition = getIntent().getIntExtra(INTENT_KEY_RESTAURANT_ITEM_POSITION, -1);
         if (mRestaurant != null) {
             Log.d(TAG, "mRestaurant: " + mRestaurant.toString());
             Log.d(TAG, "mSelectedPosition: " + mSelectedPosition);
 
-            initFoodSlider((mRestaurant.getMenu_details().size() > 0) ? mRestaurant.getMenu_details() : new ArrayList<FoodItem>());
+            initFoodSlider((mDetailIntentType == DetailIntentType.OTHER) ? (mRestaurant.getMenu_details().size() > 0) ? mRestaurant.getMenu_details() : new ArrayList<FoodItem>() : (mRestaurant.getOffer_details().size() > 0) ? mRestaurant.getOffer_details() : new ArrayList<FoodItem>());
 
             setFoodItemSliderData();
 
@@ -124,7 +151,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         tsFoodItemPrice.setFactory(new TextViewFactory(RestaurantDetailActivity.this, R.style.TextSwitcherPrice, true));
 
         tsFoodItemOffer = (TextSwitcher) findViewById(R.id.ts_food_item_offer);
-        tsFoodItemOffer.setFactory(new TextViewFactory(RestaurantDetailActivity.this, R.style.TextSwitcherPrice, true));
+        tsFoodItemOffer.setFactory(new TextViewFactory(RestaurantDetailActivity.this, R.style.TextSwitcherPriceOffer, true));
 
         tsFoodItemIngredient = (TextSwitcher) findViewById(R.id.ts_food_item_ingredient);
         tsFoodItemIngredient.setFactory(new TextViewFactory(RestaurantDetailActivity.this, R.style.TextSwitcherIngredient, true));
@@ -158,8 +185,12 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         FoodItem foodItem = foodItemSliderAdapter.getItem(lastPagePosition);
         rvFoodItemSlider.scrollToPosition(lastPagePosition);
         tsFoodItemName.setText(foodItem.getName());
-        tsFoodItemPrice.setText("$" + foodItem.getPrice());
-        tsFoodItemOffer.setText("$" + foodItem.getPrice());
+        String price = "$" + foodItem.getPrice();
+        String strikePrice = "<strike><font color=\'#000000\'>" + price + "</font></strike>";
+        tsFoodItemPrice.setText((mDetailIntentType == DetailIntentType.GCM) ? Html.fromHtml(strikePrice) : price);
+        tsFoodItemOffer.setVisibility((mDetailIntentType == DetailIntentType.GCM) ? View.VISIBLE : View.GONE);
+        AppUtils.flashView(tsFoodItemOffer, 1500);
+        tsFoodItemOffer.setText("$" + foodItem.getOffer_price());
         tsFoodItemIngredient.setText(foodItem.getIngredients());
         tvRestaurantEmail.setText(mRestaurant.getEmail());
         tvRestaurantPhone.setText(mRestaurant.getPhone());

@@ -1,8 +1,10 @@
 package com.rc.foodsignal.util;
 
+import android.animation.ValueAnimator;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.telephony.TelephonyManager;
+import android.view.View;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 
@@ -11,6 +13,22 @@ import static android.content.Context.ACTIVITY_SERVICE;
  *         Email: rashed.droid@gmail.com
  */
 public class AppUtils {
+
+    public static ValueAnimator flashView(final View viewGroup, long time) {
+        ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                viewGroup.setAlpha((Float) animation.getAnimatedValue());
+            }
+        });
+        animator.setDuration(time);
+        animator.setRepeatMode(ValueAnimator.REVERSE);
+        animator.setRepeatCount(-1);
+        animator.start();
+        return animator;
+    }
+
 
     public static int toPx(Context context, int value) {
         float density = context.getResources().getDisplayMetrics().density;

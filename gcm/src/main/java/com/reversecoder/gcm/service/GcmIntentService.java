@@ -17,8 +17,10 @@ import com.reversecoder.gcm.GcmManager;
 import com.reversecoder.gcm.R;
 import com.reversecoder.gcm.broadcast.GcmBroadcastReceiver;
 import com.reversecoder.gcm.model.GcmData;
+import com.reversecoder.gcm.util.DetailIntentType;
 
-import static com.reversecoder.gcm.util.GcmConfig.INTENT_KEY_GCM_DATA_CONTENT_INTENT;
+import static com.reversecoder.gcm.util.GcmConfig.INTENT_KEY_GCM_DATA_CONTENT;
+import static com.reversecoder.gcm.util.GcmConfig.INTENT_KEY_INTENT_DETAIL_TYPE;
 
 /**
  * @author Md. Rashadul Alam
@@ -79,7 +81,8 @@ public class GcmIntentService extends IntentService {
 
     private void sendNotification(Context context, GcmData gcmData) {
         Intent intentGcmDetail = new Intent(context, GcmManager.getContentClass());
-        intentGcmDetail.putExtra(INTENT_KEY_GCM_DATA_CONTENT_INTENT, gcmData);
+        intentGcmDetail.putExtra(INTENT_KEY_INTENT_DETAIL_TYPE, DetailIntentType.GCM.name());
+        intentGcmDetail.putExtra(INTENT_KEY_GCM_DATA_CONTENT, gcmData);
 //        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
 //        stackBuilder.addParentStack(Scheduler.getContentClass());
 //        stackBuilder.addNextIntent(result);
