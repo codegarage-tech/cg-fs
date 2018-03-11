@@ -25,9 +25,11 @@ public class AllConstants {
     public static final int INTENT_REQUEST_CODE_ADDRESS_SEARCH = 42001;
     public static final int INTENT_REQUEST_CODE_RESTAURANT_ADD_MENU = 42002;
     public static final int INTENT_REQUEST_CODE_RESTAURANT_MENU_DETAIL = 42003;
+    public static final int INTENT_REQUEST_CODE_LOCATION_LIST = 42004;
 
     //Intent key
     public static final String INTENT_KEY_LOGIN = "INTENT_KEY_LOGIN";
+    public static final String INTENT_KEY_LOCATION_LIST = "INTENT_KEY_LOCATION_LIST";
     public static final String INTENT_KEY_ADDRESS_LIST = "INTENT_KEY_ADDRESS_LIST";
     public static final String INTENT_KEY_SEARCH_ADDRESS = "INTENT_KEY_SEARCH_ADDRESS";
     public static final String INTENT_KEY_FOOD_ITEM = "INTENT_KEY_FOOD_ITEM";

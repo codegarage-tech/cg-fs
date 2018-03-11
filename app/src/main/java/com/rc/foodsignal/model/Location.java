@@ -104,6 +104,39 @@ public class Location extends ResponseBase implements Parcelable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Location)) return false;
+
+        Location that = (Location) o;
+
+        if (!getId().equals(that.getId())) return false;
+        if (!getUser_id().equals(that.getUser_id())) return false;
+        if (!getStreet().equals(that.getStreet())) return false;
+        if (!getCity().equals(that.getCity())) return false;
+        if (!getState().equals(that.getState())) return false;
+        if (!getZip().equals(that.getZip())) return false;
+        if (!getCountry().equals(that.getCountry())) return false;
+        if (!getLat().equals(that.getLat())) return false;
+        return getLng().equals(that.getLng());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId().hashCode();
+
+        result = 31 * result + getUser_id().hashCode();
+        result = 31 * result + getStreet().hashCode();
+        result = 31 * result + getCity().hashCode();
+        result = 31 * result + getState().hashCode();
+        result = 31 * result + getZip().hashCode();
+        result = 31 * result + getCountry().hashCode();
+        result = 31 * result + getLat().hashCode();
+        result = 31 * result + getLng().hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "{" +
                 "id='" + id + '\'' +

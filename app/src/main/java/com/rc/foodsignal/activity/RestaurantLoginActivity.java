@@ -22,12 +22,9 @@ import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.HttpRequestManager;
 import com.reversecoder.library.network.NetworkManager;
 import com.reversecoder.library.storage.SessionManager;
-import com.reversecoder.library.util.AllSettingsManager;
 
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_LOGIN;
-import static com.rc.foodsignal.util.AllConstants.SESSION_IS_LOCATION_ADDED;
 import static com.rc.foodsignal.util.AllConstants.SESSION_IS_RESTAURANT_LOGGED_IN;
-import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_LOCATION;
 import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_LOGIN_DATA;
 
 /**

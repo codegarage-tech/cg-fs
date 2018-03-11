@@ -46,10 +46,6 @@
                 android:icon="@drawable/ic_action_menu"
                 android:title="Menu" />
             <item
-                android:id="@+id/nav_menu_gallery"
-                android:icon="@drawable/ic_menu_gallery"
-                android:title="Menu Gallery" />
-            <item
                 android:id="@+id/nav_social_activity"
                 android:icon="@drawable/ic_menu_social_activity"
                 android:title="Social Activity" />

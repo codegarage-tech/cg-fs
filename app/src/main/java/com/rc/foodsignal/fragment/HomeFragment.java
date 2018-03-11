@@ -1,6 +1,7 @@
 package com.rc.foodsignal.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,8 +41,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
 import static com.rc.foodsignal.util.AllConstants.DEFAULT_FOOD_CATEGORY;
 import static com.rc.foodsignal.util.AllConstants.DEFAULT_RESTAURANT_CATEGORY;
+import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_LOCATION_LIST;
+import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_LOCATION_LIST;
 import static com.rc.foodsignal.util.AllConstants.SESSION_FOOD_CATEGORY;
 import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_CATEGORY;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_LOCATION;
@@ -313,6 +317,29 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
         }
 
         new DoSearchRestaurants(getActivity(), location, foodCategoryId, restaurantCategoryId).execute();
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case INTENT_REQUEST_CODE_LOCATION_LIST: {
+                if (data != null && resultCode == RESULT_OK) {
+                    if (data.getBooleanExtra(INTENT_KEY_LOCATION_LIST, false)) {
+                        //Update new selected location
+                        if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION))) {
+                            Log.d(TAG, "Session data: " + SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION));
+                            mLocation = Location.getResponseObject(SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION), Location.class);
+                        }
+
+                        //Search result depending on new location
+                        searchRestaurant(mLocation, getSelectedFoodCategory(selectedFoodCategory).getId(), getSelectedRestaurantCategory(selectedRestaurantCategory).getId());
+                    }
+                }
+                break;
+            }
+            default:
+                break;
+        }
     }
 
     /***************************

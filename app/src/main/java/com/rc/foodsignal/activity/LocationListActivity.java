@@ -27,6 +27,7 @@ import com.reversecoder.library.network.NetworkManager;
 import com.reversecoder.library.storage.SessionManager;
 
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_ADDRESS_LIST;
+import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_LOCATION_LIST;
 import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_ADDRESS_LIST;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_LOCATION;
 import static com.rc.foodsignal.util.AllConstants.SESSION_USER_BASIC_INFO;
@@ -43,6 +44,7 @@ public class LocationListActivity extends AppCompatActivity {
     ProgressDialog loadingDialog;
 
     UserBasicInfo userBasicInfo;
+    Location mSelectedLocation;
     GetAddressList getAddressList;
     AddressListViewAdapter addressListViewAdapter;
     ListView lvAddress;
@@ -61,6 +63,10 @@ public class LocationListActivity extends AppCompatActivity {
         if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(LocationListActivity.this, SESSION_USER_BASIC_INFO))) {
             Log.d(TAG, "Session data: " + SessionManager.getStringSetting(LocationListActivity.this, SESSION_USER_BASIC_INFO));
             userBasicInfo = UserBasicInfo.getResponseObject(SessionManager.getStringSetting(LocationListActivity.this, SESSION_USER_BASIC_INFO), UserBasicInfo.class);
+        }
+
+        if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(LocationListActivity.this, SESSION_SELECTED_LOCATION))) {
+            mSelectedLocation = Location.getResponseObject(SessionManager.getStringSetting(LocationListActivity.this, SESSION_SELECTED_LOCATION), Location.class);
         }
 
         ivBack = (ImageView) findViewById(R.id.iv_back);
@@ -151,6 +157,7 @@ public class LocationListActivity extends AppCompatActivity {
 
                     //Update listview
                     addressListViewAdapter.setData(responseData.getData());
+                    lvAddress.setSelection(addressListViewAdapter.getItemPosition(mSelectedLocation));
                 } else {
                     Toast.makeText(LocationListActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
                 }
@@ -159,6 +166,17 @@ public class LocationListActivity extends AppCompatActivity {
                 Toast.makeText(LocationListActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        //Send selected location status to the home activity
+        if (!mSelectedLocation.equals(Location.getResponseObject(SessionManager.getStringSetting(LocationListActivity.this, SESSION_SELECTED_LOCATION), Location.class))) {
+            Intent intent = new Intent();
+            intent.putExtra(INTENT_KEY_LOCATION_LIST, true);
+            setResult(RESULT_OK, intent);
+        }
+        finish();
     }
 
     @Override
@@ -173,6 +191,7 @@ public class LocationListActivity extends AppCompatActivity {
                         //Update address list
                         Location mLocation = Location.getResponseObject(SessionManager.getStringSetting(LocationListActivity.this, SESSION_SELECTED_LOCATION), Location.class);
                         addressListViewAdapter.addData(mLocation);
+                        lvAddress.setSelection(addressListViewAdapter.getItemPosition(mLocation));
                     }
                 }
                 break;

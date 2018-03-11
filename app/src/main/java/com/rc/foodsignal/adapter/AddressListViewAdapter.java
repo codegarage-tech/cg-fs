@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.rc.foodsignal.R;
@@ -95,7 +96,7 @@ public class AddressListViewAdapter extends BaseAdapter {
         tvAddress.setText(String.format("%s, %s, %s", location.getCity(), location.getState(), location.getCountry()));
 
         LinearLayout llAddressCheck = (LinearLayout) vi.findViewById(R.id.ll_address_check);
-        if (mLocation.getStreet().equalsIgnoreCase(location.getStreet())) {
+        if (mLocation.getId().equalsIgnoreCase(location.getId())) {
             llAddressCheck.setVisibility(View.VISIBLE);
 
             tvStreet.setTextColor(mActivity.getResources().getColor(R.color.colorPrimaryDark));

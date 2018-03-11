@@ -31,6 +31,7 @@ import com.reversecoder.library.storage.SessionManager;
 
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_LOGIN;
 import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_ADD_RESTAURANT_LOGIN;
+import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_LOCATION_LIST;
 import static com.rc.foodsignal.util.AllConstants.SESSION_IS_RESTAURANT_LOGGED_IN;
 import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_LOGIN_DATA;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_NAVIGATION_MENU;
@@ -180,7 +181,7 @@ public class HomeActivity extends BaseActivity implements AAH_FabulousFragment.C
             checkNavigationMenuItem(item);
         } else if (id == R.id.nav_location) {
             Intent intentAddress = new Intent(HomeActivity.this, LocationListActivity.class);
-            startActivity(intentAddress);
+            startActivityForResult(intentAddress, INTENT_REQUEST_CODE_LOCATION_LIST);
         } else if (id == R.id.nav_notification) {
             Intent intentNotification = new Intent(HomeActivity.this, NotificationActivity.class);
             startActivity(intentNotification);
@@ -199,8 +200,6 @@ public class HomeActivity extends BaseActivity implements AAH_FabulousFragment.C
         } else if (id == R.id.nav_menu) {
             Intent intentRestaurantMenu = new Intent(HomeActivity.this, RestaurantMenuListActivity.class);
             startActivity(intentRestaurantMenu);
-        } else if (id == R.id.nav_menu_gallery) {
-
         } else if (id == R.id.nav_social_activity) {
 
         } else if (id == R.id.nav_web_admin) {
@@ -225,10 +224,16 @@ public class HomeActivity extends BaseActivity implements AAH_FabulousFragment.C
 
                         refreshNavigationMenu();
 
+                        //Send user to the about restaurant due to successful registration
                         Intent intentRestaurant = new Intent(HomeActivity.this, AboutRestaurantActivity.class);
                         startActivity(intentRestaurant);
                     }
                 }
+                break;
+            }
+            case INTENT_REQUEST_CODE_LOCATION_LIST: {
+                //Selected location is changed so new restaurant search is needed for new location, so notify home fragment
+                ((HomeFragment) FragmentUtilsManager.getVisibleSupportFragment(HomeActivity.this, getString(R.string.title_fragment_home))).onActivityResult(requestCode, resultCode, data);
                 break;
             }
             default:
