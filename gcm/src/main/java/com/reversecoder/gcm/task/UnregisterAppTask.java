@@ -11,6 +11,8 @@ import com.reversecoder.gcm.util.GcmConfig;
 import com.reversecoder.gcm.util.HttpRequestManager;
 import com.reversecoder.gcm.util.UniqueIdManager;
 
+import static com.reversecoder.gcm.util.GcmConfig.SESSION_IS_GCM_NOTIFICATION;
+
 /**
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
@@ -53,20 +55,17 @@ public class UnregisterAppTask extends AsyncTask<String, String, HttpRequestMana
         if (result != null) {
 
             if (result.isSuccess() && !GcmConfig.isNullOrEmpty(result.getResult().toString())) {
-//                Log.d(TAG, "success response(web): " + result.getResult().toString());
+                Log.d(TAG, "success response(web): " + result.getResult().toString());
                 ResponseUnregisterApp responseUnregisterApp = ResponseUnregisterApp.convertFromStringToObject(result.getResult().toString(), ResponseUnregisterApp.class);
 
                 if (responseUnregisterApp != null) {
-
                     boolean isUnregistered = false;
+                    Log.d(TAG, "success response: " + responseUnregisterApp.toString());
 
                     if (responseUnregisterApp.getStatus().equalsIgnoreCase("success")) {
-
-//                    Log.d(TAG, "success response: " + responseRegisterApp.toString());
                         isUnregistered = true;
                         GcmConfig.removeSetting(mContext, GcmConfig.SESSION_GCM_REGISTER_DATA);
-                        GcmConfig.setBooleanSetting(mContext, GcmConfig.SESSION_IS_NOTIFICATION, false);
-//                    Log.d(TAG, "Session data: " + GcmConfig.getStringSetting(mContext, GcmConfig.SESSION_GCM_REGISTER_DATA));
+                        GcmConfig.setBooleanSetting(mContext, SESSION_IS_GCM_NOTIFICATION, false);
                     }
 
                     //Send response to the parent activity

@@ -22,6 +22,16 @@ public class RegisterApp implements Parcelable {
     public RegisterApp() {
     }
 
+    public RegisterApp(String id, String device_id, String name, String phone, String email, String unique_id, String type) {
+        this.id = id;
+        this.device_id = device_id;
+        this.name = name;
+        this.phone = phone;
+        this.email = email;
+        this.unique_id = unique_id;
+        this.type = type;
+    }
+
     public String getId() {
         return id;
     }
@@ -76,6 +86,34 @@ public class RegisterApp implements Parcelable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RegisterApp)) return false;
+
+        RegisterApp that = (RegisterApp) o;
+
+        if (!getId().equals(that.getId())) return false;
+        if (!getDevice_id().equals(that.getDevice_id())) return false;
+        if (!getName().equals(that.getName())) return false;
+        if (!getPhone().equals(that.getPhone())) return false;
+        if (!getEmail().equals(that.getEmail())) return false;
+        if (!getUnique_id().equals(that.getUnique_id())) return false;
+        return getType().equals(that.getType());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId().hashCode();
+        result = 31 * result + getDevice_id().hashCode();
+        result = 31 * result + getName().hashCode();
+        result = 31 * result + getPhone().hashCode();
+        result = 31 * result + getEmail().hashCode();
+        result = 31 * result + getUnique_id().hashCode();
+        result = 31 * result + getType().hashCode();
+        return result;
     }
 
     @Override

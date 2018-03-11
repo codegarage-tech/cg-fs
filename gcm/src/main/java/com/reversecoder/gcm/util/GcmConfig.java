@@ -16,8 +16,8 @@ public class GcmConfig {
     public static final String GCM_SENDER_ID = "482144882562";
     private static final String TAG = GcmConfig.class.getSimpleName();
     public static final String SESSION_GCM_REGISTER_DATA = "SESSION_GCM_REGISTER_DATA";
-    public static final String SESSION_IS_NOTIFICATION = "SESSION_IS_NOTIFICATION";
     public static final String INTENT_KEY_GCM_DATA_CONTENT_INTENT = "INTENT_KEY_GCM_DATA_CONTENT_INTENT";
+    public static final String SESSION_IS_GCM_NOTIFICATION = "SESSION_IS_GCM_NOTIFICATION";
 
     private static final String BASE_URL = "http://ntstx.com/food_api/index.php/";
 

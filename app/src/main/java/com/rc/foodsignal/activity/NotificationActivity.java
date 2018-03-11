@@ -17,7 +17,7 @@ import com.reversecoder.library.storage.SessionManager;
 
 import in.shadowfax.proswipebutton.ProSwipeButton;
 
-import static com.reversecoder.gcm.util.GcmConfig.SESSION_IS_NOTIFICATION;
+import static com.reversecoder.gcm.util.GcmConfig.SESSION_IS_GCM_NOTIFICATION;
 
 /**
  * @author Md. Rashadul Alam
@@ -53,7 +53,7 @@ public class NotificationActivity extends AppCompatActivity {
     }
 
     private void setProSwipeButtonText() {
-        if (SessionManager.getBooleanSetting(NotificationActivity.this, SESSION_IS_NOTIFICATION, true)) {
+        if (SessionManager.getBooleanSetting(NotificationActivity.this, SESSION_IS_GCM_NOTIFICATION, true)) {
             //Off notification
             proSwipeButton.setText(getString(R.string.txt_off_notification));
         } else {
@@ -75,7 +75,8 @@ public class NotificationActivity extends AppCompatActivity {
             public void onSwipeConfirm() {
                 if (NetworkManager.isConnected(NotificationActivity.this)) {
 
-                    if (SessionManager.getBooleanSetting(NotificationActivity.this, SESSION_IS_NOTIFICATION, true)) {
+                    if (SessionManager.getBooleanSetting(NotificationActivity.this, SESSION_IS_GCM_NOTIFICATION, true)) {
+
                         //Off notification
                         new UnregisterAppTask(NotificationActivity.this, new GcmResultListener() {
                             @Override

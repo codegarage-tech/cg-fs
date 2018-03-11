@@ -34,8 +34,7 @@ import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_ADD_RESTAU
 import static com.rc.foodsignal.util.AllConstants.SESSION_IS_RESTAURANT_LOGGED_IN;
 import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_LOGIN_DATA;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_NAVIGATION_MENU;
-import static com.reversecoder.gcm.util.GcmConfig.SESSION_GCM_REGISTER_DATA;
-import static com.reversecoder.gcm.util.GcmConfig.SESSION_IS_NOTIFICATION;
+import static com.reversecoder.gcm.util.GcmConfig.SESSION_IS_GCM_NOTIFICATION;
 
 public class HomeActivity extends BaseActivity implements AAH_FabulousFragment.Callbacks, AAH_FabulousFragment.AnimationListener {
 
@@ -68,10 +67,7 @@ public class HomeActivity extends BaseActivity implements AAH_FabulousFragment.C
         }
 
         //initialize push notification
-        if (SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_NOTIFICATION, true)
-                && SessionManager.getStringSetting(HomeActivity.this, SESSION_GCM_REGISTER_DATA) == null) {
-            initPushNotification();
-        }
+        initPushNotification();
     }
 
     private void goFragmentScreen(String currentTag, Fragment fragment) {
@@ -274,12 +270,15 @@ public class HomeActivity extends BaseActivity implements AAH_FabulousFragment.C
      *****************************************/
     private void initPushNotification() {
         if (NetworkManager.isConnected(HomeActivity.this)) {
-            new RegisterAppTask(HomeActivity.this, new GcmResultListener() {
-                @Override
-                public void onGcmResult(Object result) {
-                    //Do whatever you want with the response
-                }
-            }).execute();
+
+            if (SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_GCM_NOTIFICATION, true)) {
+                new RegisterAppTask(HomeActivity.this, new GcmResultListener() {
+                    @Override
+                    public void onGcmResult(Object result) {
+                        //Do whatever you want with the response
+                    }
+                }).execute();
+            }
         }
     }
 }
