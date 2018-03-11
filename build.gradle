@@ -36,6 +36,8 @@ allprojects {
     ext.glideVersion = '4.5.0'
     ext.picassoVersion = '2.5.2'
     ext.googlePlayServiceGcmVersion = '11.8.0'
+    ext.googlePlayServiceMapVersion = '11.8.0'
+    ext.googlePlayServiceLocationVersion = '11.8.0'
     ext.gsonVersion = '2.8.1'
 }
 

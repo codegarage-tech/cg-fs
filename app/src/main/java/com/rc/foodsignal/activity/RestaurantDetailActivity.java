@@ -12,6 +12,12 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.ramotion.cardslider.CardSliderLayoutManager;
 import com.ramotion.cardslider.CardSnapHelper;
 import com.rc.foodsignal.R;
@@ -46,6 +52,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     TextSwitcher tsFoodItemName, tsFoodItemIngredient, tsFoodItemPrice, tsFoodItemOffer;
     private int lastPagePosition = 0;
     TextView tvRestaurantEmail, tvRestaurantPhone, tvRestaurantAddress;
+    SupportMapFragment mapFragment;
 
     //Food slider
     RecyclerView rvFoodItemSlider;
@@ -82,7 +89,31 @@ public class RestaurantDetailActivity extends AppCompatActivity {
             initFoodSlider((mRestaurant.getMenu_details().size() > 0) ? mRestaurant.getMenu_details() : new ArrayList<FoodItem>());
 
             setFoodItemSliderData();
+
+            initGoogleMapWithMarker(mRestaurant);
         }
+    }
+
+    private void initGoogleMapWithMarker(final Restaurant restaurant) {
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                try {
+                    double lat = Double.parseDouble(restaurant.getLat());
+                    double lng = Double.parseDouble(restaurant.getLng());
+
+                    LatLng location = new LatLng(lat, lng);
+                    googleMap.addMarker(new MarkerOptions().position(location)
+                            .title(mRestaurant.getAddress()));
+
+                    //Move the camera to the user's location and zoom in!
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16.0f));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
     }
 
     private void initTextSwitcher() {

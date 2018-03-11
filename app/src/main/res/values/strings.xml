@@ -49,6 +49,11 @@
     <string name="txt_notification_setting_is_disabled">Notification setting is disabled.</string>
 
     <!-- Google map key -->
-    <string name="google_maps_api_key">AIzaSyAxLN8Fj9BuW8Tep-chDcZGa-5jeMkMVcc</string>
+    <!-- release key -->
+    <!--<string name="release_google_maps_api_key_home">AIzaSyA4yOh_Lb7l9tXzFYhoSLIdl5GjtxVQgVo</string>-->
+    <!-- debug key -->
+    <string name="release_google_maps_api_key_home">AIzaSyB7M09ps48qrB7V9BAhQcu2HtBhcqgt29g</string>
+    <!--Google place key-->
+    <string name="google_place_api_key">AIzaSyAxLN8Fj9BuW8Tep-chDcZGa-5jeMkMVcc</string>
 
 </resources>

@@ -56,7 +56,7 @@
             android:enabled="false"
             android:padding="16dp"
             app:pacv_adapterClass="com.seatgeek.placesautocomplete.adapter.PlacesAutocompleteAdapter"
-            app:pacv_googleMapsApiKey="@string/google_maps_api_key"
+            app:pacv_googleMapsApiKey="@string/google_place_api_key"
             app:pacv_languageCode="en"
             app:pacv_resultType="no_type" />
 
