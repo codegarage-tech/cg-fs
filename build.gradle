@@ -24,8 +24,8 @@ allprojects {
         jcenter()
     }
 
-    ext.appVersionCode = 105
-    ext.appVersionName = "1.0.5"
+    ext.appVersionCode = 106
+    ext.appVersionName = "1.0.6"
     ext.appMinSdkVersion = 15
     ext.appTargetSdkVersion = 27
     ext.appCompileSdkVersion = 27

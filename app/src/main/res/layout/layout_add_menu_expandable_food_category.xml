@@ -8,8 +8,8 @@
     <com.github.florent37.expansionpanel.ExpansionHeader
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:expansion_headerIndicator="@id/headerIndicator"
-        app:expansion_layout="@id/expansionLayout"
+        app:expansion_headerIndicator="@+id/headerIndicator"
+        app:expansion_layout="@+id/expansionLayout"
         app:expansion_toggleOnClick="true">
 
         <RelativeLayout
@@ -68,8 +68,7 @@
                 android:layout_height="wrap_content"
                 app:flChildSpacing="auto"
                 app:flRowSpacing="8dp" />
-
         </LinearLayout>
-
     </com.github.florent37.expansionpanel.ExpansionLayout>
+
 </LinearLayout>

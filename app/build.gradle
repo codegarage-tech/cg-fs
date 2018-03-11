@@ -14,6 +14,19 @@ repositories {
 }
 
 android {
+    signingConfigs {
+        releaseConfig {
+            try {
+                keyAlias 'keydata.keystore'
+                keyPassword KEY_PASSWORD
+                storeFile file('../misc/keydata.keystore')
+                storePassword KEYSTORE_PASSWORD
+            } catch (ex) {
+                throw new InvalidUserDataException("You should define KEYSTORE_PASSWORD and KEY_PASSWORD in gradle.properties.")
+            }
+        }
+    }
+
     compileSdkVersion appCompileSdkVersion
     buildToolsVersion appBuildToolsVersion
 
@@ -28,10 +41,49 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
-        release {
+        debug {
+//            applicationIdSuffix ".debug"
+
+            shrinkResources false
             minifyEnabled false
+            debuggable true
+        }
+        release {
+            shrinkResources false
+            minifyEnabled false
+            debuggable false
+
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            signingConfig signingConfigs.releaseConfig
+        }
+    }
+
+    flavorDimensions "default"
+    productFlavors {
+        stage {
+//            applicationIdSuffix ".stage"
+        }
+        pro {
+//            applicationIdSuffix ".pro"
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+
+            def stringsFile = android.sourceSets.main.res.sourceFiles.find {
+                it.name.equals 'strings.xml'
+            }
+            def appName = new XmlParser().parse(stringsFile).string.find { it.@name.equals 'app_name' }.text()
+            def separator = "_"
+            def flavor = variant.getFlavorName()
+            def version = variant.versionName
+            def buildType = variant.baseName.split("-")[1]
+            def releaseApkName = appName + separator + flavor + separator + version + separator + buildType + ".apk"
+            outputFileName = releaseApkName
         }
     }
 }
