@@ -78,30 +78,11 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     private void initUI() {
         //Intent data
-        if (getIntent().getStringExtra(INTENT_KEY_INTENT_DETAIL_TYPE) != null) {
-            mDetailIntentType = DetailIntentType.valueOf(getIntent().getStringExtra(INTENT_KEY_INTENT_DETAIL_TYPE));
-
-            switch (mDetailIntentType) {
-                case OTHER:
-                    mRestaurant = getIntent().getParcelableExtra(INTENT_KEY_RESTAURANT_ITEM);
-                    mSelectedPosition = getIntent().getIntExtra(INTENT_KEY_RESTAURANT_ITEM_POSITION, -1);
-                    break;
-                case GCM:
-                    mGcmData = getIntent().getParcelableExtra(INTENT_KEY_GCM_DATA_CONTENT);
-                    ResponseGcmRestaurantItem responseGcmRestaurantItem = ResponseGcmRestaurantItem.getResponseObject(mGcmData.getMessage(), ResponseGcmRestaurantItem.class);
-
-                    if (responseGcmRestaurantItem.getStatus().equalsIgnoreCase("1")) {
-                        mRestaurant = responseGcmRestaurantItem.getData();
-                        mSelectedPosition = 0;
-                    }
-                    break;
-            }
-        }
+        handleNewIntent(getIntent());
 
         //Toolbar
         ivBack = (ImageView) findViewById(R.id.iv_back);
         tvTitle = (TextView) findViewById(R.id.text_title);
-        tvTitle.setText(getString(R.string.title_activity_restaurant_detail));
 
         initTextSwitcher();
 
@@ -109,20 +90,25 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         tvRestaurantPhone = (TextView) findViewById(R.id.tv_restaurant_phone);
         tvRestaurantAddress = (TextView) findViewById(R.id.tv_restaurant_address);
 
+        initFoodSlider();
+
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
+
+        setData(mRestaurant);
+    }
+
+    private void setData(Restaurant restaurant) {
         if (mRestaurant != null) {
             Log.d(TAG, "mRestaurant: " + mRestaurant.toString());
             Log.d(TAG, "mSelectedPosition: " + mSelectedPosition);
 
-            initFoodSlider((mDetailIntentType == DetailIntentType.OTHER) ? (mRestaurant.getMenu_details().size() > 0) ? mRestaurant.getMenu_details() : new ArrayList<FoodItem>() : (mRestaurant.getOffer_details().size() > 0) ? mRestaurant.getOffer_details() : new ArrayList<FoodItem>());
-
             setFoodItemSliderData();
 
-            initGoogleMapWithMarker(mRestaurant);
+            setGoogleMapWithMarker(mRestaurant);
         }
     }
 
-    private void initGoogleMapWithMarker(final Restaurant restaurant) {
-        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
+    private void setGoogleMapWithMarker(final Restaurant restaurant) {
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
@@ -157,10 +143,9 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         tsFoodItemIngredient.setFactory(new TextViewFactory(RestaurantDetailActivity.this, R.style.TextSwitcherIngredient, true));
     }
 
-    private void initFoodSlider(ArrayList<FoodItem> foodItems) {
+    private void initFoodSlider() {
         rvFoodItemSlider = (RecyclerView) findViewById(R.id.rv_food_item_slider);
         foodItemSliderAdapter = new FoodItemSliderAdapter(RestaurantDetailActivity.this);
-        foodItemSliderAdapter.addAll(foodItems);
         rvFoodItemSlider.setAdapter(foodItemSliderAdapter);
         rvFoodItemSlider.setHasFixedSize(true);
 
@@ -179,8 +164,9 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     private void setFoodItemSliderData() {
-        //Select food item slider for the first time
         tvTitle.setText(mRestaurant.getName());
+        foodItemSliderAdapter.clear();
+        foodItemSliderAdapter.addAll((mDetailIntentType == DetailIntentType.OTHER) ? (mRestaurant.getMenu_details().size() > 0) ? mRestaurant.getMenu_details() : new ArrayList<FoodItem>() : (mRestaurant.getOffer_details().size() > 0) ? mRestaurant.getOffer_details() : new ArrayList<FoodItem>());
         lastPagePosition = (mSelectedPosition != -1) ? mSelectedPosition : 0;
         FoodItem foodItem = foodItemSliderAdapter.getItem(lastPagePosition);
         rvFoodItemSlider.scrollToPosition(lastPagePosition);
@@ -195,7 +181,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         tvRestaurantEmail.setText(mRestaurant.getEmail());
         tvRestaurantPhone.setText(mRestaurant.getPhone());
         tvRestaurantAddress.setText(mRestaurant.getAddress());
-    }
+  }
 
     private void switchCounter() {
         final CardSliderLayoutManager lm = (CardSliderLayoutManager) rvFoodItemSlider.getLayoutManager();
@@ -278,5 +264,36 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void handleNewIntent(Intent intent) {
+
+        if (intent != null && intent.getStringExtra(INTENT_KEY_INTENT_DETAIL_TYPE) != null) {
+            mDetailIntentType = DetailIntentType.valueOf(intent.getStringExtra(INTENT_KEY_INTENT_DETAIL_TYPE));
+
+            switch (mDetailIntentType) {
+                case OTHER:
+                    mRestaurant = intent.getParcelableExtra(INTENT_KEY_RESTAURANT_ITEM);
+                    mSelectedPosition = intent.getIntExtra(INTENT_KEY_RESTAURANT_ITEM_POSITION, -1);
+                    break;
+                case GCM:
+                    mGcmData = intent.getParcelableExtra(INTENT_KEY_GCM_DATA_CONTENT);
+                    ResponseGcmRestaurantItem responseGcmRestaurantItem = ResponseGcmRestaurantItem.getResponseObject(mGcmData.getMessage(), ResponseGcmRestaurantItem.class);
+
+                    if (responseGcmRestaurantItem.getStatus().equalsIgnoreCase("1")) {
+                        mRestaurant = responseGcmRestaurantItem.getData();
+                        mSelectedPosition = 0;
+                    }
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        handleNewIntent(intent);
+        setData(mRestaurant);
     }
 }
