@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,8 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
     TextView tvTitle;
     ImageView ivBack;
     LinearLayout llAddRestaurantMenu;
+    RelativeLayout rlSendOffer;
+    public TextView tvOfferCounter;
     ProgressDialog loadingDialog;
 
     RestaurantLoginData restaurantLoginData;
@@ -64,10 +67,13 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
         }
 
         ivBack = (ImageView) findViewById(R.id.iv_back);
+        rlSendOffer = (RelativeLayout) findViewById(R.id.rl_send_offer);
         llAddRestaurantMenu = (LinearLayout) findViewById(R.id.ll_done);
 
         tvTitle = (TextView) findViewById(R.id.text_title);
         tvTitle.setText(getString(R.string.title_activity_restaurant_menu));
+
+        tvOfferCounter = (TextView) findViewById(R.id.tv_offer_counter);
 
         lvRestaurantMenu = (ListView) findViewById(R.id.lv_menu);
         restaurantMenuListViewAdapter = new RestaurantMenuListViewAdapter(RestaurantMenuListActivity.this);
@@ -170,7 +176,7 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
                 if (data != null && resultCode == RESULT_OK) {
 
                     FoodItem foodItem = data.getParcelableExtra(INTENT_KEY_FOOD_ITEM);
-                    if(foodItem !=null){
+                    if (foodItem != null) {
                         restaurantMenuListViewAdapter.addData(foodItem);
                     }
                 }
@@ -181,7 +187,7 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
                 if (data != null && resultCode == RESULT_OK) {
 
                     FoodItem foodItem = data.getParcelableExtra(INTENT_KEY_FOOD_ITEM);
-                    if(foodItem !=null){
+                    if (foodItem != null) {
                         restaurantMenuListViewAdapter.updateData(foodItem);
                     }
                 }

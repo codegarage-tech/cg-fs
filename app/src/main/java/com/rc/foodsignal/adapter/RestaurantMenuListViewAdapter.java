@@ -1,5 +1,6 @@
 package com.rc.foodsignal.adapter;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,8 @@ import com.github.florent37.expansionpanel.ExpansionLayout;
 import com.github.florent37.expansionpanel.OnExpansionListener;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.activity.AboutRestaurantMenuActivity;
+import com.rc.foodsignal.activity.RestaurantMenuListActivity;
+import com.rc.foodsignal.animation.flytocart.CircleAnimationUtil;
 import com.rc.foodsignal.model.FoodItem;
 
 import java.util.ArrayList;
@@ -129,7 +132,6 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
         TextView tvMenuIngredient = (TextView) vi.findViewById(R.id.tv_menu_ingredient);
         tvMenuIngredient.setText("Ingredient: " + foodItem.getIngredients());
 
-
         //Expansion panel
         ExpansionHeader expansionHeader = (ExpansionHeader) vi.findViewById(R.id.expansion_header);
         ExpansionLayout expansionLayout = (ExpansionLayout) vi.findViewById(R.id.expansion_layout);
@@ -149,6 +151,12 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
 //                updateData(foodItem);
             }
         });
+        expansionLayout.findViewById(R.id.increment_product_view_copy).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                makeFlyAnimation(mActivity, v, ((RestaurantMenuListActivity) mActivity).tvOfferCounter);
+            }
+        });
         vi.findViewById(R.id.header_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,5 +167,34 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
         });
 
         return vi;
+    }
+
+    /*************************
+     * Fly to cart animation *
+     *************************/
+    private void makeFlyAnimation(Activity activity, View sourceView, View destinationView) {
+
+        new CircleAnimationUtil().attachActivity(activity).setTargetView(sourceView).setMoveDuration(1000).setDestView(destinationView).setAnimationListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+//                addItemToCart();
+//                Toast.makeText(MainActivity.this, "Continue Shopping...", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        }).startAnimation();
     }
 }
