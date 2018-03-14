@@ -13,13 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 
 public class ExpansionHeader extends FrameLayout {
 
     int headerIndicatorId = 0;
     int expansionLayoutId = 0;
-    boolean toggleOnClick = true;
+    boolean toggleButtonClick = false;
     @Nullable
     View headerIndicator;
     @Nullable
@@ -53,18 +52,18 @@ public class ExpansionHeader extends FrameLayout {
                 headerRotationCollapsed = a.getInt(R.styleable.ExpansionHeader_expansion_headerIndicatorRotationCollapsed, headerRotationCollapsed);
                 setHeaderIndicatorId(a.getResourceId(R.styleable.ExpansionHeader_expansion_headerIndicator, headerIndicatorId));
                 setExpansionLayoutId(a.getResourceId(R.styleable.ExpansionHeader_expansion_layout, expansionLayoutId));
-                setToggleOnClick(a.getBoolean(R.styleable.ExpansionHeader_expansion_toggleOnClick, toggleOnClick));
+                setToggleButtonClick(a.getBoolean(R.styleable.ExpansionHeader_expansion_toggleButtonClick, toggleButtonClick));
                 a.recycle();
             }
         }
     }
 
-    public boolean isToggleOnClick() {
-        return toggleOnClick;
+    public boolean isToggleButtonClick() {
+        return toggleButtonClick;
     }
 
-    public void setToggleOnClick(boolean toggleOnClick) {
-        this.toggleOnClick = toggleOnClick;
+    public void setToggleButtonClick(boolean toggleButtonClick) {
+        this.toggleButtonClick = toggleButtonClick;
     }
 
     public void setHeaderIndicatorId(int headerIndicatorId){
@@ -122,14 +121,30 @@ public class ExpansionHeader extends FrameLayout {
                 }
             });
 
-            setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (toggleOnClick) {
+//            setOnClickListener(new OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if (toggleButtonClick) {
+//                        expansionLayout.toggle(true);
+//                    }
+//                }
+//            });
+
+            if (toggleButtonClick) {
+                headerIndicator.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
                         expansionLayout.toggle(true);
                     }
-                }
-            });
+                });
+            } else {
+                setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        expansionLayout.toggle(true);
+                    }
+                });
+            }
 
             initialiseView(expansionLayout.isExpanded());
             expansionLayoutInitialised = true;

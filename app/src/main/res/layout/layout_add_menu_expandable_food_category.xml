@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         app:expansion_headerIndicator="@+id/headerIndicator"
         app:expansion_layout="@+id/expansionLayout"
-        app:expansion_toggleOnClick="true">
+        app:expansion_toggleButtonClick="false">
 
         <RelativeLayout
             android:layout_width="match_parent"

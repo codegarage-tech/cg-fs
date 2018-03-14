@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
+import com.github.florent37.expansionpanel.ExpansionLayout;
+import com.github.florent37.expansionpanel.viewgroup.ExpansionLayoutCollection;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.activity.AboutRestaurantMenuActivity;
 import com.rc.foodsignal.model.FoodItem;
@@ -32,11 +34,15 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
     private ArrayList<FoodItem> mData;
     private static LayoutInflater inflater = null;
     private String TAG = RestaurantMenuListViewAdapter.class.getSimpleName();
+    private ExpansionLayoutCollection expansionsCollection ;
 
     public RestaurantMenuListViewAdapter(Activity activity) {
         mActivity = activity;
         mData = new ArrayList<FoodItem>();
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        expansionsCollection = new ExpansionLayoutCollection();
+        expansionsCollection.openOnlyOne(true);
     }
 
     public ArrayList<FoodItem> getData() {
@@ -93,7 +99,7 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
 
         View vi = convertView;
         if (convertView == null)
-            vi = inflater.inflate(R.layout.list_row_restaurant_menu, null);
+            vi = inflater.inflate(R.layout.recycler_cell, null);
 
         final FoodItem foodItem = getItem(position);
 
@@ -118,7 +124,10 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
         TextView tvMenuIngredient = (TextView) vi.findViewById(R.id.tv_menu_ingredient);
         tvMenuIngredient.setText("Ingredient: " + foodItem.getIngredients());
 
-        vi.setOnClickListener(new View.OnClickListener() {
+        ExpansionLayout expansionLayout = (ExpansionLayout)vi.findViewById(R.id.expansion_layout);
+//        expansionsCollection.add(expansionLayout);
+
+        vi.findViewById(R.id.expansion_header).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intentMenuDetail = new Intent(mActivity, AboutRestaurantMenuActivity.class);
