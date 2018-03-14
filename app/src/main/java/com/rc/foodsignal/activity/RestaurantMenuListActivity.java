@@ -42,7 +42,7 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
     ImageView ivBack;
     LinearLayout llAddRestaurantMenu;
     RelativeLayout rlSendOffer;
-    public TextView tvOfferCounter;
+    TextView tvOfferCounter;
     ProgressDialog loadingDialog;
 
     RestaurantLoginData restaurantLoginData;
@@ -76,7 +76,7 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
         tvOfferCounter = (TextView) findViewById(R.id.tv_offer_counter);
 
         lvRestaurantMenu = (ListView) findViewById(R.id.lv_menu);
-        restaurantMenuListViewAdapter = new RestaurantMenuListViewAdapter(RestaurantMenuListActivity.this);
+        restaurantMenuListViewAdapter = new RestaurantMenuListViewAdapter(RestaurantMenuListActivity.this, tvOfferCounter);
         lvRestaurantMenu.setAdapter(restaurantMenuListViewAdapter);
 
         if (!NetworkManager.isConnected(RestaurantMenuListActivity.this)) {

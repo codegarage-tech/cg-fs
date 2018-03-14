@@ -4,12 +4,14 @@ import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -19,9 +21,10 @@ import com.github.florent37.expansionpanel.ExpansionLayout;
 import com.github.florent37.expansionpanel.OnExpansionListener;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.activity.AboutRestaurantMenuActivity;
-import com.rc.foodsignal.activity.RestaurantMenuListActivity;
 import com.rc.foodsignal.animation.flytocart.CircleAnimationUtil;
 import com.rc.foodsignal.model.FoodItem;
+import com.steelkiwi.library.IncrementProductView;
+import com.steelkiwi.library.listener.OnStateListener;
 
 import java.util.ArrayList;
 
@@ -38,10 +41,14 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
     private ArrayList<FoodItem> mData;
     private static LayoutInflater inflater = null;
     private String TAG = RestaurantMenuListViewAdapter.class.getSimpleName();
+    private View tvOfferCounter;
+    private ArrayList<FoodItem> mSelectedData;
 
-    public RestaurantMenuListViewAdapter(Activity activity) {
+    public RestaurantMenuListViewAdapter(Activity activity, View textViewCounter) {
         mActivity = activity;
+        tvOfferCounter = textViewCounter;
         mData = new ArrayList<FoodItem>();
+        mSelectedData = new ArrayList<FoodItem>();
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -154,7 +161,8 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
         expansionLayout.findViewById(R.id.increment_product_view_copy).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                makeFlyAnimation(mActivity, v, ((RestaurantMenuListActivity) mActivity).tvOfferCounter);
+                tvOfferCounter.setVisibility(View.VISIBLE);
+                makeFlyAnimation(mActivity, v, tvOfferCounter);
             }
         });
         vi.findViewById(R.id.header_view).setOnClickListener(new View.OnClickListener() {
@@ -163,6 +171,29 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
                 Intent intentMenuDetail = new Intent(mActivity, AboutRestaurantMenuActivity.class);
                 intentMenuDetail.putExtra(INTENT_KEY_FOOD_ITEM, foodItem);
                 mActivity.startActivityForResult(intentMenuDetail, INTENT_REQUEST_CODE_RESTAURANT_MENU_DETAIL);
+            }
+        });
+
+        //Increment product view
+        final IncrementProductView incrementProductView = (IncrementProductView) expansionLayout.findViewById(R.id.increment_product_view);
+        final IncrementProductView incrementProductViewCopy = (IncrementProductView) expansionLayout.findViewById(R.id.increment_product_view_copy);
+
+        incrementProductViewCopy.setOnStateListener(new OnStateListener() {
+            @Override
+            public void onCountChange(int count) {
+                Log.d(TAG, count + " product price is: " + "$" + count * 45);
+            }
+
+            @Override
+            public void onConfirm(int count) {
+                Log.d(TAG,"You want to buy: " + count + " products");
+//                tvOfferCounter.setVisibility(View.VISIBLE);
+//                makeFlyAnimation(mActivity, incrementProductViewCopy, tvOfferCounter);
+            }
+
+            @Override
+            public void onClose() {
+                Log.d(TAG,"Close");
             }
         });
 
