@@ -28,6 +28,7 @@ public class ExpansionHeader extends FrameLayout {
     private int headerRotationExpanded = 270;
     private int headerRotationCollapsed = 90;
     private boolean expansionLayoutInitialised = false;
+    private OnExpansionListener onExpansionListener;
 
     public ExpansionHeader(@NonNull Context context) {
         super(context);
@@ -90,6 +91,11 @@ public class ExpansionHeader extends FrameLayout {
         setup();
     }
 
+    @Nullable
+    public ExpansionLayout getExpansionLayout() {
+        return expansionLayout;
+    }
+
     public void setExpansionLayoutId(int expansionLayoutId) {
         this.expansionLayoutId = expansionLayoutId;
 
@@ -110,6 +116,10 @@ public class ExpansionHeader extends FrameLayout {
 
         setHeaderIndicatorId(this.headerIndicatorId); //setup or update
         setExpansionLayoutId(this.expansionLayoutId); //setup or update
+    }
+
+    public void setOnExpansionListener(OnExpansionListener onExpansionListener) {
+        this.onExpansionListener = onExpansionListener;
     }
 
     private void setup() {
@@ -135,6 +145,10 @@ public class ExpansionHeader extends FrameLayout {
                     @Override
                     public void onClick(View view) {
                         expansionLayout.toggle(true);
+
+                        if(onExpansionListener !=null){
+                            onExpansionListener.onExpanded(expansionLayout.isExpanded());
+                        }
                     }
                 });
             } else {
@@ -142,6 +156,10 @@ public class ExpansionHeader extends FrameLayout {
                     @Override
                     public void onClick(View view) {
                         expansionLayout.toggle(true);
+
+                        if(onExpansionListener !=null){
+                            onExpansionListener.onExpanded(expansionLayout.isExpanded());
+                        }
                     }
                 });
             }

@@ -1,70 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:orientation="horizontal">
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight=".3"
-        android:gravity="center">
+    <com.github.florent37.expansionpanel.ExpansionHeader
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/expansion_header"
+        app:expansion_headerIndicator="@+id/header_indicator"
+        app:expansion_layout="@+id/expansion_layout"
+        app:expansion_toggleButtonClick="true">
 
-        <ImageView
-            android:id="@+id/iv_menu"
+        <include layout="@layout/layout_expansion_header_restaurant_menu" />
+
+    </com.github.florent37.expansionpanel.ExpansionHeader>
+
+    <com.github.florent37.expansionpanel.ExpansionLayout
+        android:id="@+id/expansion_layout"
+        app:expansion_expanded="false"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <LinearLayout
+            android:id="@+id/container"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:adjustViewBounds="true" />
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:background="#EEE"
+                android:gravity="center"
+                android:layout_height="100dp"
+                android:layout_width="match_parent"
+                android:text="content" />
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_margin="10dp"
-        android:layout_weight=".6"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_menu_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:text=""
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/medium_font_size"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tv_menu_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:text=""
-            android:textColor="@color/textColorPrimary"
-            android:textSize="@dimen/medium_font_size" />
-
-        <TextView
-            android:id="@+id/tv_menu_ingredient"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="@color/textColorPrimary"
-            android:textSize="@dimen/medium_font_size" />
-
-    </LinearLayout>
-
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/headerIndicator"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight=".1"
-        android:adjustViewBounds="true"
-        android:gravity="center"
-        app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp" />
+    </com.github.florent37.expansionpanel.ExpansionLayout>
 
 </LinearLayout>

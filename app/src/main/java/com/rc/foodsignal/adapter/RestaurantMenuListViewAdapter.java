@@ -13,8 +13,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
+import com.github.florent37.expansionpanel.ExpansionHeader;
 import com.github.florent37.expansionpanel.ExpansionLayout;
-import com.github.florent37.expansionpanel.viewgroup.ExpansionLayoutCollection;
+import com.github.florent37.expansionpanel.OnExpansionListener;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.activity.AboutRestaurantMenuActivity;
 import com.rc.foodsignal.model.FoodItem;
@@ -34,15 +35,11 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
     private ArrayList<FoodItem> mData;
     private static LayoutInflater inflater = null;
     private String TAG = RestaurantMenuListViewAdapter.class.getSimpleName();
-    private ExpansionLayoutCollection expansionsCollection ;
 
     public RestaurantMenuListViewAdapter(Activity activity) {
         mActivity = activity;
         mData = new ArrayList<FoodItem>();
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        expansionsCollection = new ExpansionLayoutCollection();
-        expansionsCollection.openOnlyOne(true);
     }
 
     public ArrayList<FoodItem> getData() {
@@ -72,7 +69,7 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
 
     public int getItemPosition(FoodItem foodItem) {
         for (int i = 0; i < mData.size(); i++) {
-            if ((mData.get(i)).getName().contains(foodItem.getName())) {
+            if ((mData.get(i)).getId().contains(foodItem.getId())) {
                 return i;
             }
         }
@@ -91,7 +88,15 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        long id = 0;
+        try {
+
+            id = (long) Integer.parseInt(mData.get(position).getId());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            id = 0;
+        }
+        return id;
     }
 
     @Override
@@ -99,7 +104,7 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
 
         View vi = convertView;
         if (convertView == null)
-            vi = inflater.inflate(R.layout.recycler_cell, null);
+            vi = inflater.inflate(R.layout.list_row_restaurant_menu, null);
 
         final FoodItem foodItem = getItem(position);
 
@@ -124,10 +129,27 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
         TextView tvMenuIngredient = (TextView) vi.findViewById(R.id.tv_menu_ingredient);
         tvMenuIngredient.setText("Ingredient: " + foodItem.getIngredients());
 
-        ExpansionLayout expansionLayout = (ExpansionLayout)vi.findViewById(R.id.expansion_layout);
-//        expansionsCollection.add(expansionLayout);
 
-        vi.findViewById(R.id.expansion_header).setOnClickListener(new View.OnClickListener() {
+        //Expansion panel
+        ExpansionHeader expansionHeader = (ExpansionHeader) vi.findViewById(R.id.expansion_header);
+        ExpansionLayout expansionLayout = (ExpansionLayout) vi.findViewById(R.id.expansion_layout);
+        if (foodItem.isExpanded()) {
+            if (!expansionLayout.isExpanded()) {
+                expansionLayout.toggle(true);
+            }
+        } else {
+            if (expansionLayout.isExpanded()) {
+                expansionLayout.toggle(true);
+            }
+        }
+        expansionHeader.setOnExpansionListener(new OnExpansionListener() {
+            @Override
+            public void onExpanded(boolean isExpanded) {
+                foodItem.setExpanded(isExpanded);
+//                updateData(foodItem);
+            }
+        });
+        vi.findViewById(R.id.header_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intentMenuDetail = new Intent(mActivity, AboutRestaurantMenuActivity.class);

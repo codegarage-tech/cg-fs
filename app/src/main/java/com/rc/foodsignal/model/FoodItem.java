@@ -11,6 +11,7 @@ import java.util.ArrayList;
  */
 public class FoodItem extends ResponseBase implements Parcelable {
 
+    private transient boolean isExpanded = false;
     private String id = "";
     private String name = "";
     private String menu_id = "";
@@ -126,10 +127,19 @@ public class FoodItem extends ResponseBase implements Parcelable {
         this.offer_price = offer_price;
     }
 
+    public boolean isExpanded() {
+        return isExpanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        isExpanded = expanded;
+    }
+
     @Override
     public String toString() {
         return "{" +
-                "id='" + id + '\'' +
+                "isExpanded=" + isExpanded +
+                ", id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", menu_id='" + menu_id + '\'' +
                 ", menu_image='" + menu_image + '\'' +
@@ -142,6 +152,23 @@ public class FoodItem extends ResponseBase implements Parcelable {
                 ", offer_price='" + offer_price + '\'' +
                 '}';
     }
+
+    //    @Override
+//    public String toString() {
+//        return "{" +
+//                "id='" + id + '\'' +
+//                ", name='" + name + '\'' +
+//                ", menu_id='" + menu_id + '\'' +
+//                ", menu_image='" + menu_image + '\'' +
+//                ", price='" + price + '\'' +
+//                ", restaurant_id='" + restaurant_id + '\'' +
+//                ", ingredients='" + ingredients + '\'' +
+//                ", category_name='" + category_name + '\'' +
+//                ", images=" + images +
+//                ", offer_title='" + offer_title + '\'' +
+//                ", offer_price='" + offer_price + '\'' +
+//                '}';
+//    }
 
     /**************************
      * Methods for parcelable *
