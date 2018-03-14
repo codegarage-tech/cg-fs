@@ -76,7 +76,7 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
         tvOfferCounter = (TextView) findViewById(R.id.tv_offer_counter);
 
         lvRestaurantMenu = (ListView) findViewById(R.id.lv_menu);
-        restaurantMenuListViewAdapter = new RestaurantMenuListViewAdapter(RestaurantMenuListActivity.this, tvOfferCounter);
+        restaurantMenuListViewAdapter = new RestaurantMenuListViewAdapter(RestaurantMenuListActivity.this, rlSendOffer);
         lvRestaurantMenu.setAdapter(restaurantMenuListViewAdapter);
 
         if (!NetworkManager.isConnected(RestaurantMenuListActivity.this)) {
