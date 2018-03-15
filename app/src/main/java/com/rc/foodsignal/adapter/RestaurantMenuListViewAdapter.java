@@ -40,12 +40,14 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
     private ArrayList<FoodItem> mData;
     private static LayoutInflater inflater = null;
     private String TAG = RestaurantMenuListViewAdapter.class.getSimpleName();
-    private View tvOfferCounter;
+    private View mDestinationView;
+    private TextView tvOfferCounter;
     private ArrayList<FoodItem> mSelectedData;
 
-    public RestaurantMenuListViewAdapter(Activity activity, View textViewCounter) {
+    public RestaurantMenuListViewAdapter(Activity activity, View destinationView, TextView offerCounterView) {
         mActivity = activity;
-        tvOfferCounter = textViewCounter;
+        mDestinationView = destinationView;
+        tvOfferCounter = offerCounterView;
         mData = new ArrayList<FoodItem>();
         mSelectedData = new ArrayList<FoodItem>();
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -135,7 +137,7 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
         TextView tvMenuPrice = (TextView) vi.findViewById(R.id.tv_menu_price);
         tvMenuPrice.setText("Price: " + "$" + foodItem.getPrice());
 
-        TextView tvMenuIngredient = (TextView) vi.findViewById(R.id.tv_menu_ingredient);
+        final TextView tvMenuIngredient = (TextView) vi.findViewById(R.id.tv_menu_ingredient);
         tvMenuIngredient.setText("Ingredient: " + foodItem.getIngredients());
 
         //Expansion panel
@@ -181,6 +183,7 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
                 if (count > 0) {
                     foodItem.setSelected(true);
                     foodItem.setOfferPercentage(count);
+                    mSelectedData.add(foodItem);
                     Log.d(TAG, "You want to buy: " + count + " products");
                     Log.d(TAG, "Updated food offer: " + foodItem.toString());
                 }
@@ -189,8 +192,11 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
             @Override
             public void onClose() {
                 Log.d(TAG, "Close");
+
+//                resetCounterView();
+
                 if (foodItem.getOfferPercentage() > 0) {
-                    makeFlyAnimation(mActivity, incrementProductView, incrementProductViewCopy, tvOfferCounter);
+                    makeFlyAnimation(mActivity, incrementProductView, incrementProductViewCopy, mDestinationView, tvOfferCounter);
                     // if View is not destroyed in listview it will work fine otherwise you have to set it after initializing view
                     incrementProductView.setBoardCount(foodItem.getOfferPercentage());
                 }
@@ -200,10 +206,18 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
         return vi;
     }
 
+    private void resetCounterView(){
+        if(mSelectedData.size()>0){
+            tvOfferCounter.setVisibility(View.VISIBLE);
+        }else{
+            tvOfferCounter.setVisibility(View.GONE);
+        }
+    }
+
     /*************************
      * Fly to cart animation *
      *************************/
-    private void makeFlyAnimation(Activity activity, final View sourceView, final View sourceViewCopy, View destinationView) {
+    private void makeFlyAnimation(Activity activity, final View sourceView, final View sourceViewCopy, final View destinationView, final TextView counterView) {
 
         new CircleAnimationUtil().attachActivity(activity)
                 .setTargetView(sourceView)
@@ -217,8 +231,8 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
-//                addItemToCart();
-//                Toast.makeText(MainActivity.this, "Continue Shopping...", Toast.LENGTH_SHORT).show();
+                        counterView.setText(mSelectedData.size()+"");
+                        resetCounterView();
                     }
 
                     @Override
