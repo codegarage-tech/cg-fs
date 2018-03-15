@@ -49,7 +49,7 @@ public class BoardView extends View implements BoardCounter {
         strokeBackgroundPaint.setStrokeWidth(strokeWidth);
 
         counterPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        setCount(1);
+        setCount(0);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class BoardView extends View implements BoardCounter {
 
     @Override
     public void reset() {
-        count = 1;
+        count = 0;
         invalidate();
     }
 

@@ -12,6 +12,8 @@ import java.util.ArrayList;
 public class FoodItem extends ResponseBase implements Parcelable {
 
     private transient boolean isExpanded = false;
+    private transient boolean isSelected = false;
+    private transient int offerPercentage = 0;
     private String id = "";
     private String name = "";
     private String menu_id = "";
@@ -135,10 +137,28 @@ public class FoodItem extends ResponseBase implements Parcelable {
         isExpanded = expanded;
     }
 
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+    public int getOfferPercentage() {
+        return offerPercentage;
+    }
+
+    public void setOfferPercentage(int offerPercentage) {
+        this.offerPercentage = offerPercentage;
+    }
+
     @Override
     public String toString() {
         return "{" +
                 "isExpanded=" + isExpanded +
+                ", isSelected=" + isSelected +
+                ", offerPercentage=" + offerPercentage +
                 ", id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", menu_id='" + menu_id + '\'' +
@@ -153,7 +173,7 @@ public class FoodItem extends ResponseBase implements Parcelable {
                 '}';
     }
 
-    //    @Override
+//    @Override
 //    public String toString() {
 //        return "{" +
 //                "id='" + id + '\'' +

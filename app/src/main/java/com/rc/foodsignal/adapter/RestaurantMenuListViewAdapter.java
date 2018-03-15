@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -158,13 +157,6 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
 //                updateData(foodItem);
             }
         });
-        expansionLayout.findViewById(R.id.increment_product_view_copy).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvOfferCounter.setVisibility(View.VISIBLE);
-                makeFlyAnimation(mActivity, v, tvOfferCounter);
-            }
-        });
         vi.findViewById(R.id.header_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -178,7 +170,14 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
         final IncrementProductView incrementProductView = (IncrementProductView) expansionLayout.findViewById(R.id.increment_product_view);
         final IncrementProductView incrementProductViewCopy = (IncrementProductView) expansionLayout.findViewById(R.id.increment_product_view_copy);
 
-        incrementProductViewCopy.setOnStateListener(new OnStateListener() {
+//        incrementProductViewCopy.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                tvOfferCounter.setVisibility(View.VISIBLE);
+//                makeFlyAnimation(mActivity, v, incrementProductView, tvOfferCounter);
+//            }
+//        });
+        incrementProductView.setOnStateListener(new OnStateListener() {
             @Override
             public void onCountChange(int count) {
                 Log.d(TAG, count + " product price is: " + "$" + count * 45);
@@ -186,14 +185,21 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
 
             @Override
             public void onConfirm(int count) {
-                Log.d(TAG,"You want to buy: " + count + " products");
-//                tvOfferCounter.setVisibility(View.VISIBLE);
-//                makeFlyAnimation(mActivity, incrementProductViewCopy, tvOfferCounter);
+                if (count > 0) {
+                    foodItem.setSelected(true);
+                    foodItem.setOfferPercentage(count);
+                    Log.d(TAG, "You want to buy: " + count + " products");
+                    tvOfferCounter.setVisibility(View.VISIBLE);
+                    makeFlyAnimation(mActivity, incrementProductView, incrementProductViewCopy, tvOfferCounter);
+//                    incrementProductView.setBoardCount(foodItem.getOfferPercentage());
+//                    incrementProductViewCopy.setBoardCount(foodItem.getOfferPercentage());
+                    Log.d(TAG, "Updated food offer: " + foodItem.toString());
+                }
             }
 
             @Override
             public void onClose() {
-                Log.d(TAG,"Close");
+                Log.d(TAG, "Close");
             }
         });
 
@@ -203,29 +209,33 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
     /*************************
      * Fly to cart animation *
      *************************/
-    private void makeFlyAnimation(Activity activity, View sourceView, View destinationView) {
+    private void makeFlyAnimation(Activity activity, final View sourceView, final View sourceViewCopy, View destinationView) {
 
-        new CircleAnimationUtil().attachActivity(activity).setTargetView(sourceView).setMoveDuration(1000).setDestView(destinationView).setAnimationListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
+        new CircleAnimationUtil().attachActivity(activity)
+                .setTargetView(sourceView)
+                .setTargetViewCopy(sourceViewCopy)
+                .setMoveDuration(1000)
+                .setDestView(destinationView)
+                .setAnimationListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                    }
 
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
 //                addItemToCart();
 //                Toast.makeText(MainActivity.this, "Continue Shopping...", Toast.LENGTH_SHORT).show();
-            }
+                    }
 
-            @Override
-            public void onAnimationCancel(Animator animation) {
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
 
-            }
+                    }
 
-            @Override
-            public void onAnimationRepeat(Animator animation) {
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
 
-            }
-        }).startAnimation();
+                    }
+                }).startAnimation();
     }
 }

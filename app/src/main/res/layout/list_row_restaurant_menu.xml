@@ -50,6 +50,9 @@
                 app:ipv_default_background_color="@color/default_background_color"
                 app:ipv_highlight_background_color="@color/highlight_background_color"
                 app:ipv_middle_icon="@drawable/ic_discount_vertical"
+                app:ipv_confirm_icon="@drawable/done"
+                app:ipv_increment_icon="@drawable/plus"
+                app:ipv_decrement_icon="@drawable/minus"
                 app:ipv_text_color="@android:color/white"
                 app:ipv_text_size="@dimen/text_size" />
 

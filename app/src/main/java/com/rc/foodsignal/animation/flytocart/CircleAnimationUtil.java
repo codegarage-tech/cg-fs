@@ -3,6 +3,7 @@ package com.rc.foodsignal.animation.flytocart;
 /**
  * Created by coderzlab on 18/8/16.
  */
+
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -28,7 +29,7 @@ import java.lang.ref.WeakReference;
 public class CircleAnimationUtil {
     private static final int DEFAULT_DURATION = 1000;
     private static final int DEFAULT_DURATION_DISAPPEAR = 200;
-    private View mTarget;
+    private View mTarget, mTargetCopy;
     private View mDest;
 
     private float originX;
@@ -59,6 +60,11 @@ public class CircleAnimationUtil {
     public CircleAnimationUtil setTargetView(View view) {
         mTarget = view;
         setOriginRect(mTarget.getWidth(), mTarget.getHeight());
+        return this;
+    }
+
+    public CircleAnimationUtil setTargetViewCopy(View view) {
+        mTargetCopy = view;
         return this;
     }
 
@@ -147,8 +153,12 @@ public class CircleAnimationUtil {
         animatorCircleSet.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-                if (mAnimationListener != null)
+                if (mAnimationListener != null) {
                     mAnimationListener.onAnimationStart(animation);
+                }
+                if (mTargetCopy != null) {
+                    mTargetCopy.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -193,9 +203,13 @@ public class CircleAnimationUtil {
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        if (mAnimationListener != null)
+                        if (mAnimationListener != null) {
                             mAnimationListener.onAnimationEnd(animation);
+                        }
                         reset();
+                        if (mTargetCopy != null) {
+                            mTargetCopy.setVisibility(View.INVISIBLE);
+                        }
                     }
 
                     @Override
@@ -243,7 +257,7 @@ public class CircleAnimationUtil {
         if (mImageView.getParent() != null)
             ((ViewGroup) mImageView.getParent()).removeView(mImageView);
         mImageView = null;
-//        mTarget.setVisibility(View.VISIBLE);
+        mTarget.setVisibility(View.VISIBLE);
     }
 
     public CircleAnimationUtil setAnimationListener(Animator.AnimatorListener listener) {
