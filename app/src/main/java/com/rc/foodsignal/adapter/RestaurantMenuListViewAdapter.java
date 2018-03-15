@@ -169,14 +169,7 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
         //Increment product view
         final IncrementProductView incrementProductView = (IncrementProductView) expansionLayout.findViewById(R.id.increment_product_view);
         final IncrementProductView incrementProductViewCopy = (IncrementProductView) expansionLayout.findViewById(R.id.increment_product_view_copy);
-
-//        incrementProductViewCopy.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                tvOfferCounter.setVisibility(View.VISIBLE);
-//                makeFlyAnimation(mActivity, v, incrementProductView, tvOfferCounter);
-//            }
-//        });
+        incrementProductView.setBoardCount(foodItem.getOfferPercentage());
         incrementProductView.setOnStateListener(new OnStateListener() {
             @Override
             public void onCountChange(int count) {
@@ -189,10 +182,6 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
                     foodItem.setSelected(true);
                     foodItem.setOfferPercentage(count);
                     Log.d(TAG, "You want to buy: " + count + " products");
-                    tvOfferCounter.setVisibility(View.VISIBLE);
-                    makeFlyAnimation(mActivity, incrementProductView, incrementProductViewCopy, tvOfferCounter);
-//                    incrementProductView.setBoardCount(foodItem.getOfferPercentage());
-//                    incrementProductViewCopy.setBoardCount(foodItem.getOfferPercentage());
                     Log.d(TAG, "Updated food offer: " + foodItem.toString());
                 }
             }
@@ -200,6 +189,11 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
             @Override
             public void onClose() {
                 Log.d(TAG, "Close");
+                if (foodItem.getOfferPercentage() > 0) {
+                    makeFlyAnimation(mActivity, incrementProductView, incrementProductViewCopy, tvOfferCounter);
+                    // if View is not destroyed in listview it will work fine otherwise you have to set it after initializing view
+                    incrementProductView.setBoardCount(foodItem.getOfferPercentage());
+                }
             }
         });
 

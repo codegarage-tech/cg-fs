@@ -61,9 +61,9 @@
             android:gravity="center"
             android:minHeight="20dp"
             android:minWidth="20dp"
-            android:text="0"
             android:textColor="@color/red"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:visibility="gone" />
     </RelativeLayout>
 
 </android.support.v7.widget.Toolbar>

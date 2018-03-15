@@ -91,7 +91,6 @@ public class IncrementProductView extends ViewGroup implements View.OnClickListe
     // stroke width
     private int strokeWidth;
 
-
     public IncrementProductView(Context context) {
         super(context);
         init(null);
@@ -112,7 +111,6 @@ public class IncrementProductView extends ViewGroup implements View.OnClickListe
         initDefaultBackgroundPaint();
         initIncreaseButtonPaint();
         initBoardViews();
-
     }
 
     private void retrieveAttributes(AttributeSet attributes) {
@@ -287,11 +285,12 @@ public class IncrementProductView extends ViewGroup implements View.OnClickListe
             if (boardChild != null) {
                 boardChild.decrement();
                 onCountChange(boardChild.getCount());
+
                 // if count is 0 close board view
                 if (boardChild.getCount() == 0) {
                     confirmationState = ConfirmationState.OPEN;
                     manageBoardViewState(true);
-                    onClose();
+//                    onClose();
                 }
             }
         }
@@ -358,6 +357,8 @@ public class IncrementProductView extends ViewGroup implements View.OnClickListe
             idleBoardView(cx, cy, radius);
             // change parent state to have ability to expand views
             state = ViewState.IDLE;
+            // set close listener
+            onClose();
         }
     }
 
@@ -570,17 +571,17 @@ public class IncrementProductView extends ViewGroup implements View.OnClickListe
         this.boardTextColor = boardTextColor;
     }
 
-//    public int getBoardCount() {
-//        if (boardChild != null) {
-//            return boardChild.getCount();
-//        } else {
-//            return 0;
-//        }
-//    }
-//
-//    public void setBoardCount(int count) {
-//        if (boardChild != null) {
-//            boardChild.setCount(count);
-//        }
-//    }
+    public int getBoardCount() {
+        if (boardChild != null) {
+            return boardChild.getCount();
+        } else {
+            return 0;
+        }
+    }
+
+    public void setBoardCount(int count) {
+        if (boardChild != null) {
+            boardChild.setCount(count);
+        }
+    }
 }
