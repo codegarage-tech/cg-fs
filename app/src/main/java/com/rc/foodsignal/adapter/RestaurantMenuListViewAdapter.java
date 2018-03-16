@@ -171,14 +171,18 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
         //Increment product view
         final IncrementProductView incrementProductView = (IncrementProductView) expansionLayout.findViewById(R.id.increment_product_view);
         final IncrementProductView incrementProductViewCopy = (IncrementProductView) expansionLayout.findViewById(R.id.increment_product_view_copy);
+        final TextView tvSelectedOffer = (TextView) expansionLayout.findViewById(R.id.tv_selected_offer);
 
         //Set selected Value into increment product view
         if (foodItem.getOfferPercentage() > 0) {
             incrementProductView.setBoardCount(foodItem.getOfferPercentage());
         }
+        tvSelectedOffer.setText(String.format("%02d%%", foodItem.getOfferPercentage()));
+
         incrementProductView.setOnStateListener(new OnStateListener() {
             @Override
             public void onCountChange(int count) {
+                tvSelectedOffer.setText(String.format("%02d%%", count));
             }
 
             @Override

@@ -23,43 +23,75 @@
         android:layout_height="wrap_content"
         app:expansion_expanded="false">
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.steelkiwi.library.IncrementProductView
-                android:id="@+id/increment_product_view_copy"
-                android:layout_width="170dp"
-                android:layout_height="170dp"
-                android:layout_centerInParent="true"
-                android:background="@android:color/transparent"
-                app:ipv_default_background_color="@color/default_background_color"
-                app:ipv_highlight_background_color="@color/highlight_background_color"
-                app:ipv_middle_icon="@drawable/ic_discount_vertical"
-                app:ipv_confirm_icon="@drawable/done"
-                app:ipv_increment_icon="@drawable/plus"
-                app:ipv_decrement_icon="@drawable/minus"
-                app:ipv_text_color="@android:color/white"
-                app:ipv_text_size="@dimen/text_size" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-            <com.steelkiwi.library.IncrementProductView
-                android:id="@+id/increment_product_view"
-                android:layout_width="170dp"
-                android:layout_height="170dp"
-                android:layout_centerInParent="true"
-                android:background="@android:color/transparent"
-                app:ipv_default_background_color="@color/default_background_color"
-                app:ipv_highlight_background_color="@color/highlight_background_color"
-                app:ipv_middle_icon="@drawable/ic_discount_vertical"
-                app:ipv_confirm_icon="@drawable/done"
-                app:ipv_increment_icon="@drawable/plus"
-                app:ipv_decrement_icon="@drawable/minus"
-                app:ipv_text_color="@android:color/white"
-                app:ipv_text_size="@dimen/text_size" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Selected Offer: "
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/tv_selected_offer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="00"
+                    android:textColor="@color/red"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="170dp">
+
+                <com.steelkiwi.library.IncrementProductView
+                    android:id="@+id/increment_product_view_copy"
+                    android:layout_width="170dp"
+                    android:layout_height="170dp"
+                    android:layout_centerInParent="true"
+                    android:background="@android:color/transparent"
+                    app:ipv_confirm_icon="@drawable/done"
+                    app:ipv_decrement_icon="@drawable/minus"
+                    app:ipv_default_background_color="@color/default_background_color"
+                    app:ipv_highlight_background_color="@color/highlight_background_color"
+                    app:ipv_increment_icon="@drawable/plus"
+                    app:ipv_middle_icon="@drawable/ic_discount_vertical"
+                    app:ipv_text_color="@android:color/white"
+                    app:ipv_text_size="@dimen/text_size" />
+
+                <com.steelkiwi.library.IncrementProductView
+                    android:id="@+id/increment_product_view"
+                    android:layout_width="170dp"
+                    android:layout_height="170dp"
+                    android:layout_centerInParent="true"
+                    android:background="@android:color/transparent"
+                    app:ipv_confirm_icon="@drawable/done"
+                    app:ipv_decrement_icon="@drawable/minus"
+                    app:ipv_default_background_color="@color/default_background_color"
+                    app:ipv_highlight_background_color="@color/highlight_background_color"
+                    app:ipv_increment_icon="@drawable/plus"
+                    app:ipv_middle_icon="@drawable/ic_discount_vertical"
+                    app:ipv_text_color="@android:color/white"
+                    app:ipv_text_size="@dimen/text_size" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
 
     </com.github.florent37.expansionpanel.ExpansionLayout>
 
