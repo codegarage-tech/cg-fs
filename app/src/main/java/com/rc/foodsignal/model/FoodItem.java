@@ -26,7 +26,8 @@ public class FoodItem extends ResponseBase implements Parcelable {
     private String offer_title = "";
     private String offer_price = "";
 
-    public FoodItem(String id, String name, String menu_id, String menu_image, String price, String restaurant_id, String ingredients, String category_name, ArrayList<FoodImage> images, String offer_title, String offer_price) {
+    public FoodItem(int offerPercentage, String id, String name, String menu_id, String menu_image, String price, String restaurant_id, String ingredients, String category_name, ArrayList<FoodImage> images, String offer_title, String offer_price) {
+        this.offerPercentage = offerPercentage;
         this.id = id;
         this.name = name;
         this.menu_id = menu_id;
@@ -194,22 +195,6 @@ public class FoodItem extends ResponseBase implements Parcelable {
         result = 31 * result + getImages().hashCode();
         return result;
     }
-//    @Override
-//    public String toString() {
-//        return "{" +
-//                "id='" + id + '\'' +
-//                ", name='" + name + '\'' +
-//                ", menu_id='" + menu_id + '\'' +
-//                ", menu_image='" + menu_image + '\'' +
-//                ", price='" + price + '\'' +
-//                ", restaurant_id='" + restaurant_id + '\'' +
-//                ", ingredients='" + ingredients + '\'' +
-//                ", category_name='" + category_name + '\'' +
-//                ", images=" + images +
-//                ", offer_title='" + offer_title + '\'' +
-//                ", offer_price='" + offer_price + '\'' +
-//                '}';
-//    }
 
     /**************************
      * Methods for parcelable *

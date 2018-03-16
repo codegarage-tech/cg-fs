@@ -111,7 +111,7 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, final ViewGroup parent) {
+    public View getView(final int position, final View convertView, final ViewGroup parent) {
 
         View vi = convertView;
         if (convertView == null)
@@ -179,17 +179,13 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
         incrementProductView.setOnStateListener(new OnStateListener() {
             @Override
             public void onCountChange(int count) {
-//                Log.d(TAG, "onCountChange");
-//                Log.d(TAG, " percentage: " + count);
             }
 
             @Override
             public void onConfirm(int count) {
-                Log.d(TAG, "onConfirm");
+                Log.d(TAG, "onConfirm: " + count);
 
-                if (count > 0) {
-                    foodItem.setOfferPercentage(count);
-                }
+                foodItem.setOfferPercentage(count);
             }
 
             @Override
@@ -219,6 +215,13 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
                     }
                 } else {
                     Log.d(TAG, "No item is chose");
+                    if (mSelectedData.contains(foodItem)) {
+                        Log.d(TAG, "Selected item is unselected");
+                        int position = mSelectedData.indexOf(foodItem);
+                        mSelectedData.remove(position);
+                        resetCounterView();
+                        Log.d(TAG, "Selected item is removed and reset");
+                    }
                 }
             }
         });
@@ -228,7 +231,7 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
 
     private void addDataToCart(FoodItem foodItem, IncrementProductView incrementProductView, IncrementProductView incrementProductViewCopy) {
         // New food item instance is created for avoiding logic due runtime changes
-        FoodItem mFoodItem = new FoodItem(foodItem.getId(),
+        FoodItem mFoodItem = new FoodItem(foodItem.getOfferPercentage(), foodItem.getId(),
                 foodItem.getName(), foodItem.getMenu_id(), foodItem.getMenu_image(), foodItem.getPrice(),
                 foodItem.getRestaurant_id(), foodItem.getIngredients(), foodItem.getCategory_name(),
                 foodItem.getImages(), foodItem.getOffer_title(), foodItem.getOffer_price());
