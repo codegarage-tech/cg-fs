@@ -87,6 +87,10 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
         return -1;
     }
 
+    public ArrayList<FoodItem> getSelectedData() {
+        return mSelectedData;
+    }
+
     @Override
     public int getCount() {
         return mData.size();

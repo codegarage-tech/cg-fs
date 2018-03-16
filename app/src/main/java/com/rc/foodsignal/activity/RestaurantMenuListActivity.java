@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.adapter.RestaurantMenuListViewAdapter;
+import com.rc.foodsignal.dialog.SelectedOfferListDialog;
 import com.rc.foodsignal.model.FoodItem;
 import com.rc.foodsignal.model.ResponseRestaurantMenu;
 import com.rc.foodsignal.model.RestaurantLoginData;
@@ -100,6 +101,33 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intentAddress = new Intent(RestaurantMenuListActivity.this, AddRestaurantMenuActivity.class);
                 startActivityForResult(intentAddress, INTENT_REQUEST_CODE_RESTAURANT_ADD_MENU);
+            }
+        });
+
+        rlSendOffer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (restaurantMenuListViewAdapter.getSelectedData().size() > 0) {
+                    SelectedOfferListDialog selectedOfferListDialog = new SelectedOfferListDialog(RestaurantMenuListActivity.this, restaurantMenuListViewAdapter.getSelectedData(), new SelectedOfferListDialog.DialogActionListener() {
+                        @Override
+                        public void onOkButtonClick() {
+
+                        }
+
+                        @Override
+                        public void onCancelButtonClick() {
+
+                        }
+
+                        @Override
+                        public void onDeleteButtonClick(FoodItem foodItem) {
+                            Log.d(TAG, "Deleted item: " + foodItem.toString());
+                        }
+                    });
+                    selectedOfferListDialog.show();
+                } else {
+                    Toast.makeText(RestaurantMenuListActivity.this, getString(R.string.toast_no_item_selected), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

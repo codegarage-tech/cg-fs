@@ -36,6 +36,7 @@
     <string name="toast_empty_category_field">Please fill category</string>
     <string name="toast_under_development">Under development</string>
     <string name="toast_your_sim_card_is_absent">Your sim card is absent</string>
+    <string name="toast_no_item_selected">No item selected</string>
 
     <!-- Message -->
     <string name="txt_loading_message">Loading, please wait.</string>
