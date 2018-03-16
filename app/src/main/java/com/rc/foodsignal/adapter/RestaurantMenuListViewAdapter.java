@@ -171,34 +171,54 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
         //Increment product view
         final IncrementProductView incrementProductView = (IncrementProductView) expansionLayout.findViewById(R.id.increment_product_view);
         final IncrementProductView incrementProductViewCopy = (IncrementProductView) expansionLayout.findViewById(R.id.increment_product_view_copy);
-        incrementProductView.setBoardCount(foodItem.getOfferPercentage());
+
+        //Set selected Value into increment product view
+        if (foodItem.getOfferPercentage() > 0) {
+            incrementProductView.setBoardCount(foodItem.getOfferPercentage());
+        }
         incrementProductView.setOnStateListener(new OnStateListener() {
             @Override
             public void onCountChange(int count) {
-                Log.d(TAG, count + " product price is: " + "$" + count * 45);
+//                Log.d(TAG, "onCountChange");
+//                Log.d(TAG, " percentage: " + count);
             }
 
             @Override
             public void onConfirm(int count) {
+                Log.d(TAG, "onConfirm");
+
                 if (count > 0) {
-                    foodItem.setSelected(true);
                     foodItem.setOfferPercentage(count);
-                    mSelectedData.add(foodItem);
-                    Log.d(TAG, "You want to buy: " + count + " products");
-                    Log.d(TAG, "Updated food offer: " + foodItem.toString());
                 }
             }
 
             @Override
             public void onClose() {
-                Log.d(TAG, "Close");
-
-//                resetCounterView();
+                Log.d(TAG, "onClose");
 
                 if (foodItem.getOfferPercentage() > 0) {
-                    makeFlyAnimation(mActivity, incrementProductView, incrementProductViewCopy, mDestinationView, tvOfferCounter);
                     // if View is not destroyed in listview it will work fine otherwise you have to set it after initializing view
                     incrementProductView.setBoardCount(foodItem.getOfferPercentage());
+
+                    Log.d(TAG, "Valid item is chose");
+                    if (!mSelectedData.contains(foodItem)) {
+                        Log.d(TAG, "Adding new item into cart");
+                        addDataToCart(foodItem, incrementProductView, incrementProductViewCopy);
+                    } else {
+                        Log.d(TAG, "Data already exist");
+                        int position = mSelectedData.indexOf(foodItem);
+                        Log.d(TAG, "mSelectedData position: " + position);
+
+                        if (mSelectedData.get(position).getOfferPercentage() != foodItem.getOfferPercentage()) {
+                            Log.d(TAG, "Updating existing data");
+                            mSelectedData.remove(position);
+                            addDataToCart(foodItem, incrementProductView, incrementProductViewCopy);
+                        } else {
+                            Log.d(TAG, "No update found");
+                        }
+                    }
+                } else {
+                    Log.d(TAG, "No item is chose");
                 }
             }
         });
@@ -206,10 +226,20 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
         return vi;
     }
 
-    private void resetCounterView(){
-        if(mSelectedData.size()>0){
+    private void addDataToCart(FoodItem foodItem, IncrementProductView incrementProductView, IncrementProductView incrementProductViewCopy) {
+        // New food item instance is created for avoiding logic due runtime changes
+        FoodItem mFoodItem = new FoodItem(foodItem.getId(),
+                foodItem.getName(), foodItem.getMenu_id(), foodItem.getMenu_image(), foodItem.getPrice(),
+                foodItem.getRestaurant_id(), foodItem.getIngredients(), foodItem.getCategory_name(),
+                foodItem.getImages(), foodItem.getOffer_title(), foodItem.getOffer_price());
+        mSelectedData.add(mFoodItem);
+        makeFlyAnimation(mActivity, incrementProductView, incrementProductViewCopy, mDestinationView, tvOfferCounter, mSelectedData.size());
+    }
+
+    private void resetCounterView() {
+        if (mSelectedData.size() > 0) {
             tvOfferCounter.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             tvOfferCounter.setVisibility(View.GONE);
         }
     }
@@ -217,7 +247,7 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
     /*************************
      * Fly to cart animation *
      *************************/
-    private void makeFlyAnimation(Activity activity, final View sourceView, final View sourceViewCopy, final View destinationView, final TextView counterView) {
+    private void makeFlyAnimation(Activity activity, final View sourceView, final View sourceViewCopy, final View destinationView, final TextView counterView, final int newCounter) {
 
         new CircleAnimationUtil().attachActivity(activity)
                 .setTargetView(sourceView)
@@ -231,7 +261,7 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        counterView.setText(mSelectedData.size()+"");
+                        counterView.setText(newCounter + "");
                         resetCounterView();
                     }
 

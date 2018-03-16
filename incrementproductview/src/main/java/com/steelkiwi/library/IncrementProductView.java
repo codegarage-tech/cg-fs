@@ -287,11 +287,11 @@ public class IncrementProductView extends ViewGroup implements View.OnClickListe
                 onCountChange(boardChild.getCount());
 
                 // if count is 0 close board view
-                if (boardChild.getCount() == 0) {
-                    confirmationState = ConfirmationState.OPEN;
-                    manageBoardViewState(true);
-//                    onClose();
-                }
+//                if (boardChild.getCount() == 0) {
+//                    confirmationState = ConfirmationState.OPEN;
+//                    manageBoardViewState(true);
+////                    onClose();
+//                }
             }
         }
     };

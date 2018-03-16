@@ -12,7 +12,6 @@ import java.util.ArrayList;
 public class FoodItem extends ResponseBase implements Parcelable {
 
     private transient boolean isExpanded = false;
-    private transient boolean isSelected = false;
     private transient int offerPercentage = 0;
     private String id = "";
     private String name = "";
@@ -137,14 +136,6 @@ public class FoodItem extends ResponseBase implements Parcelable {
         isExpanded = expanded;
     }
 
-    public boolean isSelected() {
-        return isSelected;
-    }
-
-    public void setSelected(boolean selected) {
-        isSelected = selected;
-    }
-
     public int getOfferPercentage() {
         return offerPercentage;
     }
@@ -157,7 +148,6 @@ public class FoodItem extends ResponseBase implements Parcelable {
     public String toString() {
         return "{" +
                 "isExpanded=" + isExpanded +
-                ", isSelected=" + isSelected +
                 ", offerPercentage=" + offerPercentage +
                 ", id='" + id + '\'' +
                 ", name='" + name + '\'' +
@@ -173,6 +163,37 @@ public class FoodItem extends ResponseBase implements Parcelable {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FoodItem)) return false;
+
+        FoodItem foodItem = (FoodItem) o;
+
+        if (!getId().equals(foodItem.getId())) return false;
+        if (!getName().equals(foodItem.getName())) return false;
+        if (!getMenu_id().equals(foodItem.getMenu_id())) return false;
+        if (!getMenu_image().equals(foodItem.getMenu_image())) return false;
+        if (!getPrice().equals(foodItem.getPrice())) return false;
+        if (!getRestaurant_id().equals(foodItem.getRestaurant_id())) return false;
+        if (!getIngredients().equals(foodItem.getIngredients())) return false;
+        if (!getCategory_name().equals(foodItem.getCategory_name())) return false;
+        return getImages().equals(foodItem.getImages());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId().hashCode();
+        result = 31 * result + getName().hashCode();
+        result = 31 * result + getMenu_id().hashCode();
+        result = 31 * result + getMenu_image().hashCode();
+        result = 31 * result + getPrice().hashCode();
+        result = 31 * result + getRestaurant_id().hashCode();
+        result = 31 * result + getIngredients().hashCode();
+        result = 31 * result + getCategory_name().hashCode();
+        result = 31 * result + getImages().hashCode();
+        return result;
+    }
 //    @Override
 //    public String toString() {
 //        return "{" +
