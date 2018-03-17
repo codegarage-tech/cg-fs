@@ -18,6 +18,8 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
+import com.gitonway.lee.niftymodaldialogeffects.lib.effects.BaseEffects;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.model.FoodItem;
 
@@ -54,6 +56,9 @@ public class SelectedOfferListDialog extends Dialog {
 
         View dialogLayout = getLayoutInflater().inflate(R.layout.dialog_selected_offer_list, null);
         setContentView(dialogLayout);
+
+        BaseEffects animator= Effectstype.Shake.getAnimator();
+        animator.start(dialogLayout);
 
         setCancelable(true);
         setOnCancelListener(new OnCancelListener() {

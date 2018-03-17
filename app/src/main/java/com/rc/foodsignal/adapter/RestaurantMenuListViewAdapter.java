@@ -175,18 +175,21 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
         //Increment product view
         final IncrementProductView incrementProductView = (IncrementProductView) expansionLayout.findViewById(R.id.increment_product_view);
         final IncrementProductView incrementProductViewCopy = (IncrementProductView) expansionLayout.findViewById(R.id.increment_product_view_copy);
-        final TextView tvSelectedOffer = (TextView) expansionLayout.findViewById(R.id.tv_selected_offer);
+        final TextView tvSelectedOfferPercentage = (TextView) expansionLayout.findViewById(R.id.tv_selected_offer_percentage);
+        final TextView tvSelectedOfferPrice = (TextView) expansionLayout.findViewById(R.id.tv_selected_offer_price);
 
         //Set selected Value into increment product view
 //        if (foodItem.getOfferPercentage() > 0) {
-            incrementProductView.setBoardCount(foodItem.getOfferPercentage());
+        incrementProductView.setBoardCount(foodItem.getOfferPercentage());
 //        }
-        tvSelectedOffer.setText(String.format("%02d%%", foodItem.getOfferPercentage()));
+        tvSelectedOfferPercentage.setText(String.format("%02d%%", foodItem.getOfferPercentage()));
+        tvSelectedOfferPrice.setText("$" + String.format("%02d", getDiscountPrice(foodItem, foodItem.getOfferPercentage())));
 
         incrementProductView.setOnStateListener(new OnStateListener() {
             @Override
             public void onCountChange(int count) {
-                tvSelectedOffer.setText(String.format("%02d%%", count));
+                tvSelectedOfferPercentage.setText(String.format("%02d%%", count));
+                tvSelectedOfferPrice.setText("$" + String.format("%02d", getDiscountPrice(foodItem, count)));
             }
 
             @Override
@@ -235,6 +238,21 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
         });
 
         return vi;
+    }
+
+    private float getDiscountPrice(FoodItem foodItem, int offer) {
+        try {
+            float price = Float.parseFloat(foodItem.getPrice());
+            if (price > 0) {
+                Log.d(TAG, "price: " + price);
+                float discount = (price * offer) / 100;
+                Log.d(TAG, "discount: " + discount);
+                float discountPrice = price - discount;
+                return discountPrice;
+            }
+        } catch (Exception ex) {
+        }
+        return 0.0f;
     }
 
     private void addDataToCart(FoodItem foodItem, IncrementProductView incrementProductView, IncrementProductView incrementProductViewCopy) {
