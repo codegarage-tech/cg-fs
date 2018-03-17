@@ -84,7 +84,6 @@ public class SelectedOfferListDialog extends Dialog {
         });
         lvSelectedOffer.setAdapter(selectedOfferListAdapter);
 
-
         Button btnOk = (Button) dialogLayout.findViewById(R.id.btn_ok);
         btnOk.setOnClickListener(new View.OnClickListener() {
 

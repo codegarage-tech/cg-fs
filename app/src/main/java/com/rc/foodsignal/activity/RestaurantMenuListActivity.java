@@ -116,12 +116,33 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
 
                         @Override
                         public void onCancelButtonClick() {
-
+//                            resetCounterView();
                         }
 
                         @Override
                         public void onDeleteButtonClick(FoodItem foodItem) {
                             Log.d(TAG, "Deleted item: " + foodItem.toString());
+
+                            if (restaurantMenuListViewAdapter != null) {
+                                //Update deleted item info into menu list
+                                int position = restaurantMenuListViewAdapter.getItemPosition(foodItem);
+                                FoodItem mFoodItem = restaurantMenuListViewAdapter.getItem(position);
+                                Log.d(TAG, "Deleted item in list: " + mFoodItem.toString());
+                                mFoodItem.setExpanded(false);
+                                mFoodItem.setOfferPercentage(0);
+                                Log.d(TAG, "Deleted item in list(updated): " + mFoodItem.toString());
+                                restaurantMenuListViewAdapter.notifyDataSetChanged();
+
+                                //Delete the deleted item from selected list
+                                if (restaurantMenuListViewAdapter.getSelectedData().contains(mFoodItem)) {
+                                    int selectedPosition = restaurantMenuListViewAdapter.getSelectedData().indexOf(foodItem);
+                                    Log.d(TAG, "Deleted item in list(selected list): " + restaurantMenuListViewAdapter.getSelectedData().get(selectedPosition).toString());
+                                    restaurantMenuListViewAdapter.getSelectedData().remove(selectedPosition);
+                                }else{
+                                    Log.d(TAG, "Deleted item in list(selected list): not found, size: "+restaurantMenuListViewAdapter.getSelectedData().size());
+                                }
+                                restaurantMenuListViewAdapter.resetCounterView();
+                            }
                         }
                     });
                     selectedOfferListDialog.show();

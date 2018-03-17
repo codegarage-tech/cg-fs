@@ -44,7 +44,7 @@
             android:layout_weight="1"
             android:background="@drawable/shape_border_rectangle"
             android:minHeight="40dp"
-            android:text="OK"
+            android:text="Send"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="16dp"
             android:visibility="visible" />

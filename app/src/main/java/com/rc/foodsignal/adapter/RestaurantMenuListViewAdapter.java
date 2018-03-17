@@ -178,9 +178,9 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
         final TextView tvSelectedOffer = (TextView) expansionLayout.findViewById(R.id.tv_selected_offer);
 
         //Set selected Value into increment product view
-        if (foodItem.getOfferPercentage() > 0) {
+//        if (foodItem.getOfferPercentage() > 0) {
             incrementProductView.setBoardCount(foodItem.getOfferPercentage());
-        }
+//        }
         tvSelectedOffer.setText(String.format("%02d%%", foodItem.getOfferPercentage()));
 
         incrementProductView.setOnStateListener(new OnStateListener() {
@@ -247,8 +247,9 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
         makeFlyAnimation(mActivity, incrementProductView, incrementProductViewCopy, mDestinationView, tvOfferCounter, mSelectedData.size());
     }
 
-    private void resetCounterView() {
+    public void resetCounterView() {
         if (mSelectedData.size() > 0) {
+            tvOfferCounter.setText(mSelectedData.size() + "");
             tvOfferCounter.setVisibility(View.VISIBLE);
         } else {
             tvOfferCounter.setVisibility(View.GONE);

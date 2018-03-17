@@ -296,6 +296,14 @@ public class IncrementProductView extends ViewGroup implements View.OnClickListe
         }
     };
 
+    public void closeIncrementProductView() {
+        if (boardChild != null) {
+            setBoardCount(0);
+            confirmationState = ConfirmationState.OPEN;
+            manageBoardViewState(true);
+        }
+    }
+
     private void onCountChange(int count) {
         if (onStateListener != null) {
             onStateListener.onCountChange(count);
