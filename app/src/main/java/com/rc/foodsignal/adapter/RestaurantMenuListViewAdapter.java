@@ -183,13 +183,13 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
         incrementProductView.setBoardCount(foodItem.getOfferPercentage());
 //        }
         tvSelectedOfferPercentage.setText(String.format("%02d%%", foodItem.getOfferPercentage()));
-        tvSelectedOfferPrice.setText("$" + String.format("%02d", getDiscountPrice(foodItem, foodItem.getOfferPercentage())));
+        tvSelectedOfferPrice.setText("$" + String.format("%.2f", getDiscountPrice(foodItem, foodItem.getOfferPercentage())));
 
         incrementProductView.setOnStateListener(new OnStateListener() {
             @Override
             public void onCountChange(int count) {
                 tvSelectedOfferPercentage.setText(String.format("%02d%%", count));
-                tvSelectedOfferPrice.setText("$" + String.format("%02d", getDiscountPrice(foodItem, count)));
+                tvSelectedOfferPrice.setText("$" + String.format("%.2f", getDiscountPrice(foodItem, count)));
             }
 
             @Override
