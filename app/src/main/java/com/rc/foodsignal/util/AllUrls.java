@@ -322,4 +322,10 @@ public class AllUrls {
         Log.d(TAG, "getUnregisterDeviceParameters: " + params.toString());
         return params;
     }
+
+    public static String getSendOfferUrl() {
+        String url = BASE_URL + "notification/send1";
+        Log.d(TAG, "getSendOfferUrl: " + url);
+        return url;
+    }
 }

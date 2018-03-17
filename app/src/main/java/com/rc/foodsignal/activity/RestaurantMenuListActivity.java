@@ -22,11 +22,15 @@ import com.rc.foodsignal.dialog.SelectedOfferListDialog;
 import com.rc.foodsignal.model.FoodItem;
 import com.rc.foodsignal.model.ResponseRestaurantMenu;
 import com.rc.foodsignal.model.RestaurantLoginData;
+import com.rc.foodsignal.model.SendOfferParam;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.HttpRequestManager;
 import com.reversecoder.library.network.NetworkManager;
 import com.reversecoder.library.storage.SessionManager;
+import com.reversecoder.library.util.AllSettingsManager;
+
+import java.util.ArrayList;
 
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_FOOD_ITEM;
 import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_RESTAURANT_ADD_MENU;
@@ -51,6 +55,7 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
     RestaurantMenuListViewAdapter restaurantMenuListViewAdapter;
     ListView lvRestaurantMenu;
     String TAG = AppUtils.getTagName(RestaurantMenuListActivity.class);
+    DoSendOfferRequest doSendOfferRequest;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,11 +117,31 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
                         @Override
                         public void onOkButtonClick() {
 
+                            if (!AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(RestaurantMenuListActivity.this, SESSION_RESTAURANT_LOGIN_DATA))) {
+                                restaurantLoginData = RestaurantLoginData.getResponseObject(SessionManager.getStringSetting(RestaurantMenuListActivity.this, SESSION_RESTAURANT_LOGIN_DATA), RestaurantLoginData.class);
+                                Log.d("LoginUser: ", restaurantLoginData.toString());
+
+                                if (restaurantLoginData != null) {
+                                    if (restaurantMenuListViewAdapter.getSelectedData().size() > 0) {
+
+                                        //Prepare data for sending offers
+                                        ArrayList<SendOfferParam.Offer> offers = new ArrayList<>();
+                                        for (int i = 0; i < restaurantMenuListViewAdapter.getSelectedData().size(); i++) {
+                                            FoodItem foodItem = restaurantMenuListViewAdapter.getSelectedData().get(i);
+                                            offers.add(new SendOfferParam.Offer(foodItem.getId(), foodItem.getOfferPercentage() + ""));
+                                        }
+
+                                        //Send offer request
+                                        SendOfferParam sendOfferParam = new SendOfferParam(restaurantLoginData.getId(), offers);
+                                        doSendOfferRequest = new DoSendOfferRequest(RestaurantMenuListActivity.this, sendOfferParam);
+                                        doSendOfferRequest.execute();
+                                    }
+                                }
+                            }
                         }
 
                         @Override
                         public void onCancelButtonClick() {
-//                            resetCounterView();
                         }
 
                         @Override
@@ -138,8 +163,8 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
                                     int selectedPosition = restaurantMenuListViewAdapter.getSelectedData().indexOf(foodItem);
                                     Log.d(TAG, "Deleted item in list(selected list): " + restaurantMenuListViewAdapter.getSelectedData().get(selectedPosition).toString());
                                     restaurantMenuListViewAdapter.getSelectedData().remove(selectedPosition);
-                                }else{
-                                    Log.d(TAG, "Deleted item in list(selected list): not found, size: "+restaurantMenuListViewAdapter.getSelectedData().size());
+                                } else {
+                                    Log.d(TAG, "Deleted item in list(selected list): not found, size: " + restaurantMenuListViewAdapter.getSelectedData().size());
                                 }
                                 restaurantMenuListViewAdapter.resetCounterView();
                             }
@@ -245,6 +270,56 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
 
             default:
                 break;
+        }
+    }
+
+    private class DoSendOfferRequest extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
+
+        private Context mContext;
+        private SendOfferParam mSendOfferParam;
+
+        public DoSendOfferRequest(Context context, SendOfferParam sendOfferParam) {
+            mContext = context;
+            mSendOfferParam = sendOfferParam;
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected HttpRequestManager.HttpResponse doInBackground(String... params) {
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getSendOfferUrl(), mSendOfferParam.getSendOfferParam(), null);
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(HttpRequestManager.HttpResponse result) {
+
+            if (result != null && result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
+                Log.d(TAG, "success response from web: " + result.getResult().toString());
+//
+//                ResponseFoodCategory responseFoodCategory = ResponseFoodCategory.getResponseObject(result.getResult().toString(), ResponseFoodCategory.class);
+//
+//                if (responseFoodCategory.getStatus().equalsIgnoreCase("1") && (responseFoodCategory.getData().size() > 0)) {
+//                    Log.d(TAG, "success response from web: " + responseFoodCategory.toString());
+//
+//                    //Save food category into session
+//                    DataFoodCategory dataFoodCategory = new DataFoodCategory(responseFoodCategory.getData());
+//                    SessionManager.setStringSetting(getActivity(), SESSION_FOOD_CATEGORY, DataFoodCategory.getResponseString(dataFoodCategory));
+//
+//                    initFilterFoodCategory(responseFoodCategory.getData());
+//
+//                } else {
+//
+//                    setDefaultFoodCategory();
+////                    Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
+//                }
+            } else {
+
+//                setDefaultFoodCategory();
+                Toast.makeText(RestaurantMenuListActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
