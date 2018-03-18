@@ -3,6 +3,7 @@ package com.rc.foodsignal.util;
 import android.util.Log;
 
 import com.rc.foodsignal.model.ParamFoodItem;
+import com.rc.foodsignal.model.ParamSendOffer;
 import com.reversecoder.library.util.AllSettingsManager;
 
 import org.json.JSONObject;
@@ -327,5 +328,17 @@ public class AllUrls {
         String url = BASE_URL + "notification/send1";
         Log.d(TAG, "getSendOfferUrl: " + url);
         return url;
+    }
+
+    public static JSONObject getSendOfferParam(ParamSendOffer paramSendOffer) {
+        JSONObject jsonObject;
+        try {
+            jsonObject = new JSONObject(ParamSendOffer.getResponseString(paramSendOffer));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            jsonObject = new JSONObject();
+        }
+        Log.d(TAG, "getSendOfferParam: " + jsonObject.toString());
+        return jsonObject;
     }
 }

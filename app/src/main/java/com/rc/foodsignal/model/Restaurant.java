@@ -26,6 +26,9 @@ public class Restaurant implements Parcelable {
     private String is_restaurant = "";
     private String sms_notification = "";
     private String push_notification = "";
+    private String restaurant_category_id = "";
+    private String menu_id = "";
+    private String restaurant_category_name = "";
     private String distance = "";
     private ArrayList<FoodItem> menu_details = new ArrayList<FoodItem>();
     private ArrayList<FoodItem> offer_details = new ArrayList<FoodItem>();
@@ -172,6 +175,34 @@ public class Restaurant implements Parcelable {
         this.offer_details = offer_details;
     }
 
+    public String getRestaurant_category_id() {
+        return restaurant_category_id;
+    }
+
+    public void setRestaurant_category_id(String restaurant_category_id) {
+        this.restaurant_category_id = restaurant_category_id;
+    }
+
+    public String getMenu_id() {
+        return menu_id;
+    }
+
+    public void setMenu_id(String menu_id) {
+        this.menu_id = menu_id;
+    }
+
+    public String getRestaurant_category_name() {
+        return restaurant_category_name;
+    }
+
+    public void setRestaurant_category_name(String restaurant_category_name) {
+        this.restaurant_category_name = restaurant_category_name;
+    }
+
+    public static int getTypeImage() {
+        return TYPE_IMAGE;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -187,6 +218,9 @@ public class Restaurant implements Parcelable {
                 ", is_restaurant='" + is_restaurant + '\'' +
                 ", sms_notification='" + sms_notification + '\'' +
                 ", push_notification='" + push_notification + '\'' +
+                ", restaurant_category_id='" + restaurant_category_id + '\'' +
+                ", menu_id='" + menu_id + '\'' +
+                ", restaurant_category_name='" + restaurant_category_name + '\'' +
                 ", distance='" + distance + '\'' +
                 ", menu_details=" + menu_details +
                 ", offer_details=" + offer_details +
@@ -215,6 +249,9 @@ public class Restaurant implements Parcelable {
         dest.writeString(is_restaurant);
         dest.writeString(sms_notification);
         dest.writeString(push_notification);
+        dest.writeString(restaurant_category_id);
+        dest.writeString(menu_id);
+        dest.writeString(restaurant_category_name);
         dest.writeString(distance);
         dest.writeList(menu_details);
         dest.writeList(offer_details);
@@ -245,6 +282,9 @@ public class Restaurant implements Parcelable {
         is_restaurant = in.readString();
         sms_notification = in.readString();
         push_notification = in.readString();
+        restaurant_category_id = in.readString();
+        menu_id = in.readString();
+        restaurant_category_name = in.readString();
         distance = in.readString();
         menu_details = in.readArrayList(FoodItem.class.getClassLoader());
         offer_details = in.readArrayList(FoodItem.class.getClassLoader());

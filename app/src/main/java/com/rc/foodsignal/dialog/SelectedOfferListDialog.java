@@ -72,7 +72,6 @@ public class SelectedOfferListDialog extends Dialog {
         SelectedOfferListAdapter selectedOfferListAdapter = new SelectedOfferListAdapter(mContext, mFoodItems, new DialogActionListener() {
             @Override
             public void onOkButtonClick() {
-
             }
 
             @Override

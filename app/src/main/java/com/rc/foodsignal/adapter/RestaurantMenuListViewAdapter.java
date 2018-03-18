@@ -230,6 +230,7 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
                         Log.d(TAG, "Selected item is unselected");
                         int position = mSelectedData.indexOf(foodItem);
                         mSelectedData.remove(position);
+                        foodItem.setSelected(false);
                         resetCounterView();
                         Log.d(TAG, "Selected item is removed and reset");
                     }
@@ -257,7 +258,7 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
 
     private void addDataToCart(FoodItem foodItem, IncrementProductView incrementProductView, IncrementProductView incrementProductViewCopy) {
         // New food item instance is created for avoiding logic due runtime changes
-        FoodItem mFoodItem = new FoodItem(foodItem.getOfferPercentage(), foodItem.getId(),
+        FoodItem mFoodItem = new FoodItem(true, foodItem.getOfferPercentage(), foodItem.getId(),
                 foodItem.getName(), foodItem.getMenu_id(), foodItem.getMenu_image(), foodItem.getPrice(),
                 foodItem.getRestaurant_id(), foodItem.getIngredients(), foodItem.getCategory_name(),
                 foodItem.getImages(), foodItem.getOffer_title(), foodItem.getOffer_price());

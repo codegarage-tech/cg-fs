@@ -20,9 +20,10 @@ import com.rc.foodsignal.R;
 import com.rc.foodsignal.adapter.RestaurantMenuListViewAdapter;
 import com.rc.foodsignal.dialog.SelectedOfferListDialog;
 import com.rc.foodsignal.model.FoodItem;
+import com.rc.foodsignal.model.ParamSendOffer;
+import com.rc.foodsignal.model.ResponseGcmRestaurantItem;
 import com.rc.foodsignal.model.ResponseRestaurantMenu;
 import com.rc.foodsignal.model.RestaurantLoginData;
-import com.rc.foodsignal.model.SendOfferParam;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.HttpRequestManager;
@@ -125,15 +126,15 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
                                     if (restaurantMenuListViewAdapter.getSelectedData().size() > 0) {
 
                                         //Prepare data for sending offers
-                                        ArrayList<SendOfferParam.Offer> offers = new ArrayList<>();
+                                        ArrayList<ParamSendOffer.Offer> offers = new ArrayList<>();
                                         for (int i = 0; i < restaurantMenuListViewAdapter.getSelectedData().size(); i++) {
                                             FoodItem foodItem = restaurantMenuListViewAdapter.getSelectedData().get(i);
-                                            offers.add(new SendOfferParam.Offer(foodItem.getId(), foodItem.getOfferPercentage() + ""));
+                                            offers.add(new ParamSendOffer.Offer(foodItem.getId(), foodItem.getOfferPercentage() + ""));
                                         }
 
                                         //Send offer request
-                                        SendOfferParam sendOfferParam = new SendOfferParam(restaurantLoginData.getId(), offers);
-                                        doSendOfferRequest = new DoSendOfferRequest(RestaurantMenuListActivity.this, sendOfferParam);
+                                        ParamSendOffer paramSendOffer = new ParamSendOffer(restaurantLoginData.getId(), offers);
+                                        doSendOfferRequest = new DoSendOfferRequest(RestaurantMenuListActivity.this, paramSendOffer);
                                         doSendOfferRequest.execute();
                                     }
                                 }
@@ -276,48 +277,75 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
     private class DoSendOfferRequest extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
 
         private Context mContext;
-        private SendOfferParam mSendOfferParam;
+        private ParamSendOffer mParamSendOffer;
 
-        public DoSendOfferRequest(Context context, SendOfferParam sendOfferParam) {
+        public DoSendOfferRequest(Context context, ParamSendOffer paramSendOffer) {
             mContext = context;
-            mSendOfferParam = sendOfferParam;
+            mParamSendOffer = paramSendOffer;
         }
 
         @Override
         protected void onPreExecute() {
+            loadingDialog = new ProgressDialog(mContext);
+            loadingDialog.setMessage(getResources().getString(R.string.txt_loading));
+            loadingDialog.setIndeterminate(false);
+            loadingDialog.setCancelable(true);
+            loadingDialog.setCanceledOnTouchOutside(false);
+            loadingDialog.show();
+            loadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface arg0) {
+                    if (loadingDialog != null
+                            && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
+                }
+            });
         }
 
         @Override
         protected HttpRequestManager.HttpResponse doInBackground(String... params) {
-            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getSendOfferUrl(), mSendOfferParam.getSendOfferParam(), null);
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getSendOfferUrl(), AllUrls.getSendOfferParam(mParamSendOffer), null);
             return response;
         }
 
         @Override
         protected void onPostExecute(HttpRequestManager.HttpResponse result) {
 
+            if (loadingDialog != null
+                    && loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
+            }
+
             if (result != null && result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
                 Log.d(TAG, "success response from web: " + result.getResult().toString());
-//
-//                ResponseFoodCategory responseFoodCategory = ResponseFoodCategory.getResponseObject(result.getResult().toString(), ResponseFoodCategory.class);
-//
-//                if (responseFoodCategory.getStatus().equalsIgnoreCase("1") && (responseFoodCategory.getData().size() > 0)) {
-//                    Log.d(TAG, "success response from web: " + responseFoodCategory.toString());
-//
-//                    //Save food category into session
-//                    DataFoodCategory dataFoodCategory = new DataFoodCategory(responseFoodCategory.getData());
-//                    SessionManager.setStringSetting(getActivity(), SESSION_FOOD_CATEGORY, DataFoodCategory.getResponseString(dataFoodCategory));
-//
-//                    initFilterFoodCategory(responseFoodCategory.getData());
-//
-//                } else {
-//
-//                    setDefaultFoodCategory();
-////                    Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
-//                }
-            } else {
 
-//                setDefaultFoodCategory();
+                ResponseGcmRestaurantItem responseGcmRestaurantItem = ResponseGcmRestaurantItem.getResponseObject(result.getResult().toString(), ResponseGcmRestaurantItem.class);
+                Log.d(TAG, "success response from object: " + responseGcmRestaurantItem.toString());
+
+                if (responseGcmRestaurantItem.getStatus().equalsIgnoreCase("1")) {
+
+                    if (restaurantMenuListViewAdapter != null) {
+                        //Update deleted item info into menu list
+                        for (int i = 0; i < restaurantMenuListViewAdapter.getData().size(); i++) {
+                            FoodItem mFoodItem = restaurantMenuListViewAdapter.getItem(i);
+                            mFoodItem.setExpanded(false);
+                            mFoodItem.setSelected(false);
+                            mFoodItem.setOfferPercentage(0);
+                        }
+
+                        //Delete the deleted item from selected list
+                        restaurantMenuListViewAdapter.getSelectedData().clear();
+                        restaurantMenuListViewAdapter.resetCounterView();
+
+                        restaurantMenuListViewAdapter.notifyDataSetChanged();
+                    }
+
+                    Toast.makeText(RestaurantMenuListActivity.this, getResources().getString(R.string.toast_sent_offer_successfully), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(RestaurantMenuListActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
+                }
+            } else {
                 Toast.makeText(RestaurantMenuListActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
             }
         }

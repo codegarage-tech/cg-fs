@@ -1,21 +1,17 @@
 package com.rc.foodsignal.model;
 
-import android.util.Log;
-
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 /**
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
  */
-public class SendOfferParam extends ResponseBase {
+public class ParamSendOffer extends ResponseBase {
 
     private String restaurant_id = "";
     private ArrayList<Offer> menu_details = new ArrayList<>();
 
-    public SendOfferParam(String restaurant_id, ArrayList<Offer> menu_details) {
+    public ParamSendOffer(String restaurant_id, ArrayList<Offer> menu_details) {
         this.restaurant_id = restaurant_id;
         this.menu_details = menu_details;
     }
@@ -42,18 +38,6 @@ public class SendOfferParam extends ResponseBase {
                 "restaurant_id='" + restaurant_id + '\'' +
                 ", menu_details=" + menu_details +
                 '}';
-    }
-
-    public JSONObject getSendOfferParam() {
-        JSONObject jsonObject;
-        try {
-            jsonObject = new JSONObject(toString());
-            Log.d("getSendOfferParam", "getSendOfferParam: " + jsonObject.toString());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        return null;
     }
 
     public static class Offer {
