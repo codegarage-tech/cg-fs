@@ -98,13 +98,12 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     private void setData(Restaurant restaurant) {
-        if (mRestaurant != null) {
-            Log.d(TAG, "mRestaurant: " + mRestaurant.toString());
-            Log.d(TAG, "mSelectedPosition: " + mSelectedPosition);
+        if (restaurant != null) {
+            Log.d(TAG, "mRestaurant: " + restaurant.toString());
 
             setFoodItemSliderData();
 
-            setGoogleMapWithMarker(mRestaurant);
+            setGoogleMapWithMarker(restaurant);
         }
     }
 
@@ -118,7 +117,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
                     LatLng location = new LatLng(lat, lng);
                     googleMap.addMarker(new MarkerOptions().position(location)
-                            .title(mRestaurant.getAddress()));
+                            .title(restaurant.getAddress()));
 
                     //Move the camera to the user's location and zoom in!
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16.0f));
@@ -172,8 +171,12 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         rvFoodItemSlider.scrollToPosition(lastPagePosition);
         tsFoodItemName.setText(foodItem.getName());
         String price = "$" + foodItem.getPrice();
-        String strikePrice = "<strike><font color=\'#000000\'>" + price + "</font></strike>";
-        tsFoodItemPrice.setText((mDetailIntentType == DetailIntentType.GCM) ? Html.fromHtml(strikePrice) : price);
+
+        tsFoodItemPrice.setText(price);
+        if((mDetailIntentType == DetailIntentType.GCM)){
+            tsFoodItemPrice.setBackgroundResource(R.drawable.selector_strike_red);
+        }
+
         tsFoodItemOffer.setVisibility((mDetailIntentType == DetailIntentType.GCM) ? View.VISIBLE : View.GONE);
         AppUtils.flashView(tsFoodItemOffer, 1500);
         tsFoodItemOffer.setText("$" + foodItem.getOffer_price());
@@ -181,7 +184,12 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         tvRestaurantEmail.setText(mRestaurant.getEmail());
         tvRestaurantPhone.setText(mRestaurant.getPhone());
         tvRestaurantAddress.setText(mRestaurant.getAddress());
-  }
+    }
+
+    private String strikePrice(String price){
+        String strikePrice = "<strike><font color=\'#000000\'>" + price + "</font></strike>";
+        return Html.fromHtml(strikePrice)+"";
+    }
 
     private void switchCounter() {
         final CardSliderLayoutManager lm = (CardSliderLayoutManager) rvFoodItemSlider.getLayoutManager();
@@ -215,11 +223,16 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
         tsFoodItemPrice.setInAnimation(RestaurantDetailActivity.this, animH[0]);
         tsFoodItemPrice.setOutAnimation(RestaurantDetailActivity.this, animH[1]);
-        tsFoodItemPrice.setText("$" + foodItem.getPrice());
+        String price = "$" + foodItem.getPrice();
+
+        tsFoodItemPrice.setText(price);
+        if((mDetailIntentType == DetailIntentType.GCM)){
+            tsFoodItemPrice.setBackgroundResource(R.drawable.selector_strike_red);
+        }
 
         tsFoodItemOffer.setInAnimation(RestaurantDetailActivity.this, animH[0]);
         tsFoodItemOffer.setOutAnimation(RestaurantDetailActivity.this, animH[1]);
-        tsFoodItemOffer.setText("$" + foodItem.getPrice());
+        tsFoodItemOffer.setText("$" + foodItem.getOffer_price());
 
         tsFoodItemIngredient.setInAnimation(RestaurantDetailActivity.this, animV[0]);
         tsFoodItemIngredient.setOutAnimation(RestaurantDetailActivity.this, animV[1]);
@@ -283,6 +296,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                     if (responseGcmRestaurantItem.getStatus().equalsIgnoreCase("1")) {
                         mRestaurant = responseGcmRestaurantItem.getData();
                         mSelectedPosition = 0;
+
+                        Log.d(TAG, "Offer data: " + mRestaurant.toString());
                     }
                     break;
             }
