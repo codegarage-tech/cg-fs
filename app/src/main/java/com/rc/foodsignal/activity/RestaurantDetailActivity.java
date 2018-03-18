@@ -1,11 +1,11 @@
 package com.rc.foodsignal.activity;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -134,6 +134,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
         tsFoodItemPrice = (TextSwitcher) findViewById(R.id.ts_food_item_price);
         tsFoodItemPrice.setFactory(new TextViewFactory(RestaurantDetailActivity.this, R.style.TextSwitcherPrice, true));
+        setStrike();
 
         tsFoodItemOffer = (TextSwitcher) findViewById(R.id.ts_food_item_offer);
         tsFoodItemOffer.setFactory(new TextViewFactory(RestaurantDetailActivity.this, R.style.TextSwitcherPriceOffer, true));
@@ -170,12 +171,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         FoodItem foodItem = foodItemSliderAdapter.getItem(lastPagePosition);
         rvFoodItemSlider.scrollToPosition(lastPagePosition);
         tsFoodItemName.setText(foodItem.getName());
-        String price = "$" + foodItem.getPrice();
 
+        setStrike();
+        String price = "$" + foodItem.getPrice();
         tsFoodItemPrice.setText(price);
-        if((mDetailIntentType == DetailIntentType.GCM)){
-            tsFoodItemPrice.setBackgroundResource(R.drawable.selector_strike_red);
-        }
 
         tsFoodItemOffer.setVisibility((mDetailIntentType == DetailIntentType.GCM) ? View.VISIBLE : View.GONE);
         AppUtils.flashView(tsFoodItemOffer, 1500);
@@ -186,9 +185,13 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         tvRestaurantAddress.setText(mRestaurant.getAddress());
     }
 
-    private String strikePrice(String price){
-        String strikePrice = "<strike><font color=\'#000000\'>" + price + "</font></strike>";
-        return Html.fromHtml(strikePrice)+"";
+    private void setStrike() {
+        TextView paintText = (TextView) tsFoodItemPrice.getNextView();
+        if ((mDetailIntentType == DetailIntentType.GCM)) {
+            paintText.setPaintFlags(paintText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else {
+            paintText.setPaintFlags(paintText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
     }
 
     private void switchCounter() {
@@ -223,12 +226,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
         tsFoodItemPrice.setInAnimation(RestaurantDetailActivity.this, animH[0]);
         tsFoodItemPrice.setOutAnimation(RestaurantDetailActivity.this, animH[1]);
-        String price = "$" + foodItem.getPrice();
 
+        setStrike();
+        String price = "$" + foodItem.getPrice();
         tsFoodItemPrice.setText(price);
-        if((mDetailIntentType == DetailIntentType.GCM)){
-            tsFoodItemPrice.setBackgroundResource(R.drawable.selector_strike_red);
-        }
 
         tsFoodItemOffer.setInAnimation(RestaurantDetailActivity.this, animH[0]);
         tsFoodItemOffer.setOutAnimation(RestaurantDetailActivity.this, animH[1]);

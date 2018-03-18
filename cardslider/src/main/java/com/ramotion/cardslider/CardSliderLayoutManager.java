@@ -23,11 +23,10 @@ import java.util.LinkedList;
 /**
  * A {@link android.support.v7.widget.RecyclerView.LayoutManager} implementation.
  */
-public class CardSliderLayoutManager extends RecyclerView.LayoutManager
-        implements RecyclerView.SmoothScroller.ScrollVectorProvider {
+public class CardSliderLayoutManager extends RecyclerView.LayoutManager implements RecyclerView.SmoothScroller.ScrollVectorProvider {
 
-    private static final int DEFAULT_ACTIVE_CARD_LEFT_OFFSET = 50;
-    private static final int DEFAULT_CARD_WIDTH = 148;
+    private static final int DEFAULT_ACTIVE_CARD_LEFT_OFFSET = 8;
+    private static final int DEFAULT_CARD_WIDTH = 300;
     private static final int DEFAULT_CARDS_GAP = 12;
     private static final int LEFT_CARD_COUNT = 2;
 

@@ -61,6 +61,7 @@
                 android:id="@+id/rv_food_item_slider"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
                 android:clipChildren="false"
                 android:overScrollMode="never"
                 app:viewUpdater="com.rc.foodsignal.cardslider.CardUpdater" />
