@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'deploygate'
 
 repositories {
     maven {
@@ -71,6 +70,11 @@ android {
         }
     }
 
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
 
@@ -89,41 +93,41 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    compile "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
-    compile "com.android.support:appcompat-v7:$supportlibraryVersion"
-    compile "com.android.support:cardview-v7:$supportlibraryVersion"
-    compile "com.android.support:support-v4:$supportlibraryVersion"
-    compile "com.android.support:design:$supportlibraryVersion"
-    compile "com.google.android.gms:play-services-location:$googlePlayServiceLocationVersion"
-    compile "com.google.android.gms:play-services-maps:$googlePlayServiceLocationVersion"
+    implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
+    implementation "com.android.support:appcompat-v7:$supportlibraryVersion"
+    implementation "com.android.support:cardview-v7:$supportlibraryVersion"
+    implementation "com.android.support:support-v4:$supportlibraryVersion"
+    implementation "com.android.support:design:$supportlibraryVersion"
+    implementation "com.google.android.gms:play-services-location:$googlePlayServiceLocationVersion"
+    implementation "com.google.android.gms:play-services-maps:$googlePlayServiceLocationVersion"
 
     //library projects
-    compile project(":ribblemenu")
-    compile project(":placesautocomplete")
-    compile project(":easyrecyclerview")
-    compile project(":matisse")
-    compile project(":imagezipper")
-    compile project(":fabulousfilter")
-    compile project(":expansionpanel")
-    compile project(":flowlayout")
-    compile project(":bubblepagerindicator")
-    compile project(":gcm")
-    compile project(":proswipebutton")
-    compile project(":cardslider")
-    compile project(":incrementproductview")
-    compile project(":niftydialogeffects")
+    implementation project(":ribblemenu")
+    implementation project(":placesautocomplete")
+    implementation project(":easyrecyclerview")
+    implementation project(":matisse")
+    implementation project(":imagezipper")
+    implementation project(":fabulousfilter")
+    implementation project(":expansionpanel")
+    implementation project(":flowlayout")
+    implementation project(":bubblepagerindicator")
+    implementation project(":gcm")
+    implementation project(":proswipebutton")
+    implementation project(":cardslider")
+    implementation project(":incrementproductview")
+    implementation project(":niftydialogeffects")
 
-    compile 'com.reversecoder.permission:rc-permission:1.0.1-SNAPSHOT'
-    compile 'com.reversecoder.library:rc-library:1.0.1-SNAPSHOT'
-    compile 'com.reversecoder.logger:rc-logger:1.0.1-SNAPSHOT'
+    implementation 'com.reversecoder.permission:rc-permission:1.0.1-SNAPSHOT'
+    implementation 'com.reversecoder.library:rc-library:1.0.1-SNAPSHOT'
+    implementation 'com.reversecoder.logger:rc-logger:1.0.1-SNAPSHOT'
 
     //Image loading
-    compile "com.github.bumptech.glide:glide:$glideVersion"
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
     annotationProcessor "com.github.bumptech.glide:compiler:$glideVersion"
 
     testImplementation 'junit:junit:4.12'

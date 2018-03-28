@@ -190,7 +190,7 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
         @Override
         protected void onPostExecute(HttpRequestManager.HttpResponse result) {
 
-            if (result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
+            if (result != null && result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
                 Log.d(TAG, "success response from web: " + result.getResult().toString());
                 ResponseRestaurantItem responseData = ResponseRestaurantItem.getResponseObject(result.getResult().toString(), ResponseRestaurantItem.class);
 

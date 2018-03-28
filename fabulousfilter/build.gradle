@@ -21,11 +21,11 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:$supportlibraryVersion"
-    compile "com.android.support:design:$supportlibraryVersion"
-    compile "com.android.support:support-v4:$supportlibraryVersion"
+    implementation "com.android.support:appcompat-v7:$supportlibraryVersion"
+    implementation "com.android.support:design:$supportlibraryVersion"
+    implementation "com.android.support:support-v4:$supportlibraryVersion"
 
-    compile ('com.google.android:flexbox:0.2.7'){
+    implementation ('com.google.android:flexbox:0.3.2'){
         exclude group: 'com.android.support'
     }
 }

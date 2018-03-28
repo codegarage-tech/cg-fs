@@ -37,6 +37,7 @@ import static in.shadowfax.proswipebutton.UiUtils.dpToPx;
  * Created by shadow-admin on 24/10/17.
  */
 
+@SuppressWarnings("unchecked")
 public class ProSwipeButton extends RelativeLayout {
 
     private Context context;
