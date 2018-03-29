@@ -25,7 +25,8 @@ dependencies {
     implementation "com.android.support:design:$supportlibraryVersion"
     implementation "com.android.support:support-v4:$supportlibraryVersion"
 
-    implementation ('com.google.android:flexbox:0.3.2'){
+//    implementation "com.google.android:flexbox:$flexboxVersion"
+    compile ('com.google.android:flexbox:0.2.7'){
         exclude group: 'com.android.support'
     }
 }
