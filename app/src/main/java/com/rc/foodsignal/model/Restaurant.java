@@ -52,7 +52,7 @@ public class Restaurant implements Parcelable {
     }
 
     public int getTypeRestaurant() {
-        return ((menu_details.size() > 0 ? TYPE_RESTAURANT : TYPE_IMAGE));
+        return ((menu_details!=null && menu_details.size() > 0 )? TYPE_RESTAURANT : TYPE_IMAGE);
     }
 
     public String getId() {

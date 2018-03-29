@@ -26,6 +26,7 @@ public class FoodItem extends ResponseBase implements Parcelable {
     //For offer
     private String offer_title = "";
     private String offer_price = "";
+    private String has_offer_price = "";
 
     public FoodItem(boolean isSelected, int offerPercentage, String id, String name, String menu_id, String menu_image, String price, String restaurant_id, String ingredients, String category_name, ArrayList<FoodImage> images, String offer_title, String offer_price) {
         this.isSelected = isSelected;
@@ -155,6 +156,14 @@ public class FoodItem extends ResponseBase implements Parcelable {
         isSelected = selected;
     }
 
+    public String getHas_offer_price() {
+        return has_offer_price;
+    }
+
+    public void setHas_offer_price(String has_offer_price) {
+        this.has_offer_price = has_offer_price;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -172,6 +181,7 @@ public class FoodItem extends ResponseBase implements Parcelable {
                 ", images=" + images +
                 ", offer_title='" + offer_title + '\'' +
                 ", offer_price='" + offer_price + '\'' +
+                ", has_offer_price='" + has_offer_price + '\'' +
                 '}';
     }
 

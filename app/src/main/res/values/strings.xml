@@ -56,6 +56,9 @@
     <!-- debug key -->
     <string name="release_google_maps_api_key_home">AIzaSyB7M09ps48qrB7V9BAhQcu2HtBhcqgt29g</string>
     <!--Google place key-->
-    <string name="google_place_api_key">AIzaSyAxLN8Fj9BuW8Tep-chDcZGa-5jeMkMVcc</string>
-
+    <!--<string name="google_place_api_key">AIzaSyAxLN8Fj9BuW8Tep-chDcZGa-5jeMkMVcc</string>-->
+    <!-- debug key -->
+    <string name="google_place_api_key">AIzaSyD0QT_w5-FUATlJPWqc2gHk5jRVY2AaN8k</string>
+    <!-- release key -->
+    <!--<string name="google_place_api_key">AIzaSyAT2IpndsHZXxPTVYghF8cAXig-lVmj78Q</string>-->
 </resources>
