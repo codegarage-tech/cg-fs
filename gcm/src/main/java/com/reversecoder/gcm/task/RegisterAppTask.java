@@ -24,10 +24,12 @@ public class RegisterAppTask extends AsyncTask<String, String, HttpRequestManage
 
     private static final String TAG = RegisterAppTask.class.getSimpleName();
     private Context mContext;
+    private String mUserId = "";
     private GcmResultListener mGcmResultListener;
 
-    public RegisterAppTask(Context context, GcmResultListener gcmResultListener) {
+    public RegisterAppTask(Context context, String userId, GcmResultListener gcmResultListener) {
         this.mContext = context;
+        this.mUserId = userId;
         this.mGcmResultListener = gcmResultListener;
     }
 
@@ -68,7 +70,7 @@ public class RegisterAppTask extends AsyncTask<String, String, HttpRequestManage
             }
 
             //Send response to the server
-            response = HttpRequestManager.doRestPostRequest(GcmConfig.getRegisterDeviceUrl(), GcmConfig.getRegisterDeviceParameters(mUniqueId, mPushId), null);
+            response = HttpRequestManager.doRestPostRequest(GcmConfig.getRegisterDeviceUrl(), GcmConfig.getRegisterDeviceParameters(mUniqueId, mPushId, mUserId), null);
 
         } catch (Exception exception) {
             exception.printStackTrace();

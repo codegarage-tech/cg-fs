@@ -410,7 +410,7 @@ public class AddUserBasicInfoActivity extends BaseLocationActivity {
                 loadingDialog.dismiss();
             }
 
-            if (result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
+            if (result != null && result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
                 Log.d(TAG, "success response from web: " + result.getResult().toString());
                 ResponseAddUserBasicInfo responseData = ResponseAddUserBasicInfo.getResponseObject(result.getResult().toString(), ResponseAddUserBasicInfo.class);
 

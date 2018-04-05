@@ -21,7 +21,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.fragment.HomeFragment;
+import com.rc.foodsignal.model.UserBasicInfo;
 import com.rc.foodsignal.util.AllConstants;
+import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.FragmentUtilsManager;
 import com.rc.foodsignal.view.CanaroTextView;
 import com.reversecoder.gcm.listener.GcmResultListener;
@@ -35,9 +37,12 @@ import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_LOCATION_L
 import static com.rc.foodsignal.util.AllConstants.SESSION_IS_RESTAURANT_LOGGED_IN;
 import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_LOGIN_DATA;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_NAVIGATION_MENU;
+import static com.rc.foodsignal.util.AllConstants.SESSION_USER_BASIC_INFO;
 import static com.reversecoder.gcm.util.GcmConfig.SESSION_IS_GCM_NOTIFICATION;
 
 public class HomeActivity extends BaseActivity implements AAH_FabulousFragment.Callbacks, AAH_FabulousFragment.AnimationListener {
+
+    UserBasicInfo userBasicInfo;
 
     //Toolvar
     Toolbar toolbar;
@@ -68,7 +73,12 @@ public class HomeActivity extends BaseActivity implements AAH_FabulousFragment.C
         }
 
         //initialize push notification
-        initPushNotification();
+        if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(HomeActivity.this, SESSION_USER_BASIC_INFO))) {
+            Log.d(TAG, "Session data: " + SessionManager.getStringSetting(HomeActivity.this, SESSION_USER_BASIC_INFO));
+            userBasicInfo = UserBasicInfo.getResponseObject(SessionManager.getStringSetting(HomeActivity.this, SESSION_USER_BASIC_INFO), UserBasicInfo.class);
+
+            initPushNotification(userBasicInfo.getUser_id());
+        }
     }
 
     private void goFragmentScreen(String currentTag, Fragment fragment) {
@@ -273,11 +283,11 @@ public class HomeActivity extends BaseActivity implements AAH_FabulousFragment.C
     /*****************************************
      * Register device for push notification *
      *****************************************/
-    private void initPushNotification() {
+    private void initPushNotification(String userId) {
         if (NetworkManager.isConnected(HomeActivity.this)) {
 
             if (SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_GCM_NOTIFICATION, true)) {
-                new RegisterAppTask(HomeActivity.this, new GcmResultListener() {
+                new RegisterAppTask(HomeActivity.this, userId, new GcmResultListener() {
                     @Override
                     public void onGcmResult(Object result) {
                         //Do whatever you want with the response

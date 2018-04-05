@@ -300,11 +300,12 @@ public class AllUrls {
         return url;
     }
 
-    public static JSONObject getRegisterDeviceParameters(String uniqueId, String pushId) {
+    public static JSONObject getRegisterDeviceParameters(String uniqueId, String pushId, String userId) {
         JSONObject params = HttpRequestManager.HttpParameter.getInstance()
                 .addJSONParam("deviceId", pushId)
                 .addJSONParam("device_type", "android")
                 .addJSONParam("device_unique_id", uniqueId)
+                .addJSONParam("user_id", userId)
                 .getJSONParam();
         Log.d(TAG, "getRegisterDeviceParameters: " + params.toString());
         return params;

@@ -3,11 +3,13 @@ package com.rc.foodsignal.activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rc.foodsignal.R;
+import com.rc.foodsignal.model.UserBasicInfo;
 import com.rc.foodsignal.util.AppUtils;
 import com.reversecoder.gcm.listener.GcmResultListener;
 import com.reversecoder.gcm.task.RegisterAppTask;
@@ -17,13 +19,16 @@ import com.reversecoder.library.storage.SessionManager;
 
 import in.shadowfax.proswipebutton.ProSwipeButton;
 
+import static com.rc.foodsignal.util.AllConstants.SESSION_USER_BASIC_INFO;
 import static com.reversecoder.gcm.util.GcmConfig.SESSION_IS_GCM_NOTIFICATION;
 
 /**
  * @author Md. Rashadul Alam
- *         Email: rashed.droid@gmail.com
+ * Email: rashed.droid@gmail.com
  */
 public class NotificationActivity extends AppCompatActivity {
+
+    UserBasicInfo userBasicInfo;
 
     TextView tvTitle;
     ImageView ivBack;
@@ -50,6 +55,11 @@ public class NotificationActivity extends AppCompatActivity {
         proSwipeButton = (ProSwipeButton) findViewById(R.id.proswipebutton_notification);
         setProSwipeButtonText();
         tvNotificationStatus = (TextView) findViewById(R.id.tv_notification_status);
+
+        if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(NotificationActivity.this, SESSION_USER_BASIC_INFO))) {
+            Log.d(TAG, "Session data: " + SessionManager.getStringSetting(NotificationActivity.this, SESSION_USER_BASIC_INFO));
+            userBasicInfo = UserBasicInfo.getResponseObject(SessionManager.getStringSetting(NotificationActivity.this, SESSION_USER_BASIC_INFO), UserBasicInfo.class);
+        }
     }
 
     private void setProSwipeButtonText() {
@@ -100,7 +110,7 @@ public class NotificationActivity extends AppCompatActivity {
                         }).execute();
                     } else {
                         //On notification
-                        new RegisterAppTask(NotificationActivity.this, new GcmResultListener() {
+                        new RegisterAppTask(NotificationActivity.this, userBasicInfo.getUser_id(), new GcmResultListener() {
                             @Override
                             public void onGcmResult(final Object result) {
                                 new Handler().postDelayed(new Runnable() {
