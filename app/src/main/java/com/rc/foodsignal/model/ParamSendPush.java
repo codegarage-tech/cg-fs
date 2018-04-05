@@ -4,15 +4,17 @@ import java.util.ArrayList;
 
 /**
  * @author Md. Rashadul Alam
- *         Email: rashed.droid@gmail.com
+ * Email: rashed.droid@gmail.com
  */
-public class ParamSendOffer extends ResponseBase {
+public class ParamSendPush extends ResponseBase {
 
     private String restaurant_id = "";
+    private String send_push = "";
     private ArrayList<Offer> menu_details = new ArrayList<>();
 
-    public ParamSendOffer(String restaurant_id, ArrayList<Offer> menu_details) {
+    public ParamSendPush(String restaurant_id, PUSH_TYPE pushType, ArrayList<Offer> menu_details) {
         this.restaurant_id = restaurant_id;
+        this.send_push = (pushType == PUSH_TYPE.SEND_PUSH ? "1" : "0");
         this.menu_details = menu_details;
     }
 
@@ -22,6 +24,14 @@ public class ParamSendOffer extends ResponseBase {
 
     public void setRestaurant_id(String restaurant_id) {
         this.restaurant_id = restaurant_id;
+    }
+
+    public String getSend_push() {
+        return send_push;
+    }
+
+    public void setSend_push(String send_push) {
+        this.send_push = send_push;
     }
 
     public ArrayList<Offer> getMenu_details() {
@@ -36,8 +46,13 @@ public class ParamSendOffer extends ResponseBase {
     public String toString() {
         return "{" +
                 "restaurant_id='" + restaurant_id + '\'' +
+                ", send_push='" + send_push + '\'' +
                 ", menu_details=" + menu_details +
                 '}';
+    }
+
+    public enum PUSH_TYPE {
+        SEND_PUSH, REVERT_PUSH
     }
 
     public static class Offer {

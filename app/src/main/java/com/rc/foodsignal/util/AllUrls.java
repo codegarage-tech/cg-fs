@@ -3,7 +3,7 @@ package com.rc.foodsignal.util;
 import android.util.Log;
 
 import com.rc.foodsignal.model.ParamFoodItem;
-import com.rc.foodsignal.model.ParamSendOffer;
+import com.rc.foodsignal.model.ParamSendPush;
 import com.reversecoder.library.util.AllSettingsManager;
 
 import org.json.JSONObject;
@@ -325,21 +325,21 @@ public class AllUrls {
         return params;
     }
 
-    public static String getSendOfferUrl() {
-        String url = BASE_URL + "notification/send1";
-        Log.d(TAG, "getSendOfferUrl: " + url);
+    public static String getSendPushUrl() {
+        String url = BASE_URL + "notification/send_push";
+        Log.d(TAG, "getSendPushUrl: " + url);
         return url;
     }
 
-    public static JSONObject getSendOfferParam(ParamSendOffer paramSendOffer) {
+    public static JSONObject getSendPushParam(ParamSendPush paramSendPush) {
         JSONObject jsonObject;
         try {
-            jsonObject = new JSONObject(ParamSendOffer.getResponseString(paramSendOffer));
+            jsonObject = new JSONObject(ParamSendPush.getResponseString(paramSendPush));
         } catch (Exception ex) {
             ex.printStackTrace();
             jsonObject = new JSONObject();
         }
-        Log.d(TAG, "getSendOfferParam: " + jsonObject.toString());
+        Log.d(TAG, "getSendPushParam: " + jsonObject.toString());
         return jsonObject;
     }
 }

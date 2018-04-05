@@ -32,28 +32,9 @@ public class Restaurant implements Parcelable {
     private String restaurant_category_name = "";
     private String distance = "";
     private ArrayList<FoodCategoryDetail> food_category_details = new ArrayList<FoodCategoryDetail>();
-//    private ArrayList<FoodItem> menu_details = new ArrayList<FoodItem>();
-//    private ArrayList<FoodItem> offer_details = new ArrayList<FoodItem>();
-//
-//    public Restaurant(String id, String name, String image, String lat, String lng, String email, String phone, String address, String password, String is_restaurant, String sms_notification, String push_notification, String distance, ArrayList<FoodItem> menu_details, ArrayList<FoodItem> offer_details) {
-//        this.id = id;
-//        this.name = name;
-//        this.image = image;
-//        this.lat = lat;
-//        this.lng = lng;
-//        this.email = email;
-//        this.phone = phone;
-//        this.address = address;
-//        this.password = password;
-//        this.is_restaurant = is_restaurant;
-//        this.sms_notification = sms_notification;
-//        this.push_notification = push_notification;
-//        this.distance = distance;
-//        this.menu_details = menu_details;
-//        this.offer_details = offer_details;
-//    }
+    private ArrayList<FoodCategoryDetail> offer_details = new ArrayList<FoodCategoryDetail>();
 
-    public Restaurant(String id, String name, String image, String lat, String lng, String email, String phone, String address, String password, String is_restaurant, String sms_notification, String push_notification, String restaurant_category_id, String menu_id, String restaurant_category_name, String distance, ArrayList<FoodCategoryDetail> food_category_details) {
+    public Restaurant(String id, String name, String image, String lat, String lng, String email, String phone, String address, String password, String is_restaurant, String sms_notification, String push_notification, String restaurant_category_id, String menu_id, String restaurant_category_name, String distance, ArrayList<FoodCategoryDetail> food_category_details, ArrayList<FoodCategoryDetail> offer_details) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -71,6 +52,7 @@ public class Restaurant implements Parcelable {
         this.restaurant_category_name = restaurant_category_name;
         this.distance = distance;
         this.food_category_details = food_category_details;
+        this.offer_details = offer_details;
     }
 
     public int getTypeRestaurant() {
@@ -209,6 +191,18 @@ public class Restaurant implements Parcelable {
         return food_category_details;
     }
 
+    public void setFood_category_details(ArrayList<FoodCategoryDetail> food_category_details) {
+        this.food_category_details = food_category_details;
+    }
+
+    public ArrayList<FoodCategoryDetail> getOffer_details() {
+        return offer_details;
+    }
+
+    public void setOffer_details(ArrayList<FoodCategoryDetail> offer_details) {
+        this.offer_details = offer_details;
+    }
+
     public ArrayList<FoodItem> getAllFoodItems() {
         ArrayList<FoodItem> mItems = new ArrayList<>();
         if (getFood_category_details() != null && getFood_category_details().size() > 0) {
@@ -225,8 +219,21 @@ public class Restaurant implements Parcelable {
         return mItems;
     }
 
-    public void setFood_category_details(ArrayList<FoodCategoryDetail> food_category_details) {
-        this.food_category_details = food_category_details;
+
+    public ArrayList<FoodItem> getAllOfferFoodItems() {
+        ArrayList<FoodItem> mItems = new ArrayList<>();
+        if (getOffer_details() != null && getOffer_details().size() > 0) {
+            for (int i = 0; i < getOffer_details().size(); i++) {
+                FoodCategoryDetail foodCategoryDetail = getOffer_details().get(i);
+                if (foodCategoryDetail.getMenu_details() != null && foodCategoryDetail.getMenu_details().size() > 0) {
+                    for (int j = 0; j < foodCategoryDetail.getMenu_details().size(); j++) {
+                        FoodItem foodItem = foodCategoryDetail.getMenu_details().get(j);
+                        mItems.add(foodItem);
+                    }
+                }
+            }
+        }
+        return mItems;
     }
 
     public static int getTypeImage() {

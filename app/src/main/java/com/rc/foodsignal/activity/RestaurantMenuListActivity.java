@@ -20,7 +20,7 @@ import com.rc.foodsignal.R;
 import com.rc.foodsignal.adapter.RestaurantMenuListViewAdapter;
 import com.rc.foodsignal.dialog.SelectedOfferListDialog;
 import com.rc.foodsignal.model.FoodItem;
-import com.rc.foodsignal.model.ParamSendOffer;
+import com.rc.foodsignal.model.ParamSendPush;
 import com.rc.foodsignal.model.ResponseGcmRestaurantItem;
 import com.rc.foodsignal.model.ResponseRestaurantMenu;
 import com.rc.foodsignal.model.RestaurantLoginData;
@@ -126,15 +126,15 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
                                     if (restaurantMenuListViewAdapter.getSelectedData().size() > 0) {
 
                                         //Prepare data for sending offers
-                                        ArrayList<ParamSendOffer.Offer> offers = new ArrayList<>();
+                                        ArrayList<ParamSendPush.Offer> offers = new ArrayList<>();
                                         for (int i = 0; i < restaurantMenuListViewAdapter.getSelectedData().size(); i++) {
                                             FoodItem foodItem = restaurantMenuListViewAdapter.getSelectedData().get(i);
-                                            offers.add(new ParamSendOffer.Offer(foodItem.getId(), foodItem.getOfferPercentage() + ""));
+                                            offers.add(new ParamSendPush.Offer(foodItem.getId(), foodItem.getOfferPercentage() + ""));
                                         }
 
-                                        //Send offer request
-                                        ParamSendOffer paramSendOffer = new ParamSendOffer(restaurantLoginData.getId(), offers);
-                                        doSendOfferRequest = new DoSendOfferRequest(RestaurantMenuListActivity.this, paramSendOffer);
+                                        //Send offer request, here 1 is for send push
+                                        ParamSendPush paramSendPush = new ParamSendPush(restaurantLoginData.getId(), ParamSendPush.PUSH_TYPE.SEND_PUSH, offers);
+                                        doSendOfferRequest = new DoSendOfferRequest(RestaurantMenuListActivity.this, paramSendPush);
                                         doSendOfferRequest.execute();
                                     }
                                 }
@@ -277,11 +277,11 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
     private class DoSendOfferRequest extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
 
         private Context mContext;
-        private ParamSendOffer mParamSendOffer;
+        private ParamSendPush mParamSendPush;
 
-        public DoSendOfferRequest(Context context, ParamSendOffer paramSendOffer) {
+        public DoSendOfferRequest(Context context, ParamSendPush paramSendPush) {
             mContext = context;
-            mParamSendOffer = paramSendOffer;
+            mParamSendPush = paramSendPush;
         }
 
         @Override
@@ -305,7 +305,7 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
 
         @Override
         protected HttpRequestManager.HttpResponse doInBackground(String... params) {
-            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getSendOfferUrl(), AllUrls.getSendOfferParam(mParamSendOffer), null);
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getSendPushUrl(), AllUrls.getSendPushParam(mParamSendPush), null);
             return response;
         }
 
