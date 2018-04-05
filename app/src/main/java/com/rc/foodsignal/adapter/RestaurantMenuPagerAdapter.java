@@ -14,15 +14,17 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.interfaces.OnPagerItemClickListener;
+import com.rc.foodsignal.model.FoodCategoryDetail;
 import com.rc.foodsignal.model.FoodItem;
 import com.rc.foodsignal.model.Restaurant;
 import com.reversecoder.library.random.RandomManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Md. Rashadul Alam
- *         Email: rashed.droid@gmail.com
+ * Email: rashed.droid@gmail.com
  */
 public class RestaurantMenuPagerAdapter extends PagerAdapter {
 
@@ -37,7 +39,7 @@ public class RestaurantMenuPagerAdapter extends PagerAdapter {
         super();
         mContext = context;
         mRestaurant = restaurant;
-        mItems = restaurant.getMenu_details();
+        mItems = mRestaurant.getAllFoodItems();
     }
 
     @Override

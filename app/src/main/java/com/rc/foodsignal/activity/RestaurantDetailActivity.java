@@ -166,7 +166,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private void setFoodItemSliderData() {
         tvTitle.setText(mRestaurant.getName());
         foodItemSliderAdapter.clear();
-        foodItemSliderAdapter.addAll((mDetailIntentType == DetailIntentType.OTHER) ? (mRestaurant.getMenu_details().size() > 0) ? mRestaurant.getMenu_details() : new ArrayList<FoodItem>() : (mRestaurant.getOffer_details().size() > 0) ? mRestaurant.getOffer_details() : new ArrayList<FoodItem>());
+        foodItemSliderAdapter.addAll((mDetailIntentType == DetailIntentType.OTHER) ? mRestaurant.getAllFoodItems() : new ArrayList<FoodItem>());
         lastPagePosition = (mSelectedPosition != -1) ? mSelectedPosition : 0;
         FoodItem foodItem = foodItemSliderAdapter.getItem(lastPagePosition);
         rvFoodItemSlider.scrollToPosition(lastPagePosition);
