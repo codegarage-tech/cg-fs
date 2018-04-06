@@ -20,6 +20,7 @@ import com.rc.foodsignal.R;
 import com.rc.foodsignal.adapter.RestaurantMenuListViewAdapter;
 import com.rc.foodsignal.dialog.SelectedOfferListDialog;
 import com.rc.foodsignal.model.FoodItem;
+import com.rc.foodsignal.model.Offer;
 import com.rc.foodsignal.model.ParamSendPush;
 import com.rc.foodsignal.model.ResponseGcmRestaurantItem;
 import com.rc.foodsignal.model.ResponseRestaurantMenu;
@@ -126,10 +127,10 @@ public class RestaurantMenuListActivity extends AppCompatActivity {
                                     if (restaurantMenuListViewAdapter.getSelectedData().size() > 0) {
 
                                         //Prepare data for sending offers
-                                        ArrayList<ParamSendPush.Offer> offers = new ArrayList<>();
+                                        ArrayList<Offer> offers = new ArrayList<>();
                                         for (int i = 0; i < restaurantMenuListViewAdapter.getSelectedData().size(); i++) {
                                             FoodItem foodItem = restaurantMenuListViewAdapter.getSelectedData().get(i);
-                                            offers.add(new ParamSendPush.Offer(foodItem.getId(), foodItem.getOfferPercentage() + ""));
+                                            offers.add(new Offer(foodItem.getId(), foodItem.getOfferPercentage() + ""));
                                         }
 
                                         //Send offer request, here 1 is for send push
