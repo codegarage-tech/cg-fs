@@ -108,7 +108,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name="com.rc.foodsignal.activity.NotificationActivity"
+            android:name="com.rc.foodsignal.activity.NotificationListActivity"
             android:label="@string/title_activity_notification"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />

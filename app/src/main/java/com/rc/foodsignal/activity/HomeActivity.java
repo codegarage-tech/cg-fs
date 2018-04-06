@@ -193,7 +193,7 @@ public class HomeActivity extends BaseActivity implements AAH_FabulousFragment.C
             Intent intentAddress = new Intent(HomeActivity.this, LocationListActivity.class);
             startActivityForResult(intentAddress, INTENT_REQUEST_CODE_LOCATION_LIST);
         } else if (id == R.id.nav_notification) {
-            Intent intentNotification = new Intent(HomeActivity.this, NotificationActivity.class);
+            Intent intentNotification = new Intent(HomeActivity.this, NotificationListActivity.class);
             startActivity(intentNotification);
         } else if (id == R.id.nav_google_pay) {
 

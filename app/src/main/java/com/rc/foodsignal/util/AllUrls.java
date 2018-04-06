@@ -342,4 +342,10 @@ public class AllUrls {
         Log.d(TAG, "getSendPushParam: " + jsonObject.toString());
         return jsonObject;
     }
+
+    public static String getAllNotificationsUrl(String appUserId) {
+        String url = BASE_URL + "notification/get_all_users_notification/"+appUserId;
+        Log.d(TAG, "getAllNotificationsUrl: " + url);
+        return url;
+    }
 }
