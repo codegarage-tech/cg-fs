@@ -1,4 +1,4 @@
 include ':app', ':ribblemenu', ':placesautocomplete', ':easyrecyclerview', ':matisse',
         ':imagezipper', ':fabulousfilter', ':expansionpanel', ':flowlayout',
         ':bubblepagerindicator', ':gcm', ':proswipebutton', ':cardslider',
-        ':incrementproductview', ':niftydialogeffects'
+        ':incrementproductview', ':niftydialogeffects', 'switchicon'
