@@ -16,16 +16,16 @@ public class Notification extends ResponseBase implements Parcelable {
     private String notification = "";
     private String restaurant_id = "";
     private String datetime = "";
-    private ArrayList<Offer> notification_details = new ArrayList<>();
+//    private ArrayList<Offer> notification_details = new ArrayList<>();
 
-    public Notification(String id, String app_user_id, String notification, String restaurant_id, String datetime, ArrayList<Offer> notification_details) {
-        this.id = id;
-        this.app_user_id = app_user_id;
-        this.notification = notification;
-        this.restaurant_id = restaurant_id;
-        this.datetime = datetime;
-        this.notification_details = notification_details;
-    }
+//    public Notification(String id, String app_user_id, String notification, String restaurant_id, String datetime, ArrayList<Offer> notification_details) {
+//        this.id = id;
+//        this.app_user_id = app_user_id;
+//        this.notification = notification;
+//        this.restaurant_id = restaurant_id;
+//        this.datetime = datetime;
+//        this.notification_details = notification_details;
+//    }
 
     public String getId() {
         return id;
@@ -67,13 +67,13 @@ public class Notification extends ResponseBase implements Parcelable {
         this.datetime = datetime;
     }
 
-    public ArrayList<Offer> getNotification_details() {
-        return notification_details;
-    }
-
-    public void setNotification_details(ArrayList<Offer> notification_details) {
-        this.notification_details = notification_details;
-    }
+//    public ArrayList<Offer> getNotification_details() {
+//        return notification_details;
+//    }
+//
+//    public void setNotification_details(ArrayList<Offer> notification_details) {
+//        this.notification_details = notification_details;
+//    }
 
     @Override
     public String toString() {
@@ -83,7 +83,7 @@ public class Notification extends ResponseBase implements Parcelable {
                 ", notification='" + notification + '\'' +
                 ", restaurant_id='" + restaurant_id + '\'' +
                 ", datetime='" + datetime + '\'' +
-                ", notification_details=" + notification_details +
+//                ", notification_details=" + notification_details +
                 '}';
     }
 
@@ -102,7 +102,7 @@ public class Notification extends ResponseBase implements Parcelable {
         dest.writeString(notification);
         dest.writeString(restaurant_id);
         dest.writeString(datetime);
-        dest.writeList(notification_details);
+//        dest.writeList(notification_details);
     }
 
     // Creator
@@ -123,6 +123,6 @@ public class Notification extends ResponseBase implements Parcelable {
         notification = in.readString();
         restaurant_id = in.readString();
         datetime = in.readString();
-        notification_details = in.readArrayList(Offer.class.getClassLoader());
+//        notification_details = in.readArrayList(Offer.class.getClassLoader());
     }
 }

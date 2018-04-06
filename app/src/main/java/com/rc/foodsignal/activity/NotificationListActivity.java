@@ -10,11 +10,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.zagum.switchicon.SwitchIconView;
 import com.rc.foodsignal.R;
+import com.rc.foodsignal.adapter.NotificationListViewAdapter;
+import com.rc.foodsignal.model.ResponseNotification;
 import com.rc.foodsignal.model.UserBasicInfo;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
@@ -44,7 +47,9 @@ public class NotificationListActivity extends AppCompatActivity {
     UserBasicInfo userBasicInfo;
     String TAG = AppUtils.getTagName(NotificationListActivity.class);
     ProgressDialog loadingDialog;
+    ListView lvNotification;
     GetNotificationList getNotificationList;
+    NotificationListViewAdapter notificationListViewAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,10 +64,14 @@ public class NotificationListActivity extends AppCompatActivity {
         //Toolbar
         ivBack = (ImageView) findViewById(R.id.iv_back);
         llNotification = (LinearLayout) findViewById(R.id.ll_notification);
-        switchIconViewNotification = (SwitchIconView) findViewById(R.id.switch_notification);
         tvTitle = (TextView) findViewById(R.id.text_title);
         tvTitle.setText(getString(R.string.title_activity_notification));
 
+        lvNotification=(ListView)findViewById(R.id.lv_notification);
+        notificationListViewAdapter = new NotificationListViewAdapter(NotificationListActivity.this);
+        lvNotification.setAdapter(notificationListViewAdapter);
+
+        switchIconViewNotification = (SwitchIconView) findViewById(R.id.switch_notification);
         if (SessionManager.getBooleanSetting(NotificationListActivity.this, SESSION_IS_GCM_NOTIFICATION, true)) {
             switchIconViewNotification.setIconEnabled(true);
         } else {
@@ -177,17 +186,17 @@ public class NotificationListActivity extends AppCompatActivity {
 
             if (result != null && result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
                 Log.d(TAG, "success response from web: " + result.getResult().toString());
-//                ResponseNotification responseData = ResponseNotification.getResponseObject(result.getResult().toString().replace("\\", "").trim(), ResponseNotification.class);
-//                Log.d(TAG, "success response from object: " + responseData.toString());
-//
-//                if (responseData.getStatus().equalsIgnoreCase("success") && (responseData.getData().size() > 0)) {
-//                    Log.d(TAG, "success wrapper: " + responseData.getData().get(0).toString());
-//
-//                    //Update list view
-////                    restaurantMenuListViewAdapter.setData(responseData.getData());
-//                } else {
-//                    Toast.makeText(NotificationListActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
-//                }
+                ResponseNotification responseData = ResponseNotification.getResponseObject(result.getResult().toString().replace("\\", "").trim(), ResponseNotification.class);
+                Log.d(TAG, "success response from object: " + responseData.toString());
+
+                if (responseData.getStatus().equalsIgnoreCase("success") && (responseData.getData().size() > 0)) {
+                    Log.d(TAG, "success wrapper: " + responseData.getData().get(0).toString());
+
+                    //Update list view
+                    notificationListViewAdapter.setData(responseData.getData());
+                } else {
+                    Toast.makeText(NotificationListActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
+                }
 
             } else {
                 Toast.makeText(NotificationListActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
