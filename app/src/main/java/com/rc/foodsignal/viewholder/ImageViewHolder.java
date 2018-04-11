@@ -1,5 +1,6 @@
 package com.rc.foodsignal.viewholder;
 
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,7 +19,9 @@ import com.rc.foodsignal.model.Restaurant;
 public class ImageViewHolder extends BaseViewHolder<Restaurant> {
 
     private ImageView ivFoodImage;
-//    private TextView tvFoodPrice;
+    private TextView tvFoodPrice;
+    private TextView tvFoodOfferPrice ;
+    private TextView tvFoodIngredient ;
     private TextView tvRestaurantName;
     private TextView tvRestaurantAddress;
 //    private TextView tvRestaurantReview;
@@ -30,7 +33,9 @@ public class ImageViewHolder extends BaseViewHolder<Restaurant> {
 
 //        vpRestaurantMenu = (ViewPager) $(R.id.vp_restaurant_menu);
         ivFoodImage = $(R.id.iv_food_image);
-//        tvFoodPrice = $(R.id.tv_food_price);
+        tvFoodPrice = $(R.id.tv_food_price);
+        tvFoodOfferPrice = $(R.id.tv_food_offer_price);
+        tvFoodIngredient= $(R.id.tv_food_ingredient);
         tvRestaurantName = $(R.id.tv_restaurant_name);
         tvRestaurantAddress = $(R.id.tv_restaurant_address);
 //        tvRestaurantReview = $(R.id.tv_restaurant_review);
@@ -55,7 +60,10 @@ public class ImageViewHolder extends BaseViewHolder<Restaurant> {
 //                .apply(new RequestOptions().signature(new ObjectKey(System.currentTimeMillis())))
                 .apply(new RequestOptions().error(R.drawable.ic_default_food))
                 .into(ivFoodImage);
-//
+
+        tvFoodPrice.setVisibility(View.GONE);
+        tvFoodOfferPrice.setVisibility(View.GONE);
+        tvFoodIngredient.setVisibility(View.INVISIBLE);
 //        tvFoodPrice.setText((data.getMenu_details().size() > 0) ? ("$" + data.getMenu_details().get(0).getPrice()) : "");
         tvRestaurantName.setText("Restaurant: " +data.getName());
         tvRestaurantAddress.setText("Address: " + data.getAddress());

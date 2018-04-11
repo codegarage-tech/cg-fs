@@ -69,6 +69,6 @@ public class RestaurantViewHolder extends BaseViewHolder<Restaurant> {
 
         bpiFoodItem.setViewPager(vpRestaurantMenu);
         bpiFoodItem.setFillColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
-        bpiFoodItem.setPageColor(getContext().getResources().getColor(R.color.white));
+        bpiFoodItem.setPageColor(getContext().getResources().getColor(R.color.Off_white));
     }
 }

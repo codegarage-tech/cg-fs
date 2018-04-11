@@ -1,25 +1,24 @@
 package com.rc.foodsignal.adapter;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.interfaces.OnPagerItemClickListener;
-import com.rc.foodsignal.model.FoodCategoryDetail;
 import com.rc.foodsignal.model.FoodItem;
 import com.rc.foodsignal.model.Restaurant;
 import com.reversecoder.library.random.RandomManager;
+import com.reversecoder.library.util.AllSettingsManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,11 +59,12 @@ public class RestaurantMenuPagerAdapter extends PagerAdapter {
         //Initialize view
         ImageView ivFoodImage = (ImageView) itemView.findViewById(R.id.iv_food_image);
         TextView tvFoodPrice = itemView.findViewById(R.id.tv_food_price);
+        TextView tvFoodOfferPrice = itemView.findViewById(R.id.tv_food_offer_price);
         TextView tvFoodName = itemView.findViewById(R.id.tv_food_name);
         TextView tvFoodIngredient = itemView.findViewById(R.id.tv_food_ingredient);
         TextView tvRestaurantName = itemView.findViewById(R.id.tv_restaurant_name);
         TextView tvRestaurantAddress = itemView.findViewById(R.id.tv_restaurant_address);
-        LinearLayout llPriceLabel = itemView.findViewById(R.id.ll_price_label);
+//        LinearLayout llPriceLabel = itemView.findViewById(R.id.ll_price_label);
 
         Glide
                 .with(mContext)
@@ -75,8 +75,17 @@ public class RestaurantMenuPagerAdapter extends PagerAdapter {
 //                .apply(new RequestOptions().placeholder(R.drawable.ic_default_food))
                 .apply(new RequestOptions().error(R.drawable.ic_default_food))
                 .into(ivFoodImage);
-        llPriceLabel.setVisibility((mItems.size() > 0) ? View.VISIBLE : View.GONE);
+//        llPriceLabel.setVisibility((mItems.size() > 0) ? View.VISIBLE : View.GONE);
+        tvFoodOfferPrice.setVisibility((mItems.size() > 0) ? ((!AllSettingsManager.isNullOrEmpty(mItems.get(position).getOffer_price()) && Float.parseFloat(mItems.get(position).getOffer_price()) != 0.00) ? View.VISIBLE : View.INVISIBLE) : View.INVISIBLE);
+        tvFoodOfferPrice.setText((mItems.size() > 0) ? ((!AllSettingsManager.isNullOrEmpty(mItems.get(position).getOffer_price())) ? ("$" + mItems.get(position).getOffer_price()) : "") : "");
         tvFoodPrice.setText((mItems.size() > 0) ? "$" + mItems.get(position).getPrice() : "");
+        if (mItems.size() > 0 && !AllSettingsManager.isNullOrEmpty(mItems.get(position).getOffer_price()) && Float.parseFloat(mItems.get(position).getOffer_price()) != 0.00) {
+            tvFoodPrice.setPaintFlags(tvFoodPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            tvFoodPrice.setTextColor(mContext.getResources().getColor(android.R.color.darker_gray));
+        } else {
+            tvFoodPrice.setPaintFlags(tvFoodPrice.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            tvFoodPrice.setTextColor(mContext.getResources().getColor(R.color.black));
+        }
         tvFoodName.setText((mItems.size() > 0) ? mItems.get(position).getName() : "");
         tvFoodIngredient.setText("Ingredient: " + ((mItems.size() > 0) ? mItems.get(position).getIngredients() : ""));
         tvRestaurantName.setText("Restaurant: " + mRestaurant.getName());
