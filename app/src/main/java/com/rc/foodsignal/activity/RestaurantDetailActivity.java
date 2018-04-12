@@ -74,6 +74,7 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
     RecyclerView rvFoodItemSlider;
     FoodItemSliderAdapter foodItemSliderAdapter;
     CardSliderLayoutManager foodItemSliderLayoutManager;
+    String ALL_FOOD_KEY = "All Categories";
 
     //Fabulous Filter
     FloatingActionButton fabFilter;
@@ -93,13 +94,13 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
     }
 
     private void initUI() {
-        //Intent data
-        handleNewIntent(getIntent());
-
         //Toolbar
         ivBack = (ImageView) findViewById(R.id.iv_back);
         tvTitle = (TextView) findViewById(R.id.text_title);
         fabFilter = (FloatingActionButton) findViewById(R.id.fab_filter);
+
+        //Intent data
+        handleNewIntent(getIntent());
 
         initTextSwitcher();
 
@@ -120,7 +121,7 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
         if (restaurant != null) {
             Log.d(TAG, "mRestaurant: " + restaurant.toString());
 
-            setFoodItemSliderData();
+            setFoodItemSliderData(ALL_FOOD_KEY);
 
             setGoogleMapWithMarker(restaurant);
         }
@@ -128,7 +129,9 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
 
     private void initFilterFoodCategory(ArrayList<FoodCategoryDetail> foodCategories) {
         mFoodCategory = foodCategories;
-        mFoodCategoryKey = getUniqueFoodCategoryKeys(foodCategories);
+        //Below line is for adding one extra filter key
+        mFoodCategory.add(new FoodCategoryDetail("420", ALL_FOOD_KEY));
+        mFoodCategoryKey = getUniqueFoodCategoryKeys(mFoodCategory);
     }
 
     private void setGoogleMapWithMarker(final Restaurant restaurant) {
@@ -187,10 +190,12 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
         new CardSnapHelper().attachToRecyclerView(rvFoodItemSlider);
     }
 
-    private void setFoodItemSliderData() {
+    private void setFoodItemSliderData(String foodKey) {
         tvTitle.setText(mRestaurant.getName());
         foodItemSliderAdapter.clear();
-        foodItemSliderAdapter.addAll((mDetailIntentType == DetailIntentType.OTHER) ? mRestaurant.getAllFoodItems() : mRestaurant.getAllOfferFoodItems());
+        foodItemSliderAdapter.notifyDataSetChanged();
+        foodItemSliderAdapter.addAll((mDetailIntentType == DetailIntentType.OTHER) ? (foodKey.equalsIgnoreCase(ALL_FOOD_KEY) ? mRestaurant.getAllFoodItems() : getSelectedFoodCategory(selectedFoodCategory).getMenu_details()) : mRestaurant.getAllOfferFoodItems());
+        foodItemSliderAdapter.notifyDataSetChanged();
         lastPagePosition = (mSelectedPosition != -1) ? mSelectedPosition : 0;
         FoodItem foodItem = foodItemSliderAdapter.getItem(lastPagePosition);
         rvFoodItemSlider.scrollToPosition(lastPagePosition);
@@ -325,6 +330,7 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
                 case OTHER:
                     mRestaurant = intent.getParcelableExtra(INTENT_KEY_RESTAURANT_ITEM);
                     mSelectedPosition = intent.getIntExtra(INTENT_KEY_RESTAURANT_ITEM_POSITION, -1);
+                    fabFilter.setVisibility(View.VISIBLE);
                     break;
                 case GCM:
                     mGcmData = intent.getParcelableExtra(INTENT_KEY_GCM_DATA_CONTENT);
@@ -333,7 +339,7 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
                     if (responseGcmRestaurantItem.getStatus().equalsIgnoreCase("1")) {
                         mRestaurant = responseGcmRestaurantItem.getData();
                         mSelectedPosition = 0;
-
+                        fabFilter.setVisibility(View.GONE);
                         Log.d(TAG, "Offer data: " + mRestaurant.toString());
                     }
                     break;
@@ -377,7 +383,8 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
                     selectedFoodCategory = "";
                 }
 
-//                searchRestaurant(mLocation, getSelectedFoodCategory(selectedFoodCategory).getId(), getSelectedRestaurantCategory(selectedRestaurantCategory).getId());
+                mSelectedPosition = 0;
+                setFoodItemSliderData(selectedFoodCategory);
             }
         }
     }
