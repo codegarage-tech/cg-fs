@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 /**
  * @author Md. Rashadul Alam
- *         Email: rashed.droid@gmail.com
+ * Email: rashed.droid@gmail.com
  */
 public class FoodCategoryDetail extends ResponseBase implements Parcelable {
 
@@ -19,6 +19,11 @@ public class FoodCategoryDetail extends ResponseBase implements Parcelable {
         this.id = id;
         this.name = name;
         this.menu_details = menu_details;
+    }
+
+    public FoodCategoryDetail(String id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public String getId() {

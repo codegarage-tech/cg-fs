@@ -66,7 +66,7 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
 
     //Fabulous Filter
     private ArrayMap<String, List<String>> appliedFilters = new ArrayMap<>();
-    FilterFragment dialogFrag;
+    RestaurantFilterFragment dialogFrag;
     FloatingActionButton fabFilter;
     ArrayList<FoodCategory> mFoodCategory = new ArrayList<>();
     List<String> mFoodCategoryKey = new ArrayList<>();
@@ -148,7 +148,7 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
             @Override
             public void onClick(View v) {
 
-                dialogFrag = FilterFragment.newInstance(appliedFilters);
+                dialogFrag = RestaurantFilterFragment.newInstance(appliedFilters);
                 dialogFrag.setParentFab(fabFilter);
                 dialogFrag.setCallbacks((Callbacks) getActivity());
                 dialogFrag.setAnimationListener((AnimationListener) getActivity());

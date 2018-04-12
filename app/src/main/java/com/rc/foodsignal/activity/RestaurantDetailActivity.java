@@ -1,9 +1,12 @@
 package com.rc.foodsignal.activity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,6 +16,7 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.allattentionhere.fabulousfilter.AAH_FabulousFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -24,6 +28,8 @@ import com.ramotion.cardslider.CardSnapHelper;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.adapter.FoodItemSliderAdapter;
 import com.rc.foodsignal.factory.TextViewFactory;
+import com.rc.foodsignal.fragment.RestaurantDetailFilterFragment;
+import com.rc.foodsignal.model.FoodCategoryDetail;
 import com.rc.foodsignal.model.FoodItem;
 import com.rc.foodsignal.model.ResponseGcmRestaurantItem;
 import com.rc.foodsignal.model.Restaurant;
@@ -34,6 +40,8 @@ import com.reversecoder.library.event.OnSingleClickListener;
 import com.reversecoder.library.util.AllSettingsManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_RESTAURANT_ITEM;
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_RESTAURANT_ITEM_POSITION;
@@ -43,9 +51,9 @@ import static com.reversecoder.gcm.util.GcmConfig.INTENT_KEY_INTENT_DETAIL_TYPE;
 
 /**
  * @author Md. Rashadul Alam
- *         Email: rashed.droid@gmail.com
+ * Email: rashed.droid@gmail.com
  */
-public class RestaurantDetailActivity extends AppCompatActivity {
+public class RestaurantDetailActivity extends AppCompatActivity implements AAH_FabulousFragment.Callbacks, AAH_FabulousFragment.AnimationListener {
 
     //Toolbar
     TextView tvTitle;
@@ -67,6 +75,14 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     FoodItemSliderAdapter foodItemSliderAdapter;
     CardSliderLayoutManager foodItemSliderLayoutManager;
 
+    //Fabulous Filter
+    FloatingActionButton fabFilter;
+    private ArrayMap<String, List<String>> appliedFilters = new ArrayMap<>();
+    RestaurantDetailFilterFragment dialogFrag;
+    ArrayList<FoodCategoryDetail> mFoodCategory = new ArrayList<>();
+    List<String> mFoodCategoryKey = new ArrayList<>();
+    String selectedFoodCategory = "";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +99,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         //Toolbar
         ivBack = (ImageView) findViewById(R.id.iv_back);
         tvTitle = (TextView) findViewById(R.id.text_title);
+        fabFilter = (FloatingActionButton) findViewById(R.id.fab_filter);
 
         initTextSwitcher();
 
@@ -95,6 +112,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
 
         setData(mRestaurant);
+
+        initFilterFoodCategory(mRestaurant.getFood_category_details());
     }
 
     private void setData(Restaurant restaurant) {
@@ -105,6 +124,11 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
             setGoogleMapWithMarker(restaurant);
         }
+    }
+
+    private void initFilterFoodCategory(ArrayList<FoodCategoryDetail> foodCategories) {
+        mFoodCategory = foodCategories;
+        mFoodCategoryKey = getUniqueFoodCategoryKeys(foodCategories);
     }
 
     private void setGoogleMapWithMarker(final Restaurant restaurant) {
@@ -243,6 +267,18 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     private void initActions() {
+        fabFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogFrag = RestaurantDetailFilterFragment.newInstance(appliedFilters);
+                dialogFrag.setParentFab(fabFilter);
+                dialogFrag.setCallbacks(RestaurantDetailActivity.this);
+                dialogFrag.setAnimationListener(RestaurantDetailActivity.this);
+
+                dialogFrag.show(getSupportFragmentManager(), dialogFrag.getTag());
+            }
+        });
+
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -311,5 +347,91 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
         handleNewIntent(intent);
         setData(mRestaurant);
+    }
+
+    /***************************
+     * Fabulous Filter methods *
+     ***************************/
+    public void onResult(Object result) {
+        Log.d(TAG, "onResult: " + result.toString());
+
+        if (result != null) {
+
+            if (result.toString().equalsIgnoreCase("swiped_down")) {
+                //do something or nothing
+            } else {
+                appliedFilters = (ArrayMap<String, List<String>>) result;
+                ArrayMap<String, List<String>> appliedFilters = (ArrayMap<String, List<String>>) result;
+                if (appliedFilters.size() != 0) {
+
+                    if (appliedFilters.get("food_category") != null) {
+                        if (appliedFilters.get("food_category").size() == 1) {
+                            selectedFoodCategory = appliedFilters.get("food_category").get(0);
+                        } else {
+                            selectedFoodCategory = "";
+                        }
+                    } else {
+                        selectedFoodCategory = "";
+                    }
+                } else {
+                    selectedFoodCategory = "";
+                }
+
+//                searchRestaurant(mLocation, getSelectedFoodCategory(selectedFoodCategory).getId(), getSelectedRestaurantCategory(selectedRestaurantCategory).getId());
+            }
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (dialogFrag.isAdded()) {
+            dialogFrag.dismiss();
+            dialogFrag.show(getSupportFragmentManager(), dialogFrag.getTag());
+        }
+    }
+
+    @Override
+    public void onOpenAnimationStart() {
+        Log.d("aah_animation", "onOpenAnimationStart: ");
+    }
+
+    @Override
+    public void onOpenAnimationEnd() {
+        Log.d("aah_animation", "onOpenAnimationEnd: ");
+    }
+
+    @Override
+    public void onCloseAnimationStart() {
+        Log.d("aah_animation", "onCloseAnimationStart: ");
+    }
+
+    @Override
+    public void onCloseAnimationEnd() {
+        Log.d("aah_animation", "onCloseAnimationEnd: ");
+    }
+
+    public List<String> getUniqueFoodCategoryKeys(ArrayList<FoodCategoryDetail> foodCategories) {
+        List<String> categories = new ArrayList<>();
+        for (FoodCategoryDetail foodCategory : foodCategories) {
+            categories.add(foodCategory.getName());
+        }
+        Collections.sort(categories);
+        return categories;
+    }
+
+    public List<String> getFoodCategoryKey() {
+        return mFoodCategoryKey;
+    }
+
+    public FoodCategoryDetail getSelectedFoodCategory(String foodCategory) {
+        for (FoodCategoryDetail category : mFoodCategory) {
+            if (category.getName().equalsIgnoreCase(foodCategory)) {
+                return category;
+            }
+        }
+
+        //Selected category 0 is for nothing
+        return new FoodCategoryDetail("0", "");
     }
 }
