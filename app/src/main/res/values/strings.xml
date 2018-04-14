@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Food Signal</string>
-    <string name="app_version_name">1.0.8</string>
+    <string name="app_version_name">1.0.9</string>
     <string name="app_version_text">Version:</string>
 
     <!-- Fragment tag/title -->
@@ -55,10 +55,10 @@
     <!--<string name="release_google_maps_api_key_home">AIzaSyA4yOh_Lb7l9tXzFYhoSLIdl5GjtxVQgVo</string>-->
     <!-- debug key -->
     <string name="release_google_maps_api_key_home">AIzaSyB7M09ps48qrB7V9BAhQcu2HtBhcqgt29g</string>
+
     <!--Google place key-->
-    <!--<string name="google_place_api_key">AIzaSyAxLN8Fj9BuW8Tep-chDcZGa-5jeMkMVcc</string>-->
-    <!-- debug key -->
-    <string name="google_place_api_key">AIzaSyD0QT_w5-FUATlJPWqc2gHk5jRVY2AaN8k</string>
     <!-- release key -->
-    <!--<string name="google_place_api_key">AIzaSyAT2IpndsHZXxPTVYghF8cAXig-lVmj78Q</string>-->
+    <!--<string name="google_place_api_key">AIzaSyAknKCZXe-2rF5CE3JtOosurLLsx1zD-rw</string>-->
+    <!-- debug key -->
+    <string name="google_place_api_key">AIzaSyAzIer-DfpITSUHITpy-WvfZ6QQAwuVBUI</string>
 </resources>

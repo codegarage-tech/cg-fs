@@ -21,20 +21,20 @@ allprojects {
         jcenter()
     }
 
-    ext.appVersionCode = 108
-    ext.appVersionName = "1.0.8"
+    ext.appVersionCode = 109
+    ext.appVersionName = "1.0.9"
     ext.appMinSdkVersion = 15
     ext.appTargetSdkVersion = 27
     ext.appCompileSdkVersion = 27
     ext.appBuildToolsVersion = '27.0.3'
-    ext.supportlibraryVersion = '27.0.2'
+    ext.supportlibraryVersion = '27.1.1'
     ext.archVersion = '1.0.0-alpha8'
-    ext.constraintLayoutVersion = '1.0.2'
+    ext.constraintLayoutVersion = '1.1.0'
     ext.glideVersion = '4.5.0'
     ext.picassoVersion = '2.5.2'
-    ext.googlePlayServiceGcmVersion = '11.8.0'
-    ext.googlePlayServiceMapVersion = '11.8.0'
-    ext.googlePlayServiceLocationVersion = '11.8.0'
+    ext.googlePlayServiceGcmVersion = '15.0.0'
+    ext.googlePlayServiceMapVersion = '15.0.0'
+    ext.googlePlayServiceLocationVersion = '15.0.0'
     ext.gsonVersion = '2.8.1'
     ext.flexboxVersion = '0.3.2'
 }

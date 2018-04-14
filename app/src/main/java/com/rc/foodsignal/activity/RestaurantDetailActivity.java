@@ -129,9 +129,18 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
 
     private void initFilterFoodCategory(ArrayList<FoodCategoryDetail> foodCategories) {
         mFoodCategory = foodCategories;
-        //Below line is for adding one extra filter key
-        mFoodCategory.add(new FoodCategoryDetail("420", ALL_FOOD_KEY));
-        mFoodCategoryKey = getUniqueFoodCategoryKeys(mFoodCategory);
+
+        if (mDetailIntentType == DetailIntentType.OTHER) {
+            //Below line is for adding one extra filter key
+            mFoodCategory.add(new FoodCategoryDetail("420", ALL_FOOD_KEY));
+            mFoodCategoryKey = getUniqueFoodCategoryKeys(mFoodCategory);
+
+            //Set all category as default value for the very first time
+            selectedFoodCategory = ALL_FOOD_KEY;
+            appliedFilters.put("food_category", new ArrayList<String>() {{
+                add(ALL_FOOD_KEY);
+            }});
+        }
     }
 
     private void setGoogleMapWithMarker(final Restaurant restaurant) {
@@ -161,7 +170,8 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
 
         tsFoodItemPrice = (TextSwitcher) findViewById(R.id.ts_food_item_price);
         tsFoodItemPrice.setFactory(new TextViewFactory(RestaurantDetailActivity.this, R.style.TextSwitcherPrice, true));
-        setStrike();
+        TextView paintText = (TextView) tsFoodItemPrice.getNextView();
+        paintText.setPaintFlags(paintText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
         tsFoodItemOffer = (TextSwitcher) findViewById(R.id.ts_food_item_offer);
         tsFoodItemOffer.setFactory(new TextViewFactory(RestaurantDetailActivity.this, R.style.TextSwitcherPriceOffer, true));
@@ -201,11 +211,11 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
         rvFoodItemSlider.scrollToPosition(lastPagePosition);
         tsFoodItemName.setText(foodItem.getName());
 
-        setStrike();
+        setStrike(foodItem);
         String price = "$" + foodItem.getPrice();
         tsFoodItemPrice.setText(price);
 
-        tsFoodItemOffer.setVisibility((mDetailIntentType == DetailIntentType.GCM) ? View.VISIBLE : View.GONE);
+        tsFoodItemOffer.setVisibility(((!AllSettingsManager.isNullOrEmpty(foodItem.getOffer_price())) && (!foodItem.getOffer_price().contains("0.00")) ? View.VISIBLE : View.GONE));
         AppUtils.flashView(tsFoodItemOffer, 1500);
         tsFoodItemOffer.setText("$" + foodItem.getOffer_price());
         tsFoodItemIngredient.setText(foodItem.getIngredients());
@@ -214,9 +224,9 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
         tvRestaurantAddress.setText(mRestaurant.getAddress());
     }
 
-    private void setStrike() {
+    private void setStrike(FoodItem foodItem) {
         TextView paintText = (TextView) tsFoodItemPrice.getNextView();
-        if ((mDetailIntentType == DetailIntentType.GCM)) {
+        if (!AllSettingsManager.isNullOrEmpty(foodItem.getOffer_price()) && Float.parseFloat(foodItem.getOffer_price()) != 0.00) {
             paintText.setPaintFlags(paintText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         } else {
             paintText.setPaintFlags(paintText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
@@ -256,7 +266,7 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
         tsFoodItemPrice.setInAnimation(RestaurantDetailActivity.this, animH[0]);
         tsFoodItemPrice.setOutAnimation(RestaurantDetailActivity.this, animH[1]);
 
-        setStrike();
+        setStrike(foodItem);
         String price = "$" + foodItem.getPrice();
         tsFoodItemPrice.setText(price);
 
