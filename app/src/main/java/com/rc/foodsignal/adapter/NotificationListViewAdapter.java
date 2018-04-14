@@ -77,7 +77,6 @@ public class NotificationListViewAdapter extends BaseAdapter {
     public long getItemId(int position) {
         long id = 0;
         try {
-
             id = (long) Integer.parseInt(mData.get(position).getId());
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -91,12 +90,15 @@ public class NotificationListViewAdapter extends BaseAdapter {
 
         View vi = convertView;
         if (convertView == null)
-            vi = inflater.inflate(R.layout.list_row_restaurant_menu, null);
+            vi = inflater.inflate(R.layout.list_row_notification, null);
 
         final Notification notification = getItem(position);
 
-        TextView tvMenuName = (TextView) vi.findViewById(R.id.tv_menu_name);
-        tvMenuName.setText(notification.getNotification());
+        TextView tvOfferTitle = (TextView) vi.findViewById(R.id.tv_offer_title);
+        tvOfferTitle.setText(notification.getNotification());
+
+        TextView tvRestaurantName = (TextView) vi.findViewById(R.id.tv_restaurant_name);
+//        tvRestaurantName.setText(notification.getNotification());
 
         return vi;
     }
