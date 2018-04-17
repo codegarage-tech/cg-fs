@@ -67,8 +67,7 @@
             android:layout_height="30dp"
             android:layout_margin="10dp"
             android:adjustViewBounds="true"
-            android:background="@drawable/ic_vector_done_empty_blue"
-            android:visibility="gone" />
+            android:background="@drawable/ic_vector_done_empty_blue" />
 
     </LinearLayout>
 

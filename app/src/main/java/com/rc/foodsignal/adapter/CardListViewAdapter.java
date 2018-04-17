@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rc.foodsignal.R;
@@ -22,6 +23,7 @@ public class CardListViewAdapter extends BaseAdapter {
     private Activity mActivity;
     private ArrayList<Card> mData;
     private static LayoutInflater inflater = null;
+    private int lastSelectedPosition = -1;
     private String TAG = CardListViewAdapter.class.getSimpleName();
 
     public CardListViewAdapter(Activity activity) {
@@ -113,6 +115,21 @@ public class CardListViewAdapter extends BaseAdapter {
 
         TextView tvSubtitle = (TextView) vi.findViewById(R.id.tv_subtitle);
         tvSubtitle.setText("Expire date: " + card.getExpMonth() + "/" + card.getExpYear());
+
+        ImageView ivTick = (ImageView) vi.findViewById(R.id.iv_tick);
+        if(lastSelectedPosition != -1 && lastSelectedPosition == position){
+            ivTick.setVisibility(View.VISIBLE);
+        }else{
+            ivTick.setVisibility(View.INVISIBLE);
+        }
+
+        vi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lastSelectedPosition = position;
+                notifyDataSetChanged();
+            }
+        });
 
         return vi;
     }
