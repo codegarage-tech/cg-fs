@@ -119,6 +119,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name="com.rc.foodsignal.activity.AddCardActivity"
+            android:label="@string/title_activity_restaurant_detail"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <!-- Google Map -->
         <meta-data
             android:name="com.google.android.gms.version"

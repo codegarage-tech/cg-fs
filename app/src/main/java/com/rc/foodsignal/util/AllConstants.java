@@ -26,6 +26,7 @@ public class AllConstants {
     public static final int INTENT_REQUEST_CODE_RESTAURANT_ADD_MENU = 42002;
     public static final int INTENT_REQUEST_CODE_RESTAURANT_MENU_DETAIL = 42003;
     public static final int INTENT_REQUEST_CODE_LOCATION_LIST = 42004;
+    public static final int INTENT_REQUEST_CODE_ADD_CARD = 42005;
 
     //Intent key
     public static final String INTENT_KEY_LOGIN = "INTENT_KEY_LOGIN";
@@ -35,6 +36,7 @@ public class AllConstants {
     public static final String INTENT_KEY_FOOD_ITEM = "INTENT_KEY_FOOD_ITEM";
     public static final String INTENT_KEY_RESTAURANT_ITEM = "INTENT_KEY_RESTAURANT_ITEM";
     public static final String INTENT_KEY_RESTAURANT_ITEM_POSITION = "INTENT_KEY_RESTAURANT_ITEM_POSITION";
+    public static final String INTENT_KEY_CARD_ITEM = "INTENT_KEY_CARD_ITEM";
 
     public static final int NAVIGATION_DRAWER_CLOSE_DELAY = 200;
 

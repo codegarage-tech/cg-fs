@@ -21,6 +21,8 @@
     <string name="title_activity_about_restaurant_menu">About Restaurant Menu</string>
     <string name="title_activity_notification">Notification</string>
     <string name="title_activity_restaurant_detail">Restaurant Detail</string>
+    <string name="title_activity_card_list">Select Card</string>
+    <string name="title_activity_add_card">Add Card</string>
 
     <!-- Toast message -->
     <string name="toast_could_not_retrieve_info">Could not retrieve info</string>
@@ -52,13 +54,13 @@
 
     <!-- Google map key -->
     <!-- release key -->
-    <!--<string name="release_google_maps_api_key_home">AIzaSyA4yOh_Lb7l9tXzFYhoSLIdl5GjtxVQgVo</string>-->
+    <string name="release_google_maps_api_key_home">AIzaSyA4yOh_Lb7l9tXzFYhoSLIdl5GjtxVQgVo</string>
     <!-- debug key -->
-    <string name="release_google_maps_api_key_home">AIzaSyB7M09ps48qrB7V9BAhQcu2HtBhcqgt29g</string>
+    <!--<string name="release_google_maps_api_key_home">AIzaSyB7M09ps48qrB7V9BAhQcu2HtBhcqgt29g</string>-->
 
     <!--Google place key-->
     <!-- release key -->
-    <!--<string name="google_place_api_key">AIzaSyAknKCZXe-2rF5CE3JtOosurLLsx1zD-rw</string>-->
+    <string name="google_place_api_key">AIzaSyAknKCZXe-2rF5CE3JtOosurLLsx1zD-rw</string>
     <!-- debug key -->
-    <string name="google_place_api_key">AIzaSyAzIer-DfpITSUHITpy-WvfZ6QQAwuVBUI</string>
+    <!--<string name="google_place_api_key">AIzaSyAzIer-DfpITSUHITpy-WvfZ6QQAwuVBUI</string>-->
 </resources>

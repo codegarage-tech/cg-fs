@@ -37,6 +37,8 @@ allprojects {
     ext.googlePlayServiceLocationVersion = '15.0.0'
     ext.gsonVersion = '2.8.1'
     ext.flexboxVersion = '0.3.2'
+    ext.stripeAndroidVersion = '6.1.2'
+    ext.stripeJavaVersion = '5.35.1'
 }
 
 task clean(type: Delete) {
