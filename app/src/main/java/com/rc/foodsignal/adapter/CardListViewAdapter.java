@@ -10,9 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rc.foodsignal.R;
-import com.rc.foodsignal.application.FoodSignalApplication;
 import com.rc.foodsignal.model.realm.StripeCard;
 import com.reversecoder.library.storage.SessionManager;
+import com.reversecoder.library.util.AllSettingsManager;
 
 import java.util.ArrayList;
 
@@ -116,14 +116,22 @@ public class CardListViewAdapter extends BaseAdapter {
 //                .into(ivMenu);
 //
         TextView tvTitle = (TextView) vi.findViewById(R.id.tv_title);
-        tvTitle.setText(card.getCardNumber());
+        tvTitle.setText(card.getCardNumber().replaceAll("....(?!$)", "$0 "));
 
         TextView tvSubtitle = (TextView) vi.findViewById(R.id.tv_subtitle);
         tvSubtitle.setText("Expire date: " + card.getCardExpireMonth() + "/" + card.getCardExpireYear());
 
+        //Set default card selection
         ImageView ivTick = (ImageView) vi.findViewById(R.id.iv_tick);
-        if (lastSelectedPosition != -1 && lastSelectedPosition == position) {
-            ivTick.setVisibility(View.VISIBLE);
+        if (!AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(mActivity, SESSION_SELECTED_CARD))) {
+            StripeCard selectedCard = StripeCard.getResponseObject(SessionManager.getStringSetting(mActivity, SESSION_SELECTED_CARD), StripeCard.class);
+
+            if (selectedCard != null && selectedCard.getCardNumber().equalsIgnoreCase(card.getCardNumber())) {
+                lastSelectedPosition = position;
+                ivTick.setVisibility(View.VISIBLE);
+            } else {
+                ivTick.setVisibility(View.INVISIBLE);
+            }
         } else {
             ivTick.setVisibility(View.INVISIBLE);
         }
@@ -132,7 +140,7 @@ public class CardListViewAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 //Save card into session
-                SessionManager.setStringSetting(FoodSignalApplication.getGlobalContext(), SESSION_SELECTED_CARD, StripeCard.getResponseString(card));
+                SessionManager.setStringSetting(mActivity, SESSION_SELECTED_CARD, StripeCard.getResponseString(card));
 
                 lastSelectedPosition = position;
                 notifyDataSetChanged();
