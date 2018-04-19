@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,8 +57,9 @@ import static com.reversecoder.gcm.util.GcmConfig.INTENT_KEY_INTENT_DETAIL_TYPE;
 public class RestaurantDetailActivity extends AppCompatActivity implements AAH_FabulousFragment.Callbacks, AAH_FabulousFragment.AnimationListener {
 
     //Toolbar
-    TextView tvTitle;
+    TextView tvTitle, tvOrderCounter;
     ImageView ivBack;
+    RelativeLayout rlSendOrder;
     String TAG = AppUtils.getTagName(RestaurantDetailActivity.class);
 
     Restaurant mRestaurant;
@@ -97,6 +99,8 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
         //Toolbar
         ivBack = (ImageView) findViewById(R.id.iv_back);
         tvTitle = (TextView) findViewById(R.id.text_title);
+        tvOrderCounter = (TextView) findViewById(R.id.tv_order_counter);
+        rlSendOrder = (RelativeLayout) findViewById(R.id.rl_send_order);
         fabFilter = (FloatingActionButton) findViewById(R.id.fab_filter);
 
         //Intent data
@@ -182,7 +186,7 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
 
     private void initFoodSlider() {
         rvFoodItemSlider = (RecyclerView) findViewById(R.id.rv_food_item_slider);
-        foodItemSliderAdapter = new FoodItemSliderAdapter(RestaurantDetailActivity.this);
+        foodItemSliderAdapter = new FoodItemSliderAdapter(RestaurantDetailActivity.this, rlSendOrder, tvOrderCounter);
         rvFoodItemSlider.setAdapter(foodItemSliderAdapter);
         rvFoodItemSlider.setHasFixedSize(true);
 
@@ -282,6 +286,13 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
     }
 
     private void initActions() {
+        rlSendOrder.setOnClickListener(new OnSingleClickListener() {
+            @Override
+            public void onSingleClick(View view) {
+
+            }
+        });
+
         fabFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

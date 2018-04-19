@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme.NoActionBar">
 
         <activity
-            android:name="com.rc.foodsignal.activity.CardListActivity"
+            android:name="com.rc.foodsignal.activity.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
