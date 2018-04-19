@@ -40,6 +40,10 @@
     <string name="toast_your_sim_card_is_absent">Your sim card is absent</string>
     <string name="toast_no_item_selected">No item selected</string>
     <string name="toast_sent_offer_successfully">Sent offer successfully</string>
+    <string name="toast_please_select_card">Please select card</string>
+    <string name="toast_error_on_creating_token">Error on creating token</string>
+    <string name="toast_invalid_card">Invalid card</string>
+    <string name="toast_payment_successfull">Payment successful</string>
 
     <!-- Message -->
     <string name="txt_loading_message">Loading, please wait.</string>

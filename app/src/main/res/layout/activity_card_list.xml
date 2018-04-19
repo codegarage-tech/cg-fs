@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar_add" />
+    <include layout="@layout/toolbar_card_list" />
 
     <ListView
         android:id="@+id/lv_card"

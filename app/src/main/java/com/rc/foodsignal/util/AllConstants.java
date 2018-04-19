@@ -12,6 +12,10 @@ public class AllConstants {
     public static final String REALM_NAME = "foodsignal.realm";
     public static final int REALM_SCHEMA_VERSION = 0;
 
+    //Stripe info
+    public static final String STRIPE_PUBLISHABLE_KEY = "pk_test_X8ylYKVSbfebLx4KI1NpzWVU";
+    public static final String STRIPE_SECRET_KEY = "sk_test_rCGmdJQPppQZjFIlN80qfdM2";
+
     //Session key
     public static final String SESSION_SELECTED_NAVIGATION_MENU = "SESSION_SELECTED_NAVIGATION_MENU";
     public static final String SESSION_IS_LOCATION_ADDED = "SESSION_IS_LOCATION_ADDED";
