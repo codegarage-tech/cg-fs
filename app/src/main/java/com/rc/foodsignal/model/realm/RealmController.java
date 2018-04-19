@@ -144,7 +144,7 @@ public class RealmController {
                 Log.d(TAG, "Card is listening: " + stripeCard.toString());
             }
 
-            //Save tags into session
+            //Save card into session
             SessionManager.setStringSetting(FoodSignalApplication.getGlobalContext(), SESSION_SELECTED_CARD, StripeCard.getResponseString(stripeCard));
 
             return true;

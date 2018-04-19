@@ -17,10 +17,23 @@ public class StripeCard extends RealmObject {
     private String cardNumber;
     private String cardLastFourNumber;
     private String cardName;
-    private String cardExpireMonth;
-    private String cardExpireYear;
+    private int cardExpireMonth;
+    private int cardExpireYear;
     private String cardCvc;
     private String cardZip;
+
+    public StripeCard() {
+    }
+
+    public StripeCard(String cardNumber, String cardLastFourNumber, String cardName, int cardExpireMonth, int cardExpireYear, String cardCvc, String cardZip) {
+        this.cardNumber = cardNumber;
+        this.cardLastFourNumber = cardLastFourNumber;
+        this.cardName = cardName;
+        this.cardExpireMonth = cardExpireMonth;
+        this.cardExpireYear = cardExpireYear;
+        this.cardCvc = cardCvc;
+        this.cardZip = cardZip;
+    }
 
     public String getCardNumber() {
         return cardNumber;
@@ -46,19 +59,19 @@ public class StripeCard extends RealmObject {
         this.cardName = cardName;
     }
 
-    public String getCardExpireMonth() {
+    public int getCardExpireMonth() {
         return cardExpireMonth;
     }
 
-    public void setCardExpireMonth(String cardExpireMonth) {
+    public void setCardExpireMonth(int cardExpireMonth) {
         this.cardExpireMonth = cardExpireMonth;
     }
 
-    public String getCardExpireYear() {
+    public int getCardExpireYear() {
         return cardExpireYear;
     }
 
-    public void setCardExpireYear(String cardExpireYear) {
+    public void setCardExpireYear(int cardExpireYear) {
         this.cardExpireYear = cardExpireYear;
     }
 
@@ -84,8 +97,8 @@ public class StripeCard extends RealmObject {
                 "cardNumber='" + cardNumber + '\'' +
                 ", cardLastFourNumber='" + cardLastFourNumber + '\'' +
                 ", cardName='" + cardName + '\'' +
-                ", cardExpireMonth='" + cardExpireMonth + '\'' +
-                ", cardExpireYear='" + cardExpireYear + '\'' +
+                ", cardExpireMonth=" + cardExpireMonth +
+                ", cardExpireYear=" + cardExpireYear +
                 ", cardCvc='" + cardCvc + '\'' +
                 ", cardZip='" + cardZip + '\'' +
                 '}';

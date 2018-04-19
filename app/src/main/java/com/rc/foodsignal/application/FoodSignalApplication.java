@@ -8,6 +8,12 @@ import android.support.v7.app.AppCompatDelegate;
 import com.rc.foodsignal.activity.RestaurantDetailActivity;
 import com.reversecoder.gcm.GcmManager;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
+import static com.rc.foodsignal.util.AllConstants.REALM_NAME;
+import static com.rc.foodsignal.util.AllConstants.REALM_SCHEMA_VERSION;
+
 /**
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
@@ -30,6 +36,15 @@ public class FoodSignalApplication extends Application {
 
         //Initialize GCM content class
         GcmManager.initGcmManager(mContext, new GcmManager.GcmBuilder().setContentClass(RestaurantDetailActivity.class).buildGcmManager());
+
+        //Realm Database
+        Realm.init(this);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+                .name(REALM_NAME)
+                .schemaVersion(REALM_SCHEMA_VERSION)
+//                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(realmConfiguration);
     }
 
     private void initTypeface() {

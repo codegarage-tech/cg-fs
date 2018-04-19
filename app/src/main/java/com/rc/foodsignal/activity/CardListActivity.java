@@ -3,7 +3,6 @@ package com.rc.foodsignal.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,9 +11,12 @@ import android.widget.TextView;
 
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.adapter.CardListViewAdapter;
+import com.rc.foodsignal.model.realm.RealmController;
+import com.rc.foodsignal.model.realm.StripeCard;
 import com.rc.foodsignal.util.AppUtils;
 import com.reversecoder.library.util.AllSettingsManager;
-import com.stripe.android.model.Card;
+
+import java.util.ArrayList;
 
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_CARD_ITEM;
 import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_ADD_CARD;
@@ -31,6 +33,7 @@ public class CardListActivity extends AppCompatActivity {
 
     CardListViewAdapter cardListViewAdapter;
     ListView lvCard;
+    RealmController realmController;
     String TAG = AppUtils.getTagName(CardListActivity.class);
 
     @Override
@@ -52,6 +55,10 @@ public class CardListActivity extends AppCompatActivity {
         lvCard = (ListView) findViewById(R.id.lv_card);
         cardListViewAdapter = new CardListViewAdapter(CardListActivity.this);
         lvCard.setAdapter(cardListViewAdapter);
+
+        //Load data into listview
+        realmController = RealmController.with(CardListActivity.this);
+        cardListViewAdapter.setData(new ArrayList<StripeCard>(realmController.getCards()));
     }
 
     private void initActions() {
@@ -79,11 +86,8 @@ public class CardListActivity extends AppCompatActivity {
             case INTENT_REQUEST_CODE_ADD_CARD: {
                 if (data != null && resultCode == RESULT_OK) {
                     if (!AllSettingsManager.isNullOrEmpty(data.getStringExtra(INTENT_KEY_CARD_ITEM))) {
-                        Card card = Card.fromString(data.getStringExtra(INTENT_KEY_CARD_ITEM));
-                        Log.d(TAG, "Card Item: " + card.toString());
-
-                        if (card != null) {
-                            cardListViewAdapter.addData(card);
+                        if (cardListViewAdapter != null) {
+                            cardListViewAdapter.setData(new ArrayList<StripeCard>(realmController.getCards()));
                         }
                     }
                 }

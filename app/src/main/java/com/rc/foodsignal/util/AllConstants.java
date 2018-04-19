@@ -8,6 +8,10 @@ public class AllConstants {
 
     public static final String PREFIX_BASE64_STRING = "data:image/jpeg;base64,";
 
+    //Database
+    public static final String REALM_NAME = "foodsignal.realm";
+    public static final int REALM_SCHEMA_VERSION = 0;
+
     //Session key
     public static final String SESSION_SELECTED_NAVIGATION_MENU = "SESSION_SELECTED_NAVIGATION_MENU";
     public static final String SESSION_IS_LOCATION_ADDED = "SESSION_IS_LOCATION_ADDED";

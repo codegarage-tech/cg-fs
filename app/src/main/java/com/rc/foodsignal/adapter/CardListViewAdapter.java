@@ -10,9 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rc.foodsignal.R;
-import com.stripe.android.model.Card;
+import com.rc.foodsignal.application.FoodSignalApplication;
+import com.rc.foodsignal.model.realm.StripeCard;
+import com.reversecoder.library.storage.SessionManager;
 
 import java.util.ArrayList;
+
+import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_CARD;
 
 /**
  * @author Md. Rashadul Alam
@@ -21,34 +25,35 @@ import java.util.ArrayList;
 public class CardListViewAdapter extends BaseAdapter {
 
     private Activity mActivity;
-    private ArrayList<Card> mData;
+    private ArrayList<StripeCard> mData;
     private static LayoutInflater inflater = null;
     private int lastSelectedPosition = -1;
     private String TAG = CardListViewAdapter.class.getSimpleName();
 
     public CardListViewAdapter(Activity activity) {
         mActivity = activity;
-        mData = new ArrayList<Card>();
+        mData = new ArrayList<StripeCard>();
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public ArrayList<Card> getData() {
+    public ArrayList<StripeCard> getData() {
         return mData;
     }
 
-    public void setData(ArrayList<Card> data) {
+    public void setData(ArrayList<StripeCard> data) {
+        mData.clear();
         mData = data;
         notifyDataSetChanged();
     }
 
-    public void addData(Card card) {
+    public void addData(StripeCard card) {
 //        if (getCount() > 0) {
         mData.add(card);
         notifyDataSetChanged();
 //        }
     }
 
-    public void updateData(Card card) {
+    public void updateData(StripeCard card) {
         if (getCount() > 0) {
             int itemPosition = getItemPosition(card);
             mData.remove(itemPosition);
@@ -57,9 +62,9 @@ public class CardListViewAdapter extends BaseAdapter {
         }
     }
 
-    public int getItemPosition(Card card) {
+    public int getItemPosition(StripeCard card) {
         for (int i = 0; i < mData.size(); i++) {
-            if ((mData.get(i)).getId().contains(card.getId())) {
+            if ((mData.get(i)).getCardNumber().contains(card.getCardNumber())) {
                 return i;
             }
         }
@@ -72,7 +77,7 @@ public class CardListViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public Card getItem(int position) {
+    public StripeCard getItem(int position) {
         return mData.get(position);
     }
 
@@ -81,7 +86,7 @@ public class CardListViewAdapter extends BaseAdapter {
         long id = 0;
         try {
 
-            id = (long) Integer.parseInt(mData.get(position).getId());
+            id = (long) Integer.parseInt(mData.get(position).getCardLastFourNumber());
         } catch (Exception ex) {
             ex.printStackTrace();
             id = 0;
@@ -96,7 +101,7 @@ public class CardListViewAdapter extends BaseAdapter {
         if (convertView == null)
             vi = inflater.inflate(R.layout.list_row_card, null);
 
-        final Card card = getItem(position);
+        final StripeCard card = getItem(position);
 
 //        ImageView ivMenu = (ImageView) vi.findViewById(R.id.iv_menu);
 //        Glide
@@ -111,21 +116,24 @@ public class CardListViewAdapter extends BaseAdapter {
 //                .into(ivMenu);
 //
         TextView tvTitle = (TextView) vi.findViewById(R.id.tv_title);
-        tvTitle.setText("Last 4 digit: " + card.getLast4());
+        tvTitle.setText(card.getCardNumber());
 
         TextView tvSubtitle = (TextView) vi.findViewById(R.id.tv_subtitle);
-        tvSubtitle.setText("Expire date: " + card.getExpMonth() + "/" + card.getExpYear());
+        tvSubtitle.setText("Expire date: " + card.getCardExpireMonth() + "/" + card.getCardExpireYear());
 
         ImageView ivTick = (ImageView) vi.findViewById(R.id.iv_tick);
-        if(lastSelectedPosition != -1 && lastSelectedPosition == position){
+        if (lastSelectedPosition != -1 && lastSelectedPosition == position) {
             ivTick.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             ivTick.setVisibility(View.INVISIBLE);
         }
 
         vi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Save card into session
+                SessionManager.setStringSetting(FoodSignalApplication.getGlobalContext(), SESSION_SELECTED_CARD, StripeCard.getResponseString(card));
+
                 lastSelectedPosition = position;
                 notifyDataSetChanged();
             }

@@ -11,10 +11,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rc.foodsignal.R;
+import com.rc.foodsignal.model.realm.RealmController;
+import com.rc.foodsignal.model.realm.StripeCard;
 import com.rc.foodsignal.util.AppUtils;
 import com.stripe.android.model.Card;
 import com.stripe.android.view.CardInputListener;
 import com.stripe.android.view.CardMultilineWidget;
+
+import io.realm.RealmObject;
 
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_CARD_ITEM;
 
@@ -100,12 +104,31 @@ public class AddCardActivity extends AppCompatActivity {
                     return;
                 }
 
-                //Send saved card to the card list
-                Log.d(TAG, "Card Item: " + card.getNumber());
-                Intent intent = new Intent();
-                intent.putExtra(INTENT_KEY_CARD_ITEM, card.toString());
-                setResult(RESULT_OK, intent);
-                finish();
+                //Save card into database
+                RealmController realmController = RealmController.with(AddCardActivity.this);
+                realmController.setOnRealmDataChangeListener(new RealmController.onRealmDataChangeListener() {
+                    @Override
+                    public void onInsert(RealmObject realmObject) {
+                        Log.d(TAG, "Inserted data: " + ((StripeCard) realmObject).toString());
+
+                        //Send saved card to the card list
+                        Intent intent = new Intent();
+                        intent.putExtra(INTENT_KEY_CARD_ITEM, ((StripeCard) realmObject).toString());
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onUpdate(RealmObject realmObject) {
+
+                    }
+
+                    @Override
+                    public void onDelete(RealmObject realmObject) {
+
+                    }
+                });
+                realmController.setCard(new StripeCard(card.getNumber(), card.getLast4(), card.getName(), card.getExpMonth(), card.getExpYear(), card.getCVC(), card.getAddressZip()));
             }
         });
     }
