@@ -1,5 +1,7 @@
 package com.rc.foodsignal.activity;
 
+import android.animation.Animator;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Paint;
@@ -12,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
@@ -28,6 +31,7 @@ import com.ramotion.cardslider.CardSliderLayoutManager;
 import com.ramotion.cardslider.CardSnapHelper;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.adapter.FoodItemSliderAdapter;
+import com.rc.foodsignal.animation.flytocart.CircleAnimationUtil;
 import com.rc.foodsignal.factory.TextViewFactory;
 import com.rc.foodsignal.fragment.RestaurantDetailFilterFragment;
 import com.rc.foodsignal.model.FoodCategoryDetail;
@@ -71,12 +75,15 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
     private int lastPagePosition = 0;
     TextView tvRestaurantEmail, tvRestaurantPhone, tvRestaurantAddress;
     SupportMapFragment mapFragment;
+    ImageView ivAddToCart, ivAddToCartCopy;
+    LinearLayout llSourceView, llSourceViewCopy;
 
     //Food slider
     RecyclerView rvFoodItemSlider;
     FoodItemSliderAdapter foodItemSliderAdapter;
     CardSliderLayoutManager foodItemSliderLayoutManager;
     String ALL_FOOD_KEY = "All Categories";
+    private ArrayList<FoodItem> mSelectedData = new ArrayList<FoodItem>();
 
     //Fabulous Filter
     FloatingActionButton fabFilter;
@@ -108,6 +115,10 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
 
         initTextSwitcher();
 
+        llSourceView = (LinearLayout) findViewById(R.id.ll_source_view);
+        llSourceViewCopy = (LinearLayout) findViewById(R.id.ll_source_view_copy);
+        ivAddToCart = (ImageView) findViewById(R.id.iv_add_to_cart);
+        ivAddToCartCopy = (ImageView) findViewById(R.id.iv_add_to_cart_copy);
         tvRestaurantEmail = (TextView) findViewById(R.id.tv_restaurant_email);
         tvRestaurantPhone = (TextView) findViewById(R.id.tv_restaurant_phone);
         tvRestaurantAddress = (TextView) findViewById(R.id.tv_restaurant_address);
@@ -186,7 +197,7 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
 
     private void initFoodSlider() {
         rvFoodItemSlider = (RecyclerView) findViewById(R.id.rv_food_item_slider);
-        foodItemSliderAdapter = new FoodItemSliderAdapter(RestaurantDetailActivity.this, rlSendOrder, tvOrderCounter);
+        foodItemSliderAdapter = new FoodItemSliderAdapter(RestaurantDetailActivity.this);
         rvFoodItemSlider.setAdapter(foodItemSliderAdapter);
         rvFoodItemSlider.setHasFixedSize(true);
 
@@ -282,6 +293,14 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
         tsFoodItemIngredient.setOutAnimation(RestaurantDetailActivity.this, animV[1]);
         tsFoodItemIngredient.setText(foodItem.getIngredients());
 
+        if (foodItem.isSelected()) {
+            ivAddToCart.setBackgroundResource(R.drawable.ic_vector_cart_tick_empty_blue);
+            ivAddToCartCopy.setBackgroundResource(R.drawable.ic_vector_cart_tick_empty_blue);
+        } else {
+            ivAddToCart.setBackgroundResource(R.drawable.ic_vector_cart_add_empty_blue);
+            ivAddToCartCopy.setBackgroundResource(R.drawable.ic_vector_cart_add_empty_blue);
+        }
+
         lastPagePosition = currentPosition;
     }
 
@@ -290,6 +309,20 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
             @Override
             public void onSingleClick(View view) {
 
+            }
+        });
+
+        ivAddToCart.setOnClickListener(new OnSingleClickListener() {
+            @Override
+            public void onSingleClick(View view) {
+                onCartClick();
+            }
+        });
+
+        ivAddToCartCopy.setOnClickListener(new OnSingleClickListener() {
+            @Override
+            public void onSingleClick(View view) {
+                onCartClick();
             }
         });
 
@@ -342,6 +375,44 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
         });
     }
 
+    private void onCartClick() {
+        FoodItem foodItem = foodItemSliderAdapter.getItem(lastPagePosition);
+        foodItem.setSelected((foodItem.isSelected() ? false : true));
+        foodItemSliderAdapter.update(foodItem, lastPagePosition);
+
+        if (foodItem.isSelected()) {
+            if (!mSelectedData.contains(foodItem)) {
+                Log.d(TAG, "Adding new item into cart");
+                addDataToCart(foodItem, rlSendOrder, llSourceView, llSourceViewCopy);
+            } else {
+                Log.d(TAG, "Data already exist");
+                int position = mSelectedData.indexOf(foodItem);
+                Log.d(TAG, "mSelectedData position: " + position);
+
+                if (mSelectedData.get(position).getOfferPercentage() != foodItem.getOfferPercentage()) {
+                    Log.d(TAG, "Updating existing data");
+                    mSelectedData.remove(position);
+                    addDataToCart(foodItem, rlSendOrder, llSourceView, llSourceViewCopy);
+                } else {
+                    Log.d(TAG, "No update found");
+                }
+            }
+        } else {
+            ivAddToCart.setBackgroundResource(R.drawable.ic_vector_cart_add_empty_blue);
+            ivAddToCartCopy.setBackgroundResource(R.drawable.ic_vector_cart_add_empty_blue);
+
+            Log.d(TAG, "No item is chose");
+            if (mSelectedData.contains(foodItem)) {
+                Log.d(TAG, "Selected item is unselected");
+                int position = mSelectedData.indexOf(foodItem);
+                mSelectedData.remove(position);
+                foodItem.setSelected(false);
+                resetCounterView();
+                Log.d(TAG, "Selected item is removed and reset");
+            }
+        }
+    }
+
     private void handleNewIntent(Intent intent) {
 
         if (intent != null && intent.getStringExtra(INTENT_KEY_INTENT_DETAIL_TYPE) != null) {
@@ -352,6 +423,10 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
                     mRestaurant = intent.getParcelableExtra(INTENT_KEY_RESTAURANT_ITEM);
                     mSelectedPosition = intent.getIntExtra(INTENT_KEY_RESTAURANT_ITEM_POSITION, -1);
                     fabFilter.setVisibility(View.VISIBLE);
+
+                    //Clear selection
+                    mSelectedData.clear();
+                    resetCounterView();
                     break;
                 case GCM:
                     mGcmData = intent.getParcelableExtra(INTENT_KEY_GCM_DATA_CONTENT);
@@ -362,6 +437,10 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
                         mSelectedPosition = 0;
                         fabFilter.setVisibility(View.GONE);
                         Log.d(TAG, "Offer data: " + mRestaurant.toString());
+
+                        //Clear selection
+                        mSelectedData.clear();
+                        resetCounterView();
                     }
                     break;
             }
@@ -461,5 +540,61 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
 
         //Selected category 0 is for nothing
         return new FoodCategoryDetail("0", "");
+    }
+
+
+    /*************************
+     * Add to cart animation *
+     *************************/
+    private void makeFlyAnimation(Activity activity, final View sourceView, final View sourceViewCopy, final View destinationView, final TextView counterView, final int newCounter) {
+
+        new CircleAnimationUtil().attachActivity(activity)
+                .setTargetView(sourceView)
+                .setTargetViewCopy(sourceViewCopy)
+                .setMoveDuration(1000)
+                .setDestView(destinationView)
+                .setAnimationListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        counterView.setText(newCounter + "");
+                        resetCounterView();
+
+                        ivAddToCart.setBackgroundResource(R.drawable.ic_vector_cart_tick_empty_blue);
+                        ivAddToCartCopy.setBackgroundResource(R.drawable.ic_vector_cart_tick_empty_blue);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                }).startAnimation();
+    }
+
+    public void resetCounterView() {
+        if (mSelectedData.size() > 0) {
+            tvOrderCounter.setText(mSelectedData.size() + "");
+            tvOrderCounter.setVisibility(View.VISIBLE);
+        } else {
+            tvOrderCounter.setVisibility(View.GONE);
+        }
+    }
+
+    private void addDataToCart(FoodItem foodItem, View mDestinationView, View sourceView, View sourceViewCopy) {
+//        // New food item instance is created for avoiding logic due runtime changes
+//        FoodItem mFoodItem = new FoodItem(true, foodItem.getOfferPercentage(), foodItem.getId(),
+//                foodItem.getName(), foodItem.getMenu_id(), foodItem.getMenu_image(), foodItem.getPrice(),
+//                foodItem.getRestaurant_id(), foodItem.getIngredients(), foodItem.getCategory_name(),
+//                foodItem.getImages(), foodItem.getOffer_title(), foodItem.getOffer_price());
+        mSelectedData.add(foodItem);
+        makeFlyAnimation(RestaurantDetailActivity.this, sourceView, sourceViewCopy, mDestinationView, tvOrderCounter, mSelectedData.size());
     }
 }
