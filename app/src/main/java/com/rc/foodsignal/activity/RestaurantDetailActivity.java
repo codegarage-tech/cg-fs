@@ -308,7 +308,12 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
         rlSendOrder.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View view) {
-
+                if (mSelectedData.size() > 0) {
+                    Intent intentCheckout = new Intent(RestaurantDetailActivity.this, CheckoutActivity.class);
+                    startActivity(intentCheckout);
+                } else {
+                    Toast.makeText(RestaurantDetailActivity.this, getString(R.string.toast_no_item_selected_for_checkout), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

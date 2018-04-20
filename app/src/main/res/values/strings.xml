@@ -23,6 +23,7 @@
     <string name="title_activity_restaurant_detail">Restaurant Detail</string>
     <string name="title_activity_card_list">Select Card</string>
     <string name="title_activity_add_card">Add Card</string>
+    <string name="title_activity_checkout">Checkout</string>
 
     <!-- Toast message -->
     <string name="toast_could_not_retrieve_info">Could not retrieve info</string>
@@ -44,6 +45,7 @@
     <string name="toast_error_on_creating_token">Error on creating token</string>
     <string name="toast_invalid_card">Invalid card</string>
     <string name="toast_payment_successfull">Payment successful</string>
+    <string name="toast_no_item_selected_for_checkout">No item selected for checkout</string>
 
     <!-- Message -->
     <string name="txt_loading_message">Loading, please wait.</string>
