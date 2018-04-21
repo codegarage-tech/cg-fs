@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.adapter.CheckoutMenuListViewAdapter;
+import com.rc.foodsignal.interfaces.OnQuantityChangeListener;
 import com.rc.foodsignal.model.DataFoodItem;
 import com.rc.foodsignal.model.FoodItem;
 import com.rc.foodsignal.util.AppUtils;
@@ -36,6 +37,7 @@ public class CheckoutActivity extends AppCompatActivity {
     ListView lvSelectedMenu;
     CheckoutMenuListViewAdapter checkoutMenuListViewAdapter;
     DataFoodItem mDataFoodItem;
+    TextView tvSubtotal, tvTotal;
     String TAG = AppUtils.getTagName(CheckoutActivity.class);
 
     @Override
@@ -59,13 +61,62 @@ public class CheckoutActivity extends AppCompatActivity {
         llDone = (LinearLayout) findViewById(R.id.ll_done);
         llDone.setVisibility(View.VISIBLE);
 
+        tvSubtotal = (TextView) findViewById(R.id.tv_subtotal);
+        tvTotal = (TextView) findViewById(R.id.tv_total);
         lvSelectedMenu = (ListView) findViewById(R.id.lv_selected_menu);
-        checkoutMenuListViewAdapter = new CheckoutMenuListViewAdapter(CheckoutActivity.this);
+        checkoutMenuListViewAdapter = new CheckoutMenuListViewAdapter(CheckoutActivity.this, new OnQuantityChangeListener() {
+            @Override
+            public void OnQuantityChange() {
+                float subTotalPrice = getSubtotalPrice();
+                tvSubtotal.setText("$" + subTotalPrice);
+                tvTotal.setText("$" + subTotalPrice);
+            }
+        });
         lvSelectedMenu.setAdapter(checkoutMenuListViewAdapter);
         if (mDataFoodItem != null) {
             ArrayList<FoodItem> foodItems = new ArrayList<>(mDataFoodItem.getData());
             checkoutMenuListViewAdapter.setData(foodItems);
         }
+
+        //set item cost
+        float subTotalPrice = getSubtotalPrice();
+        tvSubtotal.setText("$" + subTotalPrice);
+        tvTotal.setText("$" + subTotalPrice);
+    }
+
+    public float getSubtotalPrice() {
+        float subTotalPrice = 0.0f;
+        try {
+            for (int i = 0; i < checkoutMenuListViewAdapter.getCount(); i++) {
+                FoodItem mFoodItem = checkoutMenuListViewAdapter.getData().get(i);
+                float itemPrice = getProductPrice(mFoodItem);
+                Log.d(TAG, "total(itemPrice): " + itemPrice);
+                Log.d(TAG, "total(itemQuantity): " + mFoodItem.getQuantity());
+                float priceWithQuantity = getProductPrice(mFoodItem) * mFoodItem.getQuantity();
+                Log.d(TAG, "total(priceWithQuantity): " + priceWithQuantity);
+                subTotalPrice = subTotalPrice + priceWithQuantity;
+                Log.d(TAG, "total(subTotalPrice): " + subTotalPrice);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return subTotalPrice;
+    }
+
+    public float getProductPrice(FoodItem foodItem) {
+        float price = 0.0f;
+        if (foodItem != null) {
+            try {
+                if ((!AllSettingsManager.isNullOrEmpty(foodItem.getOffer_price()) && (Float.parseFloat(foodItem.getOffer_price()) > 0))) {
+                    price = Float.parseFloat(foodItem.getOffer_price());
+                } else if ((!AllSettingsManager.isNullOrEmpty(foodItem.getPrice()) && (Float.parseFloat(foodItem.getPrice()) > 0))) {
+                    price = Float.parseFloat(foodItem.getPrice());
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return price;
     }
 
     private void initActions() {

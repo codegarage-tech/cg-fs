@@ -7,9 +7,12 @@ import java.util.ArrayList;
 
 /**
  * @author Md. Rashadul Alam
- *         Email: rashed.droid@gmail.com
+ * Email: rashed.droid@gmail.com
  */
 public class FoodItem extends ResponseBase implements Parcelable {
+
+    //for checkout
+    private transient int quantity = 1;
 
     private transient boolean isExpanded = false;
     private transient boolean isSelected = false;
@@ -164,9 +167,18 @@ public class FoodItem extends ResponseBase implements Parcelable {
         this.has_offer_price = has_offer_price;
     }
 
+    public int getQuantity() {
+        return (quantity == 0 ? 1 : quantity);
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     @Override
     public String toString() {
         return "{" +
+                "quantity=" + quantity +
                 "isExpanded=" + isExpanded +
                 ", isSelected=" + isSelected +
                 ", offerPercentage=" + offerPercentage +

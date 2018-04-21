@@ -54,10 +54,11 @@
                 android:textSize="@dimen/medium_font_size" />
 
             <TextView
+                android:id="@+id/tv_subtotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="$440"
+                android:text="$0.0"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="@dimen/medium_font_size" />
 
@@ -81,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="$0"
+                android:text="$0.0"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="@dimen/medium_font_size" />
 
@@ -101,10 +102,11 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tv_total"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="$440"
+                android:text="$0.0"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 

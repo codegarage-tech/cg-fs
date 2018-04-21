@@ -16,8 +16,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.rc.foodsignal.R;
+import com.rc.foodsignal.activity.CheckoutActivity;
+import com.rc.foodsignal.interfaces.OnQuantityChangeListener;
 import com.rc.foodsignal.model.FoodItem;
-import com.reversecoder.library.util.AllSettingsManager;
 
 import java.util.ArrayList;
 
@@ -31,9 +32,11 @@ public class CheckoutMenuListViewAdapter extends BaseAdapter {
     private ArrayList<FoodItem> mData;
     private static LayoutInflater inflater = null;
     private String TAG = CheckoutMenuListViewAdapter.class.getSimpleName();
+    private OnQuantityChangeListener mOnQuantityChangeListener;
 
-    public CheckoutMenuListViewAdapter(Activity activity) {
+    public CheckoutMenuListViewAdapter(Activity activity, OnQuantityChangeListener onQuantityChangeListener) {
         mActivity = activity;
+        mOnQuantityChangeListener = onQuantityChangeListener;
         mData = new ArrayList<FoodItem>();
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -126,13 +129,15 @@ public class CheckoutMenuListViewAdapter extends BaseAdapter {
         tvMenuName.setText(foodItem.getName());
 
         final TextView tvSumFoodPrice = (TextView) vi.findViewById(R.id.tv_sum_food_price);
-        tvSumFoodPrice.setText("$" + foodItem.getPrice());
+        tvSumFoodPrice.setText("$" + ((CheckoutActivity) mActivity).getProductPrice(foodItem) * foodItem.getQuantity());
 
         LinearLayout llRemoveItem = (LinearLayout) vi.findViewById(R.id.ll_remove_item);
         llRemoveItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 removeData(position);
+                //Send update to the activity
+                mOnQuantityChangeListener.OnQuantityChange();
             }
         });
 
@@ -142,16 +147,11 @@ public class CheckoutMenuListViewAdapter extends BaseAdapter {
             public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {
                 Log.d(TAG, String.format("oldValue: %d   newValue: %d", oldValue, newValue));
 
-                try {
-                    if (!AllSettingsManager.isNullOrEmpty(foodItem.getPrice())) {
-                        Float price = Float.parseFloat(foodItem.getPrice());
-                        if (price != null && price > 0) {
-                            tvSumFoodPrice.setText("$" + price * newValue);
-                        }
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                foodItem.setQuantity(newValue);
+                notifyDataSetChanged();
+//                tvSumFoodPrice.setText("$" + ((CheckoutActivity) mActivity).getProductPrice(foodItem) * newValue);
+                //Send update to the activity
+                mOnQuantityChangeListener.OnQuantityChange();
             }
         });
 
