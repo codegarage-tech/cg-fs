@@ -37,6 +37,7 @@ public class AllConstants {
     public static final int INTENT_REQUEST_CODE_LOCATION_LIST = 42004;
     public static final int INTENT_REQUEST_CODE_ADD_CARD = 42005;
     public static final int INTENT_REQUEST_CODE_CARD_CHECKOUT = 42006;
+    public static final int INTENT_REQUEST_CODE_CARD_LIST = 42007;
 
     //Intent key
     public static final String INTENT_KEY_LOGIN = "INTENT_KEY_LOGIN";
@@ -49,6 +50,7 @@ public class AllConstants {
     public static final String INTENT_KEY_CARD_ITEM = "INTENT_KEY_CARD_ITEM";
     public static final String INTENT_KEY_CHECKOUT_DATA = "INTENT_KEY_CHECKOUT_DATA";
     public static final String INTENT_KEY_REVIEWED_CHECKOUT_DATA = "INTENT_KEY_REVIEWED_CHECKOUT_DATA";
+    public static final String INTENT_KEY_CARD_LIST_CHECKOUT_AMOUNT = "INTENT_KEY_CARD_LIST_CHECKOUT_AMOUNT";
 
     public static final int NAVIGATION_DRAWER_CLOSE_DELAY = 200;
 

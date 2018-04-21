@@ -44,8 +44,15 @@
     <string name="toast_please_select_card">Please select card</string>
     <string name="toast_error_on_creating_token">Error on creating token</string>
     <string name="toast_invalid_card">Invalid card</string>
-    <string name="toast_payment_successfull">Payment successful</string>
+    <string name="toast_payment_is_successful">Payment is successful</string>
+    <string name="toast_payment_is_not_successful">Payment is not successful</string>
     <string name="toast_no_item_selected_for_checkout">No item selected for checkout</string>
+    <string name="toast_order_price_must_be_atleast_ten_dollar">Order price must be atleast $10</string>
+    <string name="toast_please_add_atleast_one_card">Please add atleast one card</string>
+    <string name="toast_please_input_valid_card_information">Please input valid card information</string>
+    <string name="toast_please_input_receiver_name">Please input receiver name</string>
+    <string name="toast_please_input_receiver_address">Please input receiver address</string>
+    <string name="toast_something_went_wrong">Something went wrong!</string>
 
     <!-- Message -->
     <string name="txt_loading_message">Loading, please wait.</string>

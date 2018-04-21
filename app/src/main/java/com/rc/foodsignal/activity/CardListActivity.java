@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -34,6 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_CARD_ITEM;
+import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_CARD_LIST_CHECKOUT_AMOUNT;
 import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_ADD_CARD;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_CARD;
 import static com.rc.foodsignal.util.AllConstants.STRIPE_PUBLISHABLE_KEY;
@@ -50,6 +53,9 @@ public class CardListActivity extends AppCompatActivity {
     LinearLayout llAddCard, llSendOrder;
     ProgressDialog loadingDialog;
 
+    LinearLayout llDeliveryInfo;
+    EditText edtReceiverName, edtReceiverAddress;
+    float checkoutAmount = 0.0f;
     CardListViewAdapter cardListViewAdapter;
     ListView lvCard;
     RealmController realmController;
@@ -65,6 +71,12 @@ public class CardListActivity extends AppCompatActivity {
     }
 
     private void initUI() {
+        Intent intent = getIntent();
+        float amount = intent.getFloatExtra(INTENT_KEY_CARD_LIST_CHECKOUT_AMOUNT, 0.0f);
+        if (amount > 0) {
+            checkoutAmount = amount;
+        }
+
         ivBack = (ImageView) findViewById(R.id.iv_back);
         llAddCard = (LinearLayout) findViewById(R.id.ll_add_card);
         llSendOrder = (LinearLayout) findViewById(R.id.ll_send_order);
@@ -72,6 +84,8 @@ public class CardListActivity extends AppCompatActivity {
         tvTitle = (TextView) findViewById(R.id.text_title);
         tvTitle.setText(getString(R.string.title_activity_card_list));
 
+        edtReceiverName = (EditText) findViewById(R.id.edt_receiver_name);
+        edtReceiverAddress = (EditText) findViewById(R.id.edt_receiver_address);
         lvCard = (ListView) findViewById(R.id.lv_card);
         cardListViewAdapter = new CardListViewAdapter(CardListActivity.this);
         lvCard.setAdapter(cardListViewAdapter);
@@ -79,6 +93,14 @@ public class CardListActivity extends AppCompatActivity {
         //Load data into listview
         realmController = RealmController.with(CardListActivity.this);
         cardListViewAdapter.setData(new ArrayList<StripeCard>(realmController.getCards()));
+
+        //Set delivery info panel
+        llDeliveryInfo = (LinearLayout) findViewById(R.id.ll_delivery_info);
+        if (AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(CardListActivity.this, SESSION_SELECTED_CARD))) {
+            llDeliveryInfo.setVisibility(View.GONE);
+        } else {
+            llDeliveryInfo.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initActions() {
@@ -115,6 +137,12 @@ public class CardListActivity extends AppCompatActivity {
                     if (!AllSettingsManager.isNullOrEmpty(data.getStringExtra(INTENT_KEY_CARD_ITEM))) {
                         if (cardListViewAdapter != null) {
                             cardListViewAdapter.setData(new ArrayList<StripeCard>(realmController.getCards()));
+
+                            if (AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(CardListActivity.this, SESSION_SELECTED_CARD))) {
+                                llDeliveryInfo.setVisibility(View.GONE);
+                            } else {
+                                llDeliveryInfo.setVisibility(View.VISIBLE);
+                            }
                         }
                     }
                 }
@@ -130,6 +158,20 @@ public class CardListActivity extends AppCompatActivity {
      * Stripe methods *
      ******************/
     private void submitCardInfo() {
+        if (AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(CardListActivity.this, SESSION_SELECTED_CARD))) {
+            Toast.makeText(CardListActivity.this, getResources().getString(R.string.toast_please_add_atleast_one_card), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (AllSettingsManager.isNullOrEmpty(edtReceiverName.getText().toString())) {
+            Toast.makeText(CardListActivity.this, getString(R.string.toast_please_input_receiver_name), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (AllSettingsManager.isNullOrEmpty(edtReceiverAddress.getText().toString())) {
+            Toast.makeText(CardListActivity.this, getString(R.string.toast_please_input_receiver_address), Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         if (!NetworkManager.isConnected(CardListActivity.this)) {
             Toast.makeText(CardListActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
@@ -152,7 +194,7 @@ public class CardListActivity extends AppCompatActivity {
                                 //Token successfully created.
                                 //Create a charge or save token to the server and use it later
 
-                                new doCharge(CardListActivity.this, token, 10).execute();
+                                new doCharge(CardListActivity.this, token, checkoutAmount).execute();
                             }
 
                             public void onError(Exception error) {
@@ -178,9 +220,9 @@ public class CardListActivity extends AppCompatActivity {
 
         private Context mContext;
         private Token mToken;
-        private int mAmount = -1;
+        private float mAmount = 0.0f;
 
-        public doCharge(Context context, Token token, int amount) {
+        public doCharge(Context context, Token token, float amount) {
             mContext = context;
             mToken = token;
             mAmount = amount;
@@ -194,9 +236,9 @@ public class CardListActivity extends AppCompatActivity {
         protected Charge doInBackground(String... params) {
             try {
                 Map<String, Object> chargeParams = new HashMap<String, Object>();
-                chargeParams.put("amount", mAmount * 100);
+                chargeParams.put("amount", (int) (mAmount * 100));
                 chargeParams.put("currency", "usd");
-                chargeParams.put("description", "Charged $" + mAmount + " from Android");
+                chargeParams.put("description", "Charged $" + (int) mAmount + " from Android");
                 chargeParams.put("source", mToken.getId());
 
                 com.stripe.Stripe.apiKey = STRIPE_SECRET_KEY;
@@ -216,9 +258,15 @@ public class CardListActivity extends AppCompatActivity {
             dismissProgressDialog();
 
             if (charge != null && charge.getPaid() && charge.getStatus().equalsIgnoreCase("succeeded")) {
-                Toast.makeText(getApplicationContext(), getString(R.string.toast_payment_successfull), Toast.LENGTH_LONG).show();
-            } else {
+                Log.d(TAG, "ChargeInfo: " + charge.toString());
+                Toast.makeText(getApplicationContext(), getString(R.string.toast_payment_is_successful), Toast.LENGTH_LONG).show();
 
+                //Send send successful payment status to checkout activity
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
+                finish();
+            } else {
+                Toast.makeText(getApplicationContext(), getString(R.string.toast_payment_is_not_successful), Toast.LENGTH_LONG).show();
             }
         }
     }

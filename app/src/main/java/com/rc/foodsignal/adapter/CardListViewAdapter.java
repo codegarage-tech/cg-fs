@@ -85,7 +85,6 @@ public class CardListViewAdapter extends BaseAdapter {
     public long getItemId(int position) {
         long id = 0;
         try {
-
             id = (long) Integer.parseInt(mData.get(position).getCardLastFourNumber());
         } catch (Exception ex) {
             ex.printStackTrace();

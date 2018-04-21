@@ -7,99 +7,36 @@
 
     <include layout="@layout/toolbar_done" />
 
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/ll_card_info"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:gravity="center_vertical">
 
-            <LinearLayout
-                android:id="@+id/ll_card_info"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:orientation="vertical">
+                android:layout_alignParentLeft="true"
+                android:text="Card Information:"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:gravity="center_vertical">
+        </RelativeLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:text="Card Information:"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+        <com.stripe.android.view.CardMultilineWidget
+            android:id="@+id/card_multiline_widget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:shouldShowPostalCode="true" />
 
-                </RelativeLayout>
-
-                <com.stripe.android.view.CardMultilineWidget
-                    android:id="@+id/card_multiline_widget"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    app:shouldShowPostalCode="true" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_delivery_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:text="Delivery Information:"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:orientation="vertical">
-
-                    <EditText
-                        android:id="@+id/edt_receiver_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_marginBottom="10dp"
-                        android:hint="Receiver Name" />
-
-                    <EditText
-                        android:id="@+id/edt_receiver_address"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:hint="Receiver Address" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </ScrollView>
+    </LinearLayout>
 
 </LinearLayout>

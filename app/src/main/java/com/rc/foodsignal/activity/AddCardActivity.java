@@ -15,7 +15,6 @@ import com.rc.foodsignal.model.realm.RealmController;
 import com.rc.foodsignal.model.realm.StripeCard;
 import com.rc.foodsignal.util.AppUtils;
 import com.stripe.android.model.Card;
-import com.stripe.android.view.CardInputListener;
 import com.stripe.android.view.CardMultilineWidget;
 
 import io.realm.RealmObject;
@@ -47,6 +46,7 @@ public class AddCardActivity extends AppCompatActivity {
     private void initUI() {
         ivBack = (ImageView) findViewById(R.id.iv_back);
         llAddCard = (LinearLayout) findViewById(R.id.ll_done);
+        llAddCard.setVisibility(View.VISIBLE);
         tvTitle = (TextView) findViewById(R.id.text_title);
         tvTitle.setText(getString(R.string.title_activity_add_card));
 
@@ -61,46 +61,17 @@ public class AddCardActivity extends AppCompatActivity {
             }
         });
 
-        mCardMultilineWidget.setCardInputListener(new CardInputListener() {
-            @Override
-            public void onFocusChange(String focusField) {
-            }
-
-            @Override
-            public void onCardComplete() {
-                if (mCardMultilineWidget.validateAllFields()) {
-                    llAddCard.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onExpirationComplete() {
-                if (mCardMultilineWidget.validateAllFields()) {
-                    llAddCard.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onCvcComplete() {
-                if (mCardMultilineWidget.validateAllFields()) {
-                    llAddCard.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onPostalCodeComplete() {
-                if (mCardMultilineWidget.validateAllFields()) {
-                    llAddCard.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
         llAddCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!mCardMultilineWidget.validateAllFields()) {
+                    Toast.makeText(AddCardActivity.this, getString(R.string.toast_please_input_valid_card_information), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Card card = mCardMultilineWidget.getCard();
                 if (card == null) {
-                    Toast.makeText(AddCardActivity.this, "Something went wrong!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddCardActivity.this, getString(R.string.toast_something_went_wrong), Toast.LENGTH_SHORT).show();
                     return;
                 }
 

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
     <include layout="@layout/toolbar_card_list" />
@@ -10,7 +12,58 @@
         android:id="@+id/lv_card"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@color/colorPrimary"
-        android:dividerHeight="1dp" />
+        android:layout_above="@+id/ll_delivery_info"
+        android:layout_below="@+id/toolbar"
+        android:divider="@null" />
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_delivery_info"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="Delivery Information:"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/edt_receiver_name"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:hint="Receiver Name" />
+
+            <EditText
+                android:id="@+id/edt_receiver_address"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:hint="Receiver Address" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

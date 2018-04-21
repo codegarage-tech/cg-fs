@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.adapter.CheckoutMenuListViewAdapter;
@@ -21,8 +22,10 @@ import com.reversecoder.library.util.AllSettingsManager;
 
 import java.util.ArrayList;
 
+import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_CARD_LIST_CHECKOUT_AMOUNT;
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_CHECKOUT_DATA;
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_REVIEWED_CHECKOUT_DATA;
+import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_CARD_LIST;
 
 /**
  * @author Md. Rashadul Alam
@@ -130,8 +133,14 @@ public class CheckoutActivity extends AppCompatActivity {
         llDone.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View view) {
-                Intent intentCardList = new Intent(CheckoutActivity.this, CardListActivity.class);
-                startActivity(intentCardList);
+                float total = getSubtotalPrice();
+                if (total >= 10) {
+                    Intent intentCardList = new Intent(CheckoutActivity.this, CardListActivity.class);
+                    intentCardList.putExtra(INTENT_KEY_CARD_LIST_CHECKOUT_AMOUNT, total);
+                    startActivityForResult(intentCardList, INTENT_REQUEST_CODE_CARD_LIST);
+                } else {
+                    Toast.makeText(CheckoutActivity.this, getString(R.string.toast_order_price_must_be_atleast_ten_dollar), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -148,6 +157,25 @@ public class CheckoutActivity extends AppCompatActivity {
         } else {
             Log.d(TAG, "Selected item change not found");
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case INTENT_REQUEST_CODE_CARD_LIST: {
+                if (data != null && resultCode == RESULT_OK) {
+                    //Order successful, that's why returning to restaurant detail page
+                    checkoutMenuListViewAdapter.getData().clear();
+                    onBackPressed();
+                }
+                break;
+            }
+
+            default:
+                break;
         }
     }
 }
