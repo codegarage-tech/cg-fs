@@ -61,6 +61,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_remove_item"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight=".05"
@@ -107,11 +108,11 @@
                     android:gravity="center_vertical|right">
 
                     <TextView
+                        android:id="@+id/tv_sum_food_price"
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
                         android:background="@drawable/background_blue"
                         android:gravity="center"
-                        android:text="$2"
                         android:textColor="@color/white"
                         android:textSize="@dimen/small_font_size"
                         android:textStyle="bold" />
@@ -149,7 +150,7 @@
                     android:gravity="right">
 
                     <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
-                        android:id="@+id/number_button2"
+                        android:id="@+id/elegant_number_button_checkout"
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
                         app:backGroundColor="@color/colorAccent"

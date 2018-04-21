@@ -52,6 +52,8 @@ import java.util.List;
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_CHECKOUT_DATA;
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_RESTAURANT_ITEM;
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_RESTAURANT_ITEM_POSITION;
+import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_REVIEWED_CHECKOUT_DATA;
+import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_CARD_CHECKOUT;
 import static com.rc.foodsignal.util.AppUtils.isSimSupport;
 import static com.reversecoder.gcm.util.GcmConfig.INTENT_KEY_GCM_DATA_CONTENT;
 import static com.reversecoder.gcm.util.GcmConfig.INTENT_KEY_INTENT_DETAIL_TYPE;
@@ -138,7 +140,7 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
         if (restaurant != null) {
             Log.d(TAG, "mRestaurant: " + restaurant.toString());
 
-            setFoodItemSliderData(ALL_FOOD_KEY);
+            setFoodItemSliderData(restaurant.getAllFoodItems());
 
             setGoogleMapWithMarker(restaurant);
         }
@@ -217,11 +219,12 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
         new CardSnapHelper().attachToRecyclerView(rvFoodItemSlider);
     }
 
-    private void setFoodItemSliderData(String foodKey) {
+    private void setFoodItemSliderData(ArrayList<FoodItem> foodItems) {
         tvTitle.setText(mRestaurant.getName());
         foodItemSliderAdapter.clear();
         foodItemSliderAdapter.notifyDataSetChanged();
-        foodItemSliderAdapter.addAll((mDetailIntentType == DetailIntentType.OTHER) ? (foodKey.equalsIgnoreCase(ALL_FOOD_KEY) ? mRestaurant.getAllFoodItems() : getSelectedFoodCategory(selectedFoodCategory).getMenu_details()) : mRestaurant.getAllOfferFoodItems());
+//        foodItemSliderAdapter.addAll((mDetailIntentType == DetailIntentType.OTHER) ? (foodKey.equalsIgnoreCase(ALL_FOOD_KEY) ? mRestaurant.getAllFoodItems() : getSelectedFoodCategory(selectedFoodCategory).getMenu_details()) : mRestaurant.getAllOfferFoodItems());
+        foodItemSliderAdapter.addAll(foodItems);
         foodItemSliderAdapter.notifyDataSetChanged();
         lastPagePosition = (mSelectedPosition != -1) ? mSelectedPosition : 0;
         FoodItem foodItem = foodItemSliderAdapter.getItem(lastPagePosition);
@@ -239,6 +242,14 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
         tvRestaurantEmail.setText(mRestaurant.getEmail());
         tvRestaurantPhone.setText(mRestaurant.getPhone());
         tvRestaurantAddress.setText(mRestaurant.getAddress());
+
+        if (foodItem.isSelected()) {
+            ivAddToCart.setBackgroundResource(R.drawable.ic_vector_cart_tick_empty_blue);
+            ivAddToCartCopy.setBackgroundResource(R.drawable.ic_vector_cart_tick_empty_blue);
+        } else {
+            ivAddToCart.setBackgroundResource(R.drawable.ic_vector_cart_add_empty_blue);
+            ivAddToCartCopy.setBackgroundResource(R.drawable.ic_vector_cart_add_empty_blue);
+        }
     }
 
     private void setStrike(FoodItem foodItem) {
@@ -314,7 +325,7 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
                     DataFoodItem dataFoodItem = new DataFoodItem(mSelectedData);
                     Intent intentCheckout = new Intent(RestaurantDetailActivity.this, CheckoutActivity.class);
                     intentCheckout.putExtra(INTENT_KEY_CHECKOUT_DATA, DataFoodItem.getResponseString(dataFoodItem));
-                    startActivity(intentCheckout);
+                    startActivityForResult(intentCheckout, INTENT_REQUEST_CODE_CARD_CHECKOUT);
                 } else {
                     Toast.makeText(RestaurantDetailActivity.this, getString(R.string.toast_no_item_selected_for_checkout), Toast.LENGTH_SHORT).show();
                 }
@@ -464,6 +475,82 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
         setData(mRestaurant);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case INTENT_REQUEST_CODE_CARD_CHECKOUT: {
+                if (data != null && resultCode == RESULT_OK) {
+                    //pick reviewed selected food item from checkout list
+                    if (!AllSettingsManager.isNullOrEmpty(data.getStringExtra(INTENT_KEY_REVIEWED_CHECKOUT_DATA))) {
+                        DataFoodItem dataFoodItem = DataFoodItem.getResponseObject(data.getStringExtra(INTENT_KEY_REVIEWED_CHECKOUT_DATA), DataFoodItem.class);
+                        if (dataFoodItem != null) {
+                            //update slider items
+                            for (int i = 0; i < foodItemSliderAdapter.getAllData().size(); i++) {
+                                if (dataFoodItem.getData().size() > 0) {
+                                    for (int j = 0; j < dataFoodItem.getData().size(); j++) {
+                                        if (!foodItemSliderAdapter.getAllData().get(i).getName().equalsIgnoreCase(dataFoodItem.getData().get(j).getName())) {
+                                            foodItemSliderAdapter.getItem(i).setSelected(false);
+                                        } else {
+                                            foodItemSliderAdapter.getItem(i).setSelected(true);
+                                            Log.d(TAG, "SelectedItem(list): " + foodItemSliderAdapter.getItem(i).toString());
+                                        }
+                                    }
+                                } else {
+                                    //if no data selected then last item is not changed in slider, so make all them false
+                                    foodItemSliderAdapter.getItem(i).setSelected(false);
+                                }
+                            }
+                            ArrayList<FoodItem> sliderData = new ArrayList<>(foodItemSliderAdapter.getAllData());
+                            setFoodItemSliderData(sliderData);
+
+                            //arrange selection array as per changes
+                            ArrayList<FoodItem> foodItems = new ArrayList<>(mSelectedData);
+                            mSelectedData.clear();
+                            Log.d(TAG, "SelectedItem(checkout): " + dataFoodItem.getData().size());
+                            for (int i = 0; i < dataFoodItem.getData().size(); i++) {
+                                FoodItem foodItem = getData(foodItems, dataFoodItem.getData().get(i));
+                                if (foodItem != null) {
+                                    mSelectedData.add(foodItem);
+                                    Log.d(TAG, "SelectedItem(selected): " + foodItem.toString());
+                                }
+                            }
+                            Log.d(TAG, "SelectedItem(selected): " + mSelectedData.size());
+                            resetCounterView();
+                        }
+                    }
+                }
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+
+    private int getPosition(ArrayList<FoodItem> items, FoodItem foodItem) {
+        if (items != null && items.size() > 0) {
+            for (int i = 0; i < items.size(); i++) {
+                if (items.get(i).getName().equalsIgnoreCase(foodItem.getName())) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    private FoodItem getData(ArrayList<FoodItem> items, FoodItem foodItem) {
+        if (items != null && items.size() > 0) {
+            for (int i = 0; i < items.size(); i++) {
+                if (items.get(i).getName().equalsIgnoreCase(foodItem.getName())) {
+                    return items.get(i);
+                }
+            }
+        }
+        return null;
+    }
+
     /***************************
      * Fabulous Filter methods *
      ***************************/
@@ -493,7 +580,7 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
                 }
 
                 mSelectedPosition = 0;
-                setFoodItemSliderData(selectedFoodCategory);
+                setFoodItemSliderData(getSelectedFoodCategory(selectedFoodCategory).getMenu_details());
             }
         }
     }

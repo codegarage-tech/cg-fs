@@ -3,6 +3,7 @@ package com.rc.foodsignal.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,11 +13,15 @@ import android.widget.TextView;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.adapter.CheckoutMenuListViewAdapter;
 import com.rc.foodsignal.model.DataFoodItem;
+import com.rc.foodsignal.model.FoodItem;
 import com.rc.foodsignal.util.AppUtils;
 import com.reversecoder.library.event.OnSingleClickListener;
 import com.reversecoder.library.util.AllSettingsManager;
 
+import java.util.ArrayList;
+
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_CHECKOUT_DATA;
+import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_REVIEWED_CHECKOUT_DATA;
 
 /**
  * @author Md. Rashadul Alam
@@ -58,7 +63,8 @@ public class CheckoutActivity extends AppCompatActivity {
         checkoutMenuListViewAdapter = new CheckoutMenuListViewAdapter(CheckoutActivity.this);
         lvSelectedMenu.setAdapter(checkoutMenuListViewAdapter);
         if (mDataFoodItem != null) {
-            checkoutMenuListViewAdapter.setData(mDataFoodItem.getData());
+            ArrayList<FoodItem> foodItems = new ArrayList<>(mDataFoodItem.getData());
+            checkoutMenuListViewAdapter.setData(foodItems);
         }
     }
 
@@ -77,5 +83,20 @@ public class CheckoutActivity extends AppCompatActivity {
                 startActivity(intentCardList);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mDataFoodItem.getData().size() != checkoutMenuListViewAdapter.getCount()) {
+            Log.d(TAG, "Selected item change found");
+            DataFoodItem dataFoodItem = new DataFoodItem(checkoutMenuListViewAdapter.getData());
+            Intent intent = new Intent();
+            intent.putExtra(INTENT_KEY_REVIEWED_CHECKOUT_DATA, DataFoodItem.getResponseString(dataFoodItem));
+            setResult(RESULT_OK, intent);
+            finish();
+        } else {
+            Log.d(TAG, "Selected item change not found");
+            super.onBackPressed();
+        }
     }
 }

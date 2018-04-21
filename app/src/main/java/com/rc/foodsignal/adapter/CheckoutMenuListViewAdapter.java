@@ -2,18 +2,22 @@ package com.rc.foodsignal.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.model.FoodItem;
+import com.reversecoder.library.util.AllSettingsManager;
 
 import java.util.ArrayList;
 
@@ -46,6 +50,13 @@ public class CheckoutMenuListViewAdapter extends BaseAdapter {
     public void addData(FoodItem foodItem) {
         if (getCount() > 0) {
             mData.add(foodItem);
+            notifyDataSetChanged();
+        }
+    }
+
+    public void removeData(int position) {
+        if (getCount() > 0) {
+            mData.remove(position);
             notifyDataSetChanged();
         }
     }
@@ -113,7 +124,37 @@ public class CheckoutMenuListViewAdapter extends BaseAdapter {
 //
         TextView tvMenuName = (TextView) vi.findViewById(R.id.tv_menu_name);
         tvMenuName.setText(foodItem.getName());
-//
+
+        final TextView tvSumFoodPrice = (TextView) vi.findViewById(R.id.tv_sum_food_price);
+        tvSumFoodPrice.setText("$" + foodItem.getPrice());
+
+        LinearLayout llRemoveItem = (LinearLayout) vi.findViewById(R.id.ll_remove_item);
+        llRemoveItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                removeData(position);
+            }
+        });
+
+        ElegantNumberButton elegantNumberButton = (ElegantNumberButton) vi.findViewById(R.id.elegant_number_button_checkout);
+        elegantNumberButton.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
+            @Override
+            public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {
+                Log.d(TAG, String.format("oldValue: %d   newValue: %d", oldValue, newValue));
+
+                try {
+                    if (!AllSettingsManager.isNullOrEmpty(foodItem.getPrice())) {
+                        Float price = Float.parseFloat(foodItem.getPrice());
+                        if (price != null && price > 0) {
+                            tvSumFoodPrice.setText("$" + price * newValue);
+                        }
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
 //        TextView tvMenuPrice = (TextView) vi.findViewById(R.id.tv_menu_price);
 //        tvMenuPrice.setText("Price: " + "$" + foodItem.getPrice());
 
