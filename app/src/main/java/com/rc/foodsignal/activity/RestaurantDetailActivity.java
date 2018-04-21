@@ -34,6 +34,7 @@ import com.rc.foodsignal.adapter.FoodItemSliderAdapter;
 import com.rc.foodsignal.animation.flytocart.CircleAnimationUtil;
 import com.rc.foodsignal.factory.TextViewFactory;
 import com.rc.foodsignal.fragment.RestaurantDetailFilterFragment;
+import com.rc.foodsignal.model.DataFoodItem;
 import com.rc.foodsignal.model.FoodCategoryDetail;
 import com.rc.foodsignal.model.FoodItem;
 import com.rc.foodsignal.model.ResponseGcmRestaurantItem;
@@ -48,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_CHECKOUT_DATA;
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_RESTAURANT_ITEM;
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_RESTAURANT_ITEM_POSITION;
 import static com.rc.foodsignal.util.AppUtils.isSimSupport;
@@ -309,7 +311,9 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
             @Override
             public void onSingleClick(View view) {
                 if (mSelectedData.size() > 0) {
+                    DataFoodItem dataFoodItem = new DataFoodItem(mSelectedData);
                     Intent intentCheckout = new Intent(RestaurantDetailActivity.this, CheckoutActivity.class);
+                    intentCheckout.putExtra(INTENT_KEY_CHECKOUT_DATA, DataFoodItem.getResponseString(dataFoodItem));
                     startActivity(intentCheckout);
                 } else {
                     Toast.makeText(RestaurantDetailActivity.this, getString(R.string.toast_no_item_selected_for_checkout), Toast.LENGTH_SHORT).show();
