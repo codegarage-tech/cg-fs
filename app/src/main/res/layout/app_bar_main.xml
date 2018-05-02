@@ -15,7 +15,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@drawable/toolbar_bg"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <com.rc.foodsignal.view.CanaroTextView
@@ -23,9 +23,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginRight="10dp"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:text=""
                 android:textColor="@color/white"
-                android:textSize="@dimen/activity_title_text_size" />
+                android:textSize="@dimen/medium_font_size" />
 
         </android.support.v7.widget.Toolbar>
 

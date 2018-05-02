@@ -89,8 +89,6 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
         recyclerViewFood = (RecyclerView) parentView.findViewById(R.id.rv_food);
         fabFilter = (FloatingActionButton) parentView.findViewById(R.id.fab_filter);
 
-        ((HomeActivity) getActivity()).setToolbarTitle(getString(R.string.title_fragment_home));
-
         restaurantAdapter = new RestaurantAdapter(getActivity());
         recyclerViewFood.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerViewFood.setAdapter(restaurantAdapter);
@@ -98,6 +96,8 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
         if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION))) {
             Log.d(TAG, "Session data: " + SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION));
             mLocation = Location.getResponseObject(SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION), Location.class);
+
+            ((HomeActivity) getActivity()).setToolbarTitle(String.format("%s, %s, %s, %s", mLocation.getStreet(), mLocation.getCity(), mLocation.getState(), mLocation.getCountry()));
         }
 
         if (!NetworkManager.isConnected(getActivity())) {
