@@ -129,11 +129,11 @@
                 android:layout_marginBottom="10dp"
                 android:layout_toRightOf="@+id/iv_address"
                 android:gravity="bottom"
-                android:text="Address"
-                android:textSize="@dimen/medium_font_size"
                 android:paddingLeft="20dp"
+                android:text="Address"
                 android:textColor="@color/textColorSecondary"
-                android:textColorHint="@color/textColorSecondary" />
+                android:textColorHint="@color/textColorSecondary"
+                android:textSize="@dimen/medium_font_size" />
 
             <View
                 android:id="@+id/line_address"
@@ -221,6 +221,48 @@
 
             <View
                 android:id="@+id/line_password"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/colorPrimaryDark" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
+            android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/iv_shipping_cost"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_above="@+id/line_shipping_cost"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="12dp"
+                android:background="@drawable/ic_vector_shipping_cost_black" />
+
+            <EditText
+                android:id="@+id/edt_shipping_cost"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_above="@+id/line_shipping_cost"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:layout_toRightOf="@+id/iv_shipping_cost"
+                android:background="@null"
+                android:gravity="bottom"
+                android:hint="Shipping Cost($)"
+                android:inputType="numberDecimal"
+                android:paddingLeft="20dp"
+                android:textColor="@color/textColorSecondary"
+                android:textColorHint="@color/textColorSecondary" />
+
+            <View
+                android:id="@+id/line_shipping_cost"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_alignParentBottom="true"

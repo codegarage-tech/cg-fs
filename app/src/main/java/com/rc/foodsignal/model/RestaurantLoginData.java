@@ -2,7 +2,7 @@ package com.rc.foodsignal.model;
 
 /**
  * @author Md. Rashadul Alam
- *         Email: rashed.droid@gmail.com
+ * Email: rashed.droid@gmail.com
  */
 public class RestaurantLoginData extends ResponseBase {
 
@@ -19,10 +19,11 @@ public class RestaurantLoginData extends ResponseBase {
     private String sms_notification = "";
     private String push_notification = "";
     private String restaurant_category_id = "";
+    private String shipping_cost = "";
     private int is_address_added = 0;
     private String restaurant_category_name = "";
 
-    public RestaurantLoginData(String id, String name, String image, String lat, String lng, String email, String phone, String address, String password, String is_restaurant, String sms_notification, String push_notification, String restaurant_category_id, int is_address_added, String restaurant_category_name) {
+    public RestaurantLoginData(String id, String name, String image, String lat, String lng, String email, String phone, String address, String password, String is_restaurant, String sms_notification, String push_notification, String restaurant_category_id, String shipping_cost, int is_address_added, String restaurant_category_name) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -36,6 +37,7 @@ public class RestaurantLoginData extends ResponseBase {
         this.sms_notification = sms_notification;
         this.push_notification = push_notification;
         this.restaurant_category_id = restaurant_category_id;
+        this.shipping_cost = shipping_cost;
         this.is_address_added = is_address_added;
         this.restaurant_category_name = restaurant_category_name;
     }
@@ -160,6 +162,14 @@ public class RestaurantLoginData extends ResponseBase {
         this.restaurant_category_name = restaurant_category_name;
     }
 
+    public String getShipping_cost() {
+        return shipping_cost;
+    }
+
+    public void setShipping_cost(String shipping_cost) {
+        this.shipping_cost = shipping_cost;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -176,6 +186,7 @@ public class RestaurantLoginData extends ResponseBase {
                 ", sms_notification='" + sms_notification + '\'' +
                 ", push_notification='" + push_notification + '\'' +
                 ", restaurant_category_id='" + restaurant_category_id + '\'' +
+                ", shipping_cost='" + shipping_cost + '\'' +
                 ", is_address_added=" + is_address_added +
                 ", restaurant_category_name='" + restaurant_category_name + '\'' +
                 '}';

@@ -56,7 +56,7 @@ import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_LOGIN_DATA;
 
 /**
  * @author Md. Rashadul Alam
- *         Email: rashed.droid@gmail.com
+ * Email: rashed.droid@gmail.com
  */
 public class AboutRestaurantActivity extends AppCompatActivity {
 
@@ -69,7 +69,7 @@ public class AboutRestaurantActivity extends AppCompatActivity {
     ProgressDialog loadingDialog;
 
     ImageView ivUser;
-    EditText edtName, edtEmail, edtPhone, edtPassword;
+    EditText edtName, edtEmail, edtPhone, edtPassword, edtShippingCost;
     TextView tvAddress;
     LinearLayout llDone;
     String mBase64 = "";
@@ -107,6 +107,7 @@ public class AboutRestaurantActivity extends AppCompatActivity {
         tvAddress = (TextView) findViewById(R.id.tv_address);
         edtPhone = (EditText) findViewById(R.id.edt_phone);
         edtPassword = (EditText) findViewById(R.id.edt_password);
+        edtShippingCost = (EditText) findViewById(R.id.edt_shipping_cost);
         llDone = (LinearLayout) findViewById(R.id.ll_done);
 
         //Flow layout
@@ -149,6 +150,7 @@ public class AboutRestaurantActivity extends AppCompatActivity {
         tvAddress.setText((!AllSettingsManager.isNullOrEmpty(restaurantLoginInfo.getAddress())) ? restaurantLoginInfo.getAddress() : "");
         edtPhone.setText((!AllSettingsManager.isNullOrEmpty(restaurantLoginInfo.getPhone())) ? restaurantLoginInfo.getPhone() : "");
         edtPassword.setText((!AllSettingsManager.isNullOrEmpty(restaurantLoginInfo.getPassword())) ? restaurantLoginInfo.getPassword() : "");
+        edtShippingCost.setText((!AllSettingsManager.isNullOrEmpty(restaurantLoginInfo.getShipping_cost())) ? restaurantLoginInfo.getShipping_cost() : "");
     }
 
     private void initRegistrationAction() {
@@ -192,7 +194,8 @@ public class AboutRestaurantActivity extends AppCompatActivity {
                         mEmail = edtEmail.getText().toString(),
                         mAddress = tvAddress.getText().toString(),
                         mPhone = edtPhone.getText().toString(),
-                        mPassword = edtPassword.getText().toString();
+                        mPassword = edtPassword.getText().toString(),
+                        mShippingCost = edtShippingCost.getText().toString();
 
                 if (mCategory.equalsIgnoreCase("")) {
                     Toast.makeText(AboutRestaurantActivity.this, getResources().getString(R.string.toast_empty_category_field), Toast.LENGTH_SHORT).show();
@@ -218,15 +221,19 @@ public class AboutRestaurantActivity extends AppCompatActivity {
                     Toast.makeText(AboutRestaurantActivity.this, getResources().getString(R.string.toast_empty_password_field), Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if (mShippingCost.equalsIgnoreCase("")) {
+                    Toast.makeText(AboutRestaurantActivity.this, getResources().getString(R.string.toast_empty_shipping_cost_field), Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (!NetworkManager.isConnected(AboutRestaurantActivity.this)) {
                     Toast.makeText(AboutRestaurantActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (mAddress.equalsIgnoreCase(restaurantLoginData.getAddress())) {
-                    doUpdateRestaurantInfo = new DoUpdateRestaurantInfo(AboutRestaurantActivity.this, mName, Double.parseDouble(restaurantLoginData.getLat()), mAddress, mPhone, Double.parseDouble(restaurantLoginData.getLng()), mEmail, mPassword, getRestaurantCategory(mCategory).getId(), mBase64);
+                    doUpdateRestaurantInfo = new DoUpdateRestaurantInfo(AboutRestaurantActivity.this, mName, Double.parseDouble(restaurantLoginData.getLat()), mAddress, mPhone, Double.parseDouble(restaurantLoginData.getLng()), mEmail, mPassword, getRestaurantCategory(mCategory).getId(), mShippingCost, mBase64);
                 } else {
-                    doUpdateRestaurantInfo = new DoUpdateRestaurantInfo(AboutRestaurantActivity.this, mName, ((mLocation != null) ? Double.parseDouble(mLocation.getLat()) : -1), mAddress, mPhone, ((mLocation != null) ? Double.parseDouble(mLocation.getLng()) : -1), mEmail, mPassword, getRestaurantCategory(mCategory).getId(), mBase64);
+                    doUpdateRestaurantInfo = new DoUpdateRestaurantInfo(AboutRestaurantActivity.this, mName, ((mLocation != null) ? Double.parseDouble(mLocation.getLat()) : -1), mAddress, mPhone, ((mLocation != null) ? Double.parseDouble(mLocation.getLng()) : -1), mEmail, mPassword, getRestaurantCategory(mCategory).getId(), mShippingCost, mBase64);
                 }
                 doUpdateRestaurantInfo.execute();
             }
@@ -237,9 +244,9 @@ public class AboutRestaurantActivity extends AppCompatActivity {
 
         private Context mContext;
         private double mLat = -1, mLng = -1;
-        private String mName = "", mAddress = "", mPhone = "", mEmail = "", mPassword = "", mRestaurantCategoryId = "", mImage = "";
+        private String mName = "", mAddress = "", mPhone = "", mEmail = "", mPassword = "", mRestaurantCategoryId = "", mShippingCost = "", mImage = "";
 
-        public DoUpdateRestaurantInfo(Context context, String name, double lat, String address, String phone, double lng, String email, String password, String restaurantCategoryId, String image) {
+        public DoUpdateRestaurantInfo(Context context, String name, double lat, String address, String phone, double lng, String email, String password, String restaurantCategoryId,  String shippingCost, String image) {
             this.mContext = context;
             this.mName = name;
             this.mLat = lat;
@@ -249,6 +256,7 @@ public class AboutRestaurantActivity extends AppCompatActivity {
             this.mEmail = email;
             this.mPassword = password;
             this.mRestaurantCategoryId = restaurantCategoryId;
+            this.mShippingCost = shippingCost;
             this.mImage = image;
         }
 
@@ -273,7 +281,7 @@ public class AboutRestaurantActivity extends AppCompatActivity {
 
         @Override
         protected HttpRequestManager.HttpResponse doInBackground(String... params) {
-            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getRestaurantUpdateUrl(), AllUrls.getRestaurantUpdateParameters(restaurantLoginData.getId(), mName, mLat, mAddress, mPhone, mLng, mEmail, mPassword, mRestaurantCategoryId, mImage), null);
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getRestaurantUpdateUrl(), AllUrls.getRestaurantUpdateParameters(restaurantLoginData.getId(), mName, mLat, mAddress, mPhone, mLng, mEmail, mPassword, mRestaurantCategoryId, mShippingCost, mImage), null);
             return response;
         }
 
@@ -285,7 +293,7 @@ public class AboutRestaurantActivity extends AppCompatActivity {
                 loadingDialog.dismiss();
             }
 
-            if (result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
+            if (result !=null && result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
                 Log.d(TAG, "success response from web: " + result.getResult().toString());
                 ResponseRestaurantLoginData responseData = ResponseRestaurantLoginData.getResponseObject(result.getResult().toString(), ResponseRestaurantLoginData.class);
 

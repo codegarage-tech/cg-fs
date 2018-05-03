@@ -31,6 +31,7 @@
     <string name="toast_no_info_found">No info found</string>
     <string name="toast_empty_email_field">Please fill email address</string>
     <string name="toast_empty_password_field">Please fill password</string>
+    <string name="toast_empty_shipping_cost_field">Please fill shipping cost</string>
     <string name="toast_empty_address_field">Please fill address</string>
     <string name="toast_empty_name_field">Please fill name</string>
     <string name="toast_empty_phone_field">Please fill phone</string>
