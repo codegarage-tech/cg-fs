@@ -9,7 +9,7 @@ import com.google.gson.Gson;
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
  */
-public class RegisterApp implements Parcelable {
+public class RegisterAppUser implements Parcelable {
 
     private String id = "";
     private String device_id = "";
@@ -19,10 +19,10 @@ public class RegisterApp implements Parcelable {
     private String unique_id = "";
     private String type = "";
 
-    public RegisterApp() {
+    public RegisterAppUser() {
     }
 
-    public RegisterApp(String id, String device_id, String name, String phone, String email, String unique_id, String type) {
+    public RegisterAppUser(String id, String device_id, String name, String phone, String email, String unique_id, String type) {
         this.id = id;
         this.device_id = device_id;
         this.name = name;
@@ -91,9 +91,9 @@ public class RegisterApp implements Parcelable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RegisterApp)) return false;
+        if (!(o instanceof RegisterAppUser)) return false;
 
-        RegisterApp that = (RegisterApp) o;
+        RegisterAppUser that = (RegisterAppUser) o;
 
         if (!getId().equals(that.getId())) return false;
         if (!getDevice_id().equals(that.getDevice_id())) return false;
@@ -151,17 +151,17 @@ public class RegisterApp implements Parcelable {
     // Creator
     public static final Creator CREATOR
             = new Creator() {
-        public RegisterApp createFromParcel(Parcel in) {
-            return new RegisterApp(in);
+        public RegisterAppUser createFromParcel(Parcel in) {
+            return new RegisterAppUser(in);
         }
 
-        public RegisterApp[] newArray(int size) {
-            return new RegisterApp[size];
+        public RegisterAppUser[] newArray(int size) {
+            return new RegisterAppUser[size];
         }
     };
 
     // "De-parcel object
-    public RegisterApp(Parcel in) {
+    public RegisterAppUser(Parcel in) {
         id = in.readString();
         device_id = in.readString();
         name = in.readString();

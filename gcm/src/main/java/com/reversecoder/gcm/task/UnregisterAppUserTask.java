@@ -5,8 +5,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.reversecoder.gcm.listener.GcmResultListener;
-import com.reversecoder.gcm.model.RegisterApp;
-import com.reversecoder.gcm.model.ResponseUnregisterApp;
+import com.reversecoder.gcm.model.RegisterAppUser;
+import com.reversecoder.gcm.model.ResponseUnregisterAppUser;
 import com.reversecoder.gcm.util.GcmConfig;
 import com.reversecoder.gcm.util.HttpRequestManager;
 import com.reversecoder.gcm.util.UniqueIdManager;
@@ -39,8 +39,8 @@ public class UnregisterAppUserTask extends AsyncTask<String, String, HttpRequest
         String mUniqueId = "";
 
         if (!GcmConfig.isNullOrEmpty(GcmConfig.getStringSetting(mContext, GcmConfig.SESSION_GCM_REGISTER_APP_USER_DATA))) {
-            RegisterApp registerApp = RegisterApp.convertFromStringToObject(GcmConfig.getStringSetting(mContext, GcmConfig.SESSION_GCM_REGISTER_APP_USER_DATA), RegisterApp.class);
-            mUniqueId = registerApp.getUnique_id();
+            RegisterAppUser registerAppUser = RegisterAppUser.convertFromStringToObject(GcmConfig.getStringSetting(mContext, GcmConfig.SESSION_GCM_REGISTER_APP_USER_DATA), RegisterAppUser.class);
+            mUniqueId = registerAppUser.getUnique_id();
         } else {
             //Get GCM unique id for each device
             mUniqueId = UniqueIdManager.getAndroidId(mContext);
@@ -56,13 +56,13 @@ public class UnregisterAppUserTask extends AsyncTask<String, String, HttpRequest
 
             if (result.isSuccess() && !GcmConfig.isNullOrEmpty(result.getResult().toString())) {
                 Log.d(TAG, "success response(web): " + result.getResult().toString());
-                ResponseUnregisterApp responseUnregisterApp = ResponseUnregisterApp.convertFromStringToObject(result.getResult().toString(), ResponseUnregisterApp.class);
+                ResponseUnregisterAppUser responseUnregisterAppUser = ResponseUnregisterAppUser.convertFromStringToObject(result.getResult().toString(), ResponseUnregisterAppUser.class);
 
-                if (responseUnregisterApp != null) {
+                if (responseUnregisterAppUser != null) {
                     boolean isUnregistered = false;
-                    Log.d(TAG, "success response: " + responseUnregisterApp.toString());
+                    Log.d(TAG, "success response: " + responseUnregisterAppUser.toString());
 
-                    if (responseUnregisterApp.getStatus().equalsIgnoreCase("success")) {
+                    if (responseUnregisterAppUser.getStatus().equalsIgnoreCase("success")) {
                         isUnregistered = true;
                         GcmConfig.removeSetting(mContext, GcmConfig.SESSION_GCM_REGISTER_APP_USER_DATA);
                         GcmConfig.setBooleanSetting(mContext, SESSION_IS_APP_USER_GCM_NOTIFICATION, false);

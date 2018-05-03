@@ -8,12 +8,12 @@ import java.util.ArrayList;
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
  */
-public class ResponseRegisterApp {
+public class ResponseRegisterAppUser {
 
     private String status = "";
-    private ArrayList<RegisterApp> data = new ArrayList<>();
+    private ArrayList<RegisterAppUser> data = new ArrayList<>();
 
-    public ResponseRegisterApp() {
+    public ResponseRegisterAppUser() {
     }
 
     public String getStatus() {
@@ -24,17 +24,17 @@ public class ResponseRegisterApp {
         this.status = status;
     }
 
-    public ArrayList<RegisterApp> getData() {
+    public ArrayList<RegisterAppUser> getData() {
         return data;
     }
 
-    public void setData(ArrayList<RegisterApp> data) {
+    public void setData(ArrayList<RegisterAppUser> data) {
         this.data = data;
     }
 
     @Override
     public String toString() {
-        return "ResponseRegisterApp{" +
+        return "ResponseRegisterAppUser{" +
                 "status='" + status + '\'' +
                 ", data=" + data +
                 '}';

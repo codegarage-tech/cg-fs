@@ -6,12 +6,12 @@ import com.google.gson.Gson;
  * @author Md. Rashadul Alam
  *         Email: rashed.droid@gmail.com
  */
-public class ResponseUnregisterApp {
+public class ResponseUnregisterAppUser {
 
     private String status = "";
     private String msg = "";
 
-    public ResponseUnregisterApp() {
+    public ResponseUnregisterAppUser() {
     }
 
     public String getStatus() {
@@ -32,7 +32,7 @@ public class ResponseUnregisterApp {
 
     @Override
     public String toString() {
-        return "ResponseUnregisterApp{" +
+        return "ResponseUnregisterAppUser{" +
                 "status='" + status + '\'' +
                 ", msg='" + msg + '\'' +
                 '}';

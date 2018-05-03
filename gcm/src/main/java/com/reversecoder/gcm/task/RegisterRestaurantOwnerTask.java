@@ -20,16 +20,16 @@ import static com.reversecoder.gcm.util.GcmConfig.SESSION_IS_APP_USER_GCM_NOTIFI
  * @author Md. Rashadul Alam
  * Email: rashed.droid@gmail.com
  */
-public class RegisterAppUserTask extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
+public class RegisterRestaurantOwnerTask extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
 
-    private static final String TAG = RegisterAppUserTask.class.getSimpleName();
+    private static final String TAG = RegisterRestaurantOwnerTask.class.getSimpleName();
     private Context mContext;
-    private String mUserId = "";
+    private String mRestaurantId = "";
     private GcmResultListener mGcmResultListener;
 
-    public RegisterAppUserTask(Context context, String userId, GcmResultListener gcmResultListener) {
+    public RegisterRestaurantOwnerTask(Context context, String restaurantId, GcmResultListener gcmResultListener) {
         this.mContext = context;
-        this.mUserId = userId;
+        this.mRestaurantId = restaurantId;
         this.mGcmResultListener = gcmResultListener;
     }
 
@@ -70,7 +70,7 @@ public class RegisterAppUserTask extends AsyncTask<String, String, HttpRequestMa
             }
 
             //Send response to the server
-            response = HttpRequestManager.doRestPostRequest(GcmConfig.getRegisterAppUserDeviceUrl(), GcmConfig.getRegisterAppUserDeviceParameters(mUniqueId, mPushId, mUserId), null);
+            response = HttpRequestManager.doRestPostRequest(GcmConfig.getRegisterAppUserDeviceUrl(), GcmConfig.getRegisterAppUserDeviceParameters(mUniqueId, mPushId, mRestaurantId), null);
 
         } catch (Exception exception) {
             exception.printStackTrace();
