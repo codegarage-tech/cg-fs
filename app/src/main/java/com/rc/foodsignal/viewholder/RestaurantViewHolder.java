@@ -15,7 +15,7 @@ import com.shuhart.bubblepagerindicator.BubblePageIndicator;
 
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_RESTAURANT_ITEM;
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_RESTAURANT_ITEM_POSITION;
-import static com.reversecoder.gcm.util.GcmConfig.INTENT_KEY_INTENT_DETAIL_TYPE;
+import static com.reversecoder.gcm.util.GcmConfig.INTENT_KEY_APP_USER_INTENT_DETAIL_TYPE;
 
 /**
  * @author Md. Rashadul Alam
@@ -42,7 +42,7 @@ public class RestaurantViewHolder extends BaseViewHolder<Restaurant> {
             @Override
             public void onItemClicked(int position) {
                 Intent intentRestaurantDetail = new Intent(getContext(), RestaurantDetailActivity.class);
-                intentRestaurantDetail.putExtra(INTENT_KEY_INTENT_DETAIL_TYPE, DetailIntentType.OTHER.name());
+                intentRestaurantDetail.putExtra(INTENT_KEY_APP_USER_INTENT_DETAIL_TYPE, DetailIntentType.OTHER.name());
                 intentRestaurantDetail.putExtra(INTENT_KEY_RESTAURANT_ITEM, data);
                 intentRestaurantDetail.putExtra(INTENT_KEY_RESTAURANT_ITEM_POSITION, position);
                 getContext().startActivity(intentRestaurantDetail);

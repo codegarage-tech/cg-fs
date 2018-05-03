@@ -23,14 +23,14 @@ import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.HttpRequestManager;
 import com.reversecoder.gcm.listener.GcmResultListener;
-import com.reversecoder.gcm.task.RegisterAppTask;
-import com.reversecoder.gcm.task.UnregisterAppTask;
+import com.reversecoder.gcm.task.RegisterAppUserTask;
+import com.reversecoder.gcm.task.UnregisterAppUserTask;
 import com.reversecoder.library.event.OnSingleClickListener;
 import com.reversecoder.library.network.NetworkManager;
 import com.reversecoder.library.storage.SessionManager;
 
 import static com.rc.foodsignal.util.AllConstants.SESSION_USER_BASIC_INFO;
-import static com.reversecoder.gcm.util.GcmConfig.SESSION_IS_GCM_NOTIFICATION;
+import static com.reversecoder.gcm.util.GcmConfig.SESSION_IS_APP_USER_GCM_NOTIFICATION;
 
 /**
  * @author Md. Rashadul Alam
@@ -67,12 +67,12 @@ public class NotificationListActivity extends AppCompatActivity {
         tvTitle = (TextView) findViewById(R.id.text_title);
         tvTitle.setText(getString(R.string.title_activity_notification));
 
-        lvNotification=(ListView)findViewById(R.id.lv_notification);
+        lvNotification = (ListView) findViewById(R.id.lv_notification);
         notificationListViewAdapter = new NotificationListViewAdapter(NotificationListActivity.this);
         lvNotification.setAdapter(notificationListViewAdapter);
 
         switchIconViewNotification = (SwitchIconView) findViewById(R.id.switch_notification);
-        if (SessionManager.getBooleanSetting(NotificationListActivity.this, SESSION_IS_GCM_NOTIFICATION, true)) {
+        if (SessionManager.getBooleanSetting(NotificationListActivity.this, SESSION_IS_APP_USER_GCM_NOTIFICATION, true)) {
             switchIconViewNotification.setIconEnabled(true);
         } else {
             switchIconViewNotification.setIconEnabled(false);
@@ -104,10 +104,10 @@ public class NotificationListActivity extends AppCompatActivity {
             public void onSingleClick(View view) {
                 if (NetworkManager.isConnected(NotificationListActivity.this)) {
 
-                    if (SessionManager.getBooleanSetting(NotificationListActivity.this, SESSION_IS_GCM_NOTIFICATION, true)) {
+                    if (SessionManager.getBooleanSetting(NotificationListActivity.this, SESSION_IS_APP_USER_GCM_NOTIFICATION, true)) {
 
                         //Off notification
-                        new UnregisterAppTask(NotificationListActivity.this, new GcmResultListener() {
+                        new UnregisterAppUserTask(NotificationListActivity.this, new GcmResultListener() {
                             @Override
                             public void onGcmResult(final Object result) {
                                 boolean isUnregistered = (boolean) result;
@@ -120,7 +120,7 @@ public class NotificationListActivity extends AppCompatActivity {
                         }).execute();
                     } else {
                         //On notification
-                        new RegisterAppTask(NotificationListActivity.this, userBasicInfo.getUser_id(), new GcmResultListener() {
+                        new RegisterAppUserTask(NotificationListActivity.this, userBasicInfo.getUser_id(), new GcmResultListener() {
                             @Override
                             public void onGcmResult(final Object result) {
                                 boolean isRegistered = (boolean) result;

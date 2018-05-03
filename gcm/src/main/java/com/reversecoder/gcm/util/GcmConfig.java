@@ -15,41 +15,41 @@ public class GcmConfig {
 
     public static final String GCM_SENDER_ID = "482144882562";
     private static final String TAG = GcmConfig.class.getSimpleName();
-    public static final String SESSION_GCM_REGISTER_DATA = "SESSION_GCM_REGISTER_DATA";
-    public static final String INTENT_KEY_GCM_DATA_CONTENT = "INTENT_KEY_GCM_DATA_CONTENT";
-    public static final String INTENT_KEY_INTENT_DETAIL_TYPE = "INTENT_KEY_INTENT_DETAIL_TYPE";
-    public static final String SESSION_IS_GCM_NOTIFICATION = "SESSION_IS_GCM_NOTIFICATION";
+    public static final String SESSION_GCM_REGISTER_APP_USER_DATA = "SESSION_GCM_REGISTER_APP_USER_DATA";
+    public static final String INTENT_KEY_GCM_APP_USER_DATA_CONTENT = "INTENT_KEY_GCM_APP_USER_DATA_CONTENT";
+    public static final String INTENT_KEY_APP_USER_INTENT_DETAIL_TYPE = "INTENT_KEY_APP_USER_INTENT_DETAIL_TYPE";
+    public static final String SESSION_IS_APP_USER_GCM_NOTIFICATION = "SESSION_IS_APP_USER_GCM_NOTIFICATION";
 
     private static final String BASE_URL = "http://ntstx.com/food_api/index.php/";
 
-    public static String getRegisterDeviceUrl() {
+    public static String getRegisterAppUserDeviceUrl() {
         String url = BASE_URL + "signup/register_device";
-        Log.d(TAG, "getRegisterDeviceUrl: " + url);
+        Log.d(TAG, "getRegisterAppUserDeviceUrl: " + url);
         return url;
     }
 
-    public static JSONObject getRegisterDeviceParameters(String uniqueId, String pushId, String userId) {
+    public static JSONObject getRegisterAppUserDeviceParameters(String uniqueId, String pushId, String userId) {
         JSONObject params = HttpRequestManager.HttpParameter.getInstance()
                 .addJSONParam("deviceId", pushId)
                 .addJSONParam("device_type", "android")
                 .addJSONParam("device_unique_id", uniqueId)
                 .addJSONParam("user_id", userId)
                 .getJSONParam();
-        Log.d(TAG, "getRegisterDeviceParameters: " + params.toString());
+        Log.d(TAG, "getRegisterAppUserDeviceParameters: " + params.toString());
         return params;
     }
 
-    public static String getUnregisterDeviceUrl() {
+    public static String getUnregisterAppUserDeviceUrl() {
         String url = BASE_URL + "signup/remove_device";
-        Log.d(TAG, "getUnregisterDeviceUrl: " + url);
+        Log.d(TAG, "getUnregisterAppUserDeviceUrl: " + url);
         return url;
     }
 
-    public static JSONObject getUnregisterDeviceParameters(String uniqueId) {
+    public static JSONObject getUnregisterAppUserDeviceParameters(String uniqueId) {
         JSONObject params = HttpRequestManager.HttpParameter.getInstance()
                 .addJSONParam("device_unique_id", uniqueId)
                 .getJSONParam();
-        Log.d(TAG, "getUnregisterDeviceParameters: " + params.toString());
+        Log.d(TAG, "getUnregisterAppUserDeviceParameters: " + params.toString());
         return params;
     }
 

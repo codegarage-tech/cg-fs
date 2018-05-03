@@ -27,7 +27,7 @@ import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.FragmentUtilsManager;
 import com.rc.foodsignal.view.CanaroTextView;
 import com.reversecoder.gcm.listener.GcmResultListener;
-import com.reversecoder.gcm.task.RegisterAppTask;
+import com.reversecoder.gcm.task.RegisterAppUserTask;
 import com.reversecoder.library.network.NetworkManager;
 import com.reversecoder.library.storage.SessionManager;
 
@@ -38,7 +38,7 @@ import static com.rc.foodsignal.util.AllConstants.SESSION_IS_RESTAURANT_LOGGED_I
 import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_LOGIN_DATA;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_NAVIGATION_MENU;
 import static com.rc.foodsignal.util.AllConstants.SESSION_USER_BASIC_INFO;
-import static com.reversecoder.gcm.util.GcmConfig.SESSION_IS_GCM_NOTIFICATION;
+import static com.reversecoder.gcm.util.GcmConfig.SESSION_IS_APP_USER_GCM_NOTIFICATION;
 
 public class HomeActivity extends BaseActivity implements AAH_FabulousFragment.Callbacks, AAH_FabulousFragment.AnimationListener {
 
@@ -286,8 +286,8 @@ public class HomeActivity extends BaseActivity implements AAH_FabulousFragment.C
     private void initPushNotification(String userId) {
         if (NetworkManager.isConnected(HomeActivity.this)) {
 
-            if (SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_GCM_NOTIFICATION, true)) {
-                new RegisterAppTask(HomeActivity.this, userId, new GcmResultListener() {
+            if (SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_APP_USER_GCM_NOTIFICATION, true)) {
+                new RegisterAppUserTask(HomeActivity.this, userId, new GcmResultListener() {
                     @Override
                     public void onGcmResult(Object result) {
                         //Do whatever you want with the response

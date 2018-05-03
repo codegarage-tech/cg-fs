@@ -55,8 +55,8 @@ import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_RESTAURANT_ITEM_POS
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_REVIEWED_CHECKOUT_DATA;
 import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_CARD_CHECKOUT;
 import static com.rc.foodsignal.util.AppUtils.isSimSupport;
-import static com.reversecoder.gcm.util.GcmConfig.INTENT_KEY_GCM_DATA_CONTENT;
-import static com.reversecoder.gcm.util.GcmConfig.INTENT_KEY_INTENT_DETAIL_TYPE;
+import static com.reversecoder.gcm.util.GcmConfig.INTENT_KEY_APP_USER_INTENT_DETAIL_TYPE;
+import static com.reversecoder.gcm.util.GcmConfig.INTENT_KEY_GCM_APP_USER_DATA_CONTENT;
 
 /**
  * @author Md. Rashadul Alam
@@ -435,8 +435,8 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
 
     private void handleNewIntent(Intent intent) {
 
-        if (intent != null && intent.getStringExtra(INTENT_KEY_INTENT_DETAIL_TYPE) != null) {
-            mDetailIntentType = DetailIntentType.valueOf(intent.getStringExtra(INTENT_KEY_INTENT_DETAIL_TYPE));
+        if (intent != null && intent.getStringExtra(INTENT_KEY_APP_USER_INTENT_DETAIL_TYPE) != null) {
+            mDetailIntentType = DetailIntentType.valueOf(intent.getStringExtra(INTENT_KEY_APP_USER_INTENT_DETAIL_TYPE));
 
             switch (mDetailIntentType) {
                 case OTHER:
@@ -449,7 +449,7 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
                     resetCounterView();
                     break;
                 case GCM:
-                    mGcmData = intent.getParcelableExtra(INTENT_KEY_GCM_DATA_CONTENT);
+                    mGcmData = intent.getParcelableExtra(INTENT_KEY_GCM_APP_USER_DATA_CONTENT);
                     ResponseGcmRestaurantItem responseGcmRestaurantItem = ResponseGcmRestaurantItem.getResponseObject(mGcmData.getMessage(), ResponseGcmRestaurantItem.class);
 
                     if (responseGcmRestaurantItem.getStatus().equalsIgnoreCase("1")) {

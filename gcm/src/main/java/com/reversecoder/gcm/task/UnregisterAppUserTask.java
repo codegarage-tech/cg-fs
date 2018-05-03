@@ -11,19 +11,19 @@ import com.reversecoder.gcm.util.GcmConfig;
 import com.reversecoder.gcm.util.HttpRequestManager;
 import com.reversecoder.gcm.util.UniqueIdManager;
 
-import static com.reversecoder.gcm.util.GcmConfig.SESSION_IS_GCM_NOTIFICATION;
+import static com.reversecoder.gcm.util.GcmConfig.SESSION_IS_APP_USER_GCM_NOTIFICATION;
 
 /**
  * @author Md. Rashadul Alam
- *         Email: rashed.droid@gmail.com
+ * Email: rashed.droid@gmail.com
  */
-public class UnregisterAppTask extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
+public class UnregisterAppUserTask extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
 
-    private static final String TAG = UnregisterAppTask.class.getSimpleName();
+    private static final String TAG = UnregisterAppUserTask.class.getSimpleName();
     private Context mContext;
     private GcmResultListener mGcmResultListener;
 
-    public UnregisterAppTask(Context context, GcmResultListener gcmResultListener) {
+    public UnregisterAppUserTask(Context context, GcmResultListener gcmResultListener) {
         this.mContext = context;
         this.mGcmResultListener = gcmResultListener;
     }
@@ -38,8 +38,8 @@ public class UnregisterAppTask extends AsyncTask<String, String, HttpRequestMana
 
         String mUniqueId = "";
 
-        if (!GcmConfig.isNullOrEmpty(GcmConfig.getStringSetting(mContext, GcmConfig.SESSION_GCM_REGISTER_DATA))) {
-            RegisterApp registerApp = RegisterApp.convertFromStringToObject(GcmConfig.getStringSetting(mContext, GcmConfig.SESSION_GCM_REGISTER_DATA), RegisterApp.class);
+        if (!GcmConfig.isNullOrEmpty(GcmConfig.getStringSetting(mContext, GcmConfig.SESSION_GCM_REGISTER_APP_USER_DATA))) {
+            RegisterApp registerApp = RegisterApp.convertFromStringToObject(GcmConfig.getStringSetting(mContext, GcmConfig.SESSION_GCM_REGISTER_APP_USER_DATA), RegisterApp.class);
             mUniqueId = registerApp.getUnique_id();
         } else {
             //Get GCM unique id for each device
@@ -47,7 +47,7 @@ public class UnregisterAppTask extends AsyncTask<String, String, HttpRequestMana
 //            Log.d(TAG, "mUniqueId: " + mUniqueId);
         }
 
-        return HttpRequestManager.doRestPostRequest(GcmConfig.getUnregisterDeviceUrl(), GcmConfig.getUnregisterDeviceParameters(mUniqueId), null);
+        return HttpRequestManager.doRestPostRequest(GcmConfig.getUnregisterAppUserDeviceUrl(), GcmConfig.getUnregisterAppUserDeviceParameters(mUniqueId), null);
     }
 
     @Override
@@ -64,8 +64,8 @@ public class UnregisterAppTask extends AsyncTask<String, String, HttpRequestMana
 
                     if (responseUnregisterApp.getStatus().equalsIgnoreCase("success")) {
                         isUnregistered = true;
-                        GcmConfig.removeSetting(mContext, GcmConfig.SESSION_GCM_REGISTER_DATA);
-                        GcmConfig.setBooleanSetting(mContext, SESSION_IS_GCM_NOTIFICATION, false);
+                        GcmConfig.removeSetting(mContext, GcmConfig.SESSION_GCM_REGISTER_APP_USER_DATA);
+                        GcmConfig.setBooleanSetting(mContext, SESSION_IS_APP_USER_GCM_NOTIFICATION, false);
                     }
 
                     //Send response to the parent activity

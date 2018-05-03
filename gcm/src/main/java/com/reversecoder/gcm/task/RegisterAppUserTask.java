@@ -13,21 +13,21 @@ import com.reversecoder.gcm.util.HttpRequestManager;
 import com.reversecoder.gcm.util.UniqueIdManager;
 
 import static com.reversecoder.gcm.util.GcmConfig.GCM_SENDER_ID;
-import static com.reversecoder.gcm.util.GcmConfig.SESSION_GCM_REGISTER_DATA;
-import static com.reversecoder.gcm.util.GcmConfig.SESSION_IS_GCM_NOTIFICATION;
+import static com.reversecoder.gcm.util.GcmConfig.SESSION_GCM_REGISTER_APP_USER_DATA;
+import static com.reversecoder.gcm.util.GcmConfig.SESSION_IS_APP_USER_GCM_NOTIFICATION;
 
 /**
  * @author Md. Rashadul Alam
- *         Email: rashed.droid@gmail.com
+ * Email: rashed.droid@gmail.com
  */
-public class RegisterAppTask extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
+public class RegisterAppUserTask extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
 
-    private static final String TAG = RegisterAppTask.class.getSimpleName();
+    private static final String TAG = RegisterAppUserTask.class.getSimpleName();
     private Context mContext;
     private String mUserId = "";
     private GcmResultListener mGcmResultListener;
 
-    public RegisterAppTask(Context context, String userId, GcmResultListener gcmResultListener) {
+    public RegisterAppUserTask(Context context, String userId, GcmResultListener gcmResultListener) {
         this.mContext = context;
         this.mUserId = userId;
         this.mGcmResultListener = gcmResultListener;
@@ -54,9 +54,9 @@ public class RegisterAppTask extends AsyncTask<String, String, HttpRequestManage
             Log.d(TAG, "mUniqueId: " + mUniqueId);
 
             //Check if same data
-            if (!GcmConfig.isNullOrEmpty(GcmConfig.getStringSetting(mContext, SESSION_GCM_REGISTER_DATA))) {
+            if (!GcmConfig.isNullOrEmpty(GcmConfig.getStringSetting(mContext, SESSION_GCM_REGISTER_APP_USER_DATA))) {
                 //Session data
-                RegisterApp registerApp = RegisterApp.convertFromStringToObject(GcmConfig.getStringSetting(mContext, SESSION_GCM_REGISTER_DATA), RegisterApp.class);
+                RegisterApp registerApp = RegisterApp.convertFromStringToObject(GcmConfig.getStringSetting(mContext, SESSION_GCM_REGISTER_APP_USER_DATA), RegisterApp.class);
                 if (registerApp != null) {
                     Log.d(TAG, "Session data: " + registerApp.toString());
                     //Current data
@@ -70,7 +70,7 @@ public class RegisterAppTask extends AsyncTask<String, String, HttpRequestManage
             }
 
             //Send response to the server
-            response = HttpRequestManager.doRestPostRequest(GcmConfig.getRegisterDeviceUrl(), GcmConfig.getRegisterDeviceParameters(mUniqueId, mPushId, mUserId), null);
+            response = HttpRequestManager.doRestPostRequest(GcmConfig.getRegisterAppUserDeviceUrl(), GcmConfig.getRegisterAppUserDeviceParameters(mUniqueId, mPushId, mUserId), null);
 
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -92,9 +92,9 @@ public class RegisterAppTask extends AsyncTask<String, String, HttpRequestManage
                     boolean isRegistered = false;
                     if (responseRegisterApp.getStatus().equalsIgnoreCase("success") && responseRegisterApp.getData().size() > 0) {
                         isRegistered = true;
-                        GcmConfig.setStringSetting(mContext, SESSION_GCM_REGISTER_DATA, RegisterApp.convertFromObjectToString(responseRegisterApp.getData().get(0)));
-                        Log.d(TAG, "Session data: " + GcmConfig.getStringSetting(mContext, SESSION_GCM_REGISTER_DATA));
-                        GcmConfig.setBooleanSetting(mContext, SESSION_IS_GCM_NOTIFICATION, true);
+                        GcmConfig.setStringSetting(mContext, SESSION_GCM_REGISTER_APP_USER_DATA, RegisterApp.convertFromObjectToString(responseRegisterApp.getData().get(0)));
+                        Log.d(TAG, "Session data: " + GcmConfig.getStringSetting(mContext, SESSION_GCM_REGISTER_APP_USER_DATA));
+                        GcmConfig.setBooleanSetting(mContext, SESSION_IS_APP_USER_GCM_NOTIFICATION, true);
                     }
 
                     //Send response to the parent activity
