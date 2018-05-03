@@ -52,7 +52,7 @@ import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_LOCATION;
 
 /**
  * @author Md. Rashadul Alam
- *         Email: rashed.droid@gmail.com
+ * Email: rashed.droid@gmail.com
  */
 public class HomeFragment extends Fragment implements OnFragmentBackPressedListener {
 
@@ -329,6 +329,8 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
                         if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION))) {
                             Log.d(TAG, "Session data: " + SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION));
                             mLocation = Location.getResponseObject(SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION), Location.class);
+
+                            ((HomeActivity) getActivity()).setToolbarTitle(String.format("%s, %s, %s, %s", mLocation.getStreet(), mLocation.getCity(), mLocation.getState(), mLocation.getCountry()));
                         }
 
                         //Search result depending on new location
