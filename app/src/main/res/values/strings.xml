@@ -24,6 +24,7 @@
     <string name="title_activity_card_list">Select Card</string>
     <string name="title_activity_add_card">Add Card</string>
     <string name="title_activity_checkout">Checkout</string>
+    <string name="title_activity_android_pay">Select Card</string>
 
     <!-- Toast message -->
     <string name="toast_could_not_retrieve_info">Could not retrieve info</string>
