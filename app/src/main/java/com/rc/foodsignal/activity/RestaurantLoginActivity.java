@@ -20,16 +20,19 @@ import com.rc.foodsignal.model.ResponseRestaurantLoginData;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.HttpRequestManager;
+import com.reversecoder.gcm.listener.GcmResultListener;
+import com.reversecoder.gcm.task.RegisterRestaurantOwnerTask;
 import com.reversecoder.library.network.NetworkManager;
 import com.reversecoder.library.storage.SessionManager;
 
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_LOGIN;
 import static com.rc.foodsignal.util.AllConstants.SESSION_IS_RESTAURANT_LOGGED_IN;
 import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_LOGIN_DATA;
+import static com.reversecoder.gcm.util.GcmConfig.SESSION_IS_RESTAURANT_OWNER_GCM_NOTIFICATION;
 
 /**
  * @author Md. Rashadul Alam
- *         Email: rashed.droid@gmail.com
+ * Email: rashed.droid@gmail.com
  */
 public class RestaurantLoginActivity extends AppCompatActivity {
 
@@ -155,7 +158,7 @@ public class RestaurantLoginActivity extends AppCompatActivity {
                 loadingDialog.dismiss();
             }
 
-            if (result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
+            if (result != null && result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
                 Log.d(TAG, "success response from web: " + result.getResult().toString());
                 ResponseRestaurantLoginData responseData = ResponseRestaurantLoginData.getResponseObject(result.getResult().toString(), ResponseRestaurantLoginData.class);
 
@@ -174,18 +177,36 @@ public class RestaurantLoginActivity extends AppCompatActivity {
 //                        }
 //                    }
 
-                    //Send login status to the navigation drawer activity
-                    Intent intent = new Intent();
-                    intent.putExtra(INTENT_KEY_LOGIN, true);
-                    setResult(RESULT_OK, intent);
-                    finish();
+                    if (NetworkManager.isConnected(RestaurantLoginActivity.this)) {
+                        if (SessionManager.getBooleanSetting(RestaurantLoginActivity.this, SESSION_IS_RESTAURANT_OWNER_GCM_NOTIFICATION, true)) {
+                            new RegisterRestaurantOwnerTask(RestaurantLoginActivity.this, responseData.getData().get(0).getId(), new GcmResultListener() {
+                                @Override
+                                public void onGcmResult(Object result) {
+                                    //Do whatever you want with the response
+
+                                    finishLogin();
+                                }
+                            }).execute();
+                        } else {
+                            finishLogin();
+                        }
+                    } else {
+                        finishLogin();
+                    }
                 } else {
                     Toast.makeText(RestaurantLoginActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
                 }
-
             } else {
                 Toast.makeText(RestaurantLoginActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void finishLogin() {
+        //Send login status to the navigation drawer activity
+        Intent intent = new Intent();
+        intent.putExtra(INTENT_KEY_LOGIN, true);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

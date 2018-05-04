@@ -20,7 +20,27 @@ public class GcmConfig {
     public static final String INTENT_KEY_APP_USER_INTENT_DETAIL_TYPE = "INTENT_KEY_APP_USER_INTENT_DETAIL_TYPE";
     public static final String SESSION_IS_APP_USER_GCM_NOTIFICATION = "SESSION_IS_APP_USER_GCM_NOTIFICATION";
 
+    public static final String SESSION_GCM_REGISTER_RESTAURANT_OWNER_DATA = "SESSION_GCM_REGISTER_RESTAURANT_OWNER_DATA";
+    public static final String SESSION_IS_RESTAURANT_OWNER_GCM_NOTIFICATION = "SESSION_IS_RESTAURANT_OWNER_GCM_NOTIFICATION";
+
     private static final String BASE_URL = "http://ntstx.com/food_api/index.php/";
+
+    public static String getRegisterRestaurantOwnerDeviceUrl() {
+        String url = BASE_URL + "orders/add_restaurant_device";
+        Log.d(TAG, "getRegisterRestaurantOwnerDeviceUrl: " + url);
+        return url;
+    }
+
+    public static JSONObject getRegisterRestaurantOwnerDeviceParameters(String uniqueId, String pushId, String restaurantId) {
+        JSONObject params = HttpRequestManager.HttpParameter.getInstance()
+                .addJSONParam("deviceId", pushId)
+                .addJSONParam("device_type", "android")
+                .addJSONParam("device_unique_id", uniqueId)
+                .addJSONParam("restaurant_id", restaurantId)
+                .getJSONParam();
+        Log.d(TAG, "getRegisterRestaurantOwnerDeviceParameters: " + params.toString());
+        return params;
+    }
 
     public static String getRegisterAppUserDeviceUrl() {
         String url = BASE_URL + "signup/register_device";
