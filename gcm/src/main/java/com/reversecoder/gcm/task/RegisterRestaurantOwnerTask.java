@@ -90,7 +90,7 @@ public class RegisterRestaurantOwnerTask extends AsyncTask<String, String, HttpR
 
                 if (responseRegisterRestaurantOwner != null) {
                     boolean isRegistered = false;
-                    if (responseRegisterRestaurantOwner.getStatus().equalsIgnoreCase("success") && responseRegisterRestaurantOwner.getData().size() > 0) {
+                    if (responseRegisterRestaurantOwner.getStatus().equalsIgnoreCase("1") && responseRegisterRestaurantOwner.getData().size() > 0) {
                         isRegistered = true;
                         GcmConfig.setStringSetting(mContext, SESSION_GCM_REGISTER_RESTAURANT_OWNER_DATA, RegisterRestaurantOwner.convertFromObjectToString(responseRegisterRestaurantOwner.getData().get(0)));
                         Log.d(TAG, "Task: Session data: " + GcmConfig.getStringSetting(mContext, SESSION_GCM_REGISTER_RESTAURANT_OWNER_DATA));
