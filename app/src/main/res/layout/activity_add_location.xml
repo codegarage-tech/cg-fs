@@ -26,7 +26,7 @@
             android:orientation="horizontal"
             segmentedgroup:sc_border_width="1dp"
             segmentedgroup:sc_corner_radius="0dp"
-            segmentedgroup:sc_tint_color="#009688">
+            segmentedgroup:sc_tint_color="@color/colorPrimary">
 
             <RadioButton
                 android:id="@+id/segmented_rbtn_current_location"
