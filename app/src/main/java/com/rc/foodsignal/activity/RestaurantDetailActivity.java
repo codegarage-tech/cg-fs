@@ -322,7 +322,7 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
             @Override
             public void onSingleClick(View view) {
                 if (mSelectedData.size() > 0) {
-                    DataFoodItem dataFoodItem = new DataFoodItem(mSelectedData);
+                    DataFoodItem dataFoodItem = new DataFoodItem(mSelectedData, (((!AllSettingsManager.isNullOrEmpty(mRestaurant.getShipping_cost()) && (Float.parseFloat(mRestaurant.getShipping_cost()) > 0))) ? (Float.parseFloat(mRestaurant.getShipping_cost())) : 0.0f));
                     Intent intentCheckout = new Intent(RestaurantDetailActivity.this, CheckoutActivity.class);
                     intentCheckout.putExtra(INTENT_KEY_CHECKOUT_DATA, DataFoodItem.getResponseString(dataFoodItem));
                     startActivityForResult(intentCheckout, INTENT_REQUEST_CODE_CARD_CHECKOUT);

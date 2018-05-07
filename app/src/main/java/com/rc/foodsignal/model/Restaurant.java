@@ -28,13 +28,14 @@ public class Restaurant implements Parcelable {
     private String sms_notification = "";
     private String push_notification = "";
     private String restaurant_category_id = "";
+    private String shipping_cost="";
     private String menu_id = "";
     private String restaurant_category_name = "";
     private String distance = "";
     private ArrayList<FoodCategoryDetail> food_category_details = new ArrayList<FoodCategoryDetail>();
     private ArrayList<FoodCategoryDetail> offer_details = new ArrayList<FoodCategoryDetail>();
 
-    public Restaurant(String id, String name, String image, String lat, String lng, String email, String phone, String address, String password, String is_restaurant, String sms_notification, String push_notification, String restaurant_category_id, String menu_id, String restaurant_category_name, String distance, ArrayList<FoodCategoryDetail> food_category_details, ArrayList<FoodCategoryDetail> offer_details) {
+    public Restaurant(String id, String name, String image, String lat, String lng, String email, String phone, String address, String password, String is_restaurant, String sms_notification, String push_notification, String restaurant_category_id, String shipping_cost, String menu_id, String restaurant_category_name, String distance, ArrayList<FoodCategoryDetail> food_category_details, ArrayList<FoodCategoryDetail> offer_details) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -48,6 +49,7 @@ public class Restaurant implements Parcelable {
         this.sms_notification = sms_notification;
         this.push_notification = push_notification;
         this.restaurant_category_id = restaurant_category_id;
+        this.shipping_cost = shipping_cost;
         this.menu_id = menu_id;
         this.restaurant_category_name = restaurant_category_name;
         this.distance = distance;
@@ -171,6 +173,14 @@ public class Restaurant implements Parcelable {
         this.restaurant_category_id = restaurant_category_id;
     }
 
+    public String getShipping_cost() {
+        return shipping_cost;
+    }
+
+    public void setShipping_cost(String shipping_cost) {
+        this.shipping_cost = shipping_cost;
+    }
+
     public String getMenu_id() {
         return menu_id;
     }
@@ -219,7 +229,6 @@ public class Restaurant implements Parcelable {
         return mItems;
     }
 
-
     public ArrayList<FoodItem> getAllOfferFoodItems() {
         ArrayList<FoodItem> mItems = new ArrayList<>();
         if (getOffer_details() != null && getOffer_details().size() > 0) {
@@ -256,6 +265,7 @@ public class Restaurant implements Parcelable {
                 ", sms_notification='" + sms_notification + '\'' +
                 ", push_notification='" + push_notification + '\'' +
                 ", restaurant_category_id='" + restaurant_category_id + '\'' +
+                ", shipping_cost='" + shipping_cost + '\'' +
                 ", menu_id='" + menu_id + '\'' +
                 ", restaurant_category_name='" + restaurant_category_name + '\'' +
                 ", distance='" + distance + '\'' +
@@ -286,6 +296,7 @@ public class Restaurant implements Parcelable {
         dest.writeString(sms_notification);
         dest.writeString(push_notification);
         dest.writeString(restaurant_category_id);
+        dest.writeString(shipping_cost);
         dest.writeString(menu_id);
         dest.writeString(restaurant_category_name);
         dest.writeString(distance);
@@ -318,6 +329,7 @@ public class Restaurant implements Parcelable {
         sms_notification = in.readString();
         push_notification = in.readString();
         restaurant_category_id = in.readString();
+        shipping_cost = in.readString();
         menu_id = in.readString();
         restaurant_category_name = in.readString();
         distance = in.readString();

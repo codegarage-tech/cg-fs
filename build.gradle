@@ -26,12 +26,12 @@ allprojects {
         jcenter()
     }
 
-    configurations.all {
-        resolutionStrategy {
-            cacheChangingModulesFor 2, 'minutes'
-            cacheDynamicVersionsFor 2, 'minutes'
-        }
-    }
+//    configurations.all {
+//        resolutionStrategy {
+//            cacheChangingModulesFor 2, 'minutes'
+//            cacheDynamicVersionsFor 2, 'minutes'
+//        }
+//    }
 
     ext.appVersionCode = 110
     ext.appVersionName = "1.1.0"
