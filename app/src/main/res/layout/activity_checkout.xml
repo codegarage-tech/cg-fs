@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:segmentedgroup="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -14,19 +15,63 @@
         android:layout_below="@+id/toolbar"
         android:divider="@null" />
 
+    <!--<LinearLayout
+        android:id="@+id/ll_delivery_type"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_above="@+id/ll_calculation"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.reversecoder.library.segmentradiogroup.SegmentedRadioGroup
+            android:id="@+id/sr_location_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            segmentedgroup:sc_border_width="1dp"
+            segmentedgroup:sc_corner_radius="0dp"
+            segmentedgroup:sc_tint_color="@color/colorPrimary">
+
+            <RadioButton
+                android:id="@+id/segmented_rbtn_delivery"
+                style="@style/SegmentedRadioButton"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight=".5"
+                android:checked="true"
+                android:text="Delivery" />
+
+            <RadioButton
+                android:id="@+id/segmented_rbtn_take_out"
+                style="@style/SegmentedRadioButton"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight=".5"
+                android:text="Take Out" />
+
+        </com.reversecoder.library.segmentradiogroup.SegmentedRadioGroup>
+
+    </LinearLayout>
+-->
     <LinearLayout
         android:id="@+id/ll_calculation"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="180dp"
         android:layout_alignParentBottom="true"
-        android:layout_margin="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/Off_white"
         android:gravity="center"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:gravity="center_vertical">
 
             <TextView
@@ -34,15 +79,49 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:text="Items Cost:"
+                android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
         </RelativeLayout>
 
-        <RelativeLayout
+        <com.reversecoder.library.segmentradiogroup.SegmentedRadioGroup
+            android:id="@+id/sr_location_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            segmentedgroup:sc_border_width="1dp"
+            segmentedgroup:sc_corner_radius="0dp"
+            segmentedgroup:sc_tint_color="@color/colorPrimary">
+
+            <RadioButton
+                android:id="@+id/segmented_rbtn_delivery"
+                style="@style/SegmentedRadioButton"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_weight=".5"
+                android:checked="true"
+                android:text="Delivery" />
+
+            <RadioButton
+                android:id="@+id/segmented_rbtn_take_out"
+                style="@style/SegmentedRadioButton"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_weight=".5"
+                android:text="Take Out" />
+
+        </com.reversecoder.library.segmentradiogroup.SegmentedRadioGroup>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:gravity="center_vertical">
 
             <TextView
@@ -50,7 +129,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:text="Subtotal"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="@dimen/medium_font_size" />
 
             <TextView
@@ -59,7 +138,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="$0.0"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="@dimen/medium_font_size" />
 
         </RelativeLayout>
@@ -67,7 +146,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:gravity="center_vertical">
 
             <TextView
@@ -75,7 +156,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:text="Shipping cost"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="@dimen/medium_font_size" />
 
             <TextView
@@ -84,7 +165,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="$0.0"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="@dimen/medium_font_size" />
 
         </RelativeLayout>
@@ -92,6 +173,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:gravity="center_vertical">
 
             <TextView
@@ -99,6 +183,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:text="Total"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="@dimen/medium_font_size"
                 android:textStyle="bold" />
 
@@ -108,6 +193,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="$0.0"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 

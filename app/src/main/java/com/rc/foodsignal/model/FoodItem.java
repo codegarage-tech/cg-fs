@@ -13,6 +13,7 @@ public class FoodItem extends ResponseBase implements Parcelable {
 
     //for checkout
     private transient int quantity = 1;
+//    private transient int sumPrice = 0;
 
     private transient boolean isExpanded = false;
     private transient boolean isSelected = false;
@@ -175,10 +176,19 @@ public class FoodItem extends ResponseBase implements Parcelable {
         this.quantity = quantity;
     }
 
+//    public int getSumPrice() {
+//        return sumPrice;
+//    }
+//
+//    public void setSumPrice(int sumPrice) {
+//        this.sumPrice = sumPrice;
+//    }
+
     @Override
     public String toString() {
         return "{" +
                 "quantity=" + quantity +
+//                "sumPrice=" + sumPrice +
                 "isExpanded=" + isExpanded +
                 ", isSelected=" + isSelected +
                 ", offerPercentage=" + offerPercentage +

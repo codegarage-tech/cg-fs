@@ -16,6 +16,7 @@ import com.rc.foodsignal.adapter.CheckoutMenuListViewAdapter;
 import com.rc.foodsignal.interfaces.OnQuantityChangeListener;
 import com.rc.foodsignal.model.DataFoodItem;
 import com.rc.foodsignal.model.FoodItem;
+import com.rc.foodsignal.model.Restaurant;
 import com.rc.foodsignal.util.AppUtils;
 import com.reversecoder.library.event.OnSingleClickListener;
 import com.reversecoder.library.util.AllSettingsManager;
@@ -42,6 +43,8 @@ public class CheckoutActivity extends AppCompatActivity {
     DataFoodItem mDataFoodItem;
     TextView tvSubtotal, tvShippingCost, tvTotal;
     String TAG = AppUtils.getTagName(CheckoutActivity.class);
+    float shippingCost = 0.0f;
+    Restaurant mRestaurant;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,8 @@ public class CheckoutActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (!AllSettingsManager.isNullOrEmpty(intent.getStringExtra(INTENT_KEY_CHECKOUT_DATA))) {
             mDataFoodItem = DataFoodItem.getResponseObject(intent.getStringExtra(INTENT_KEY_CHECKOUT_DATA), DataFoodItem.class);
+            mRestaurant = mDataFoodItem.getRestaurant();
+            shippingCost = (((!AllSettingsManager.isNullOrEmpty(mRestaurant.getShipping_cost()) && (Float.parseFloat(mRestaurant.getShipping_cost()) > 0))) ? (Float.parseFloat(mRestaurant.getShipping_cost())) : 0.0f);
         }
 
         ivBack = (ImageView) findViewById(R.id.iv_back);
@@ -74,9 +79,10 @@ public class CheckoutActivity extends AppCompatActivity {
                 if (checkoutMenuListViewAdapter.getData().size() > 0) {
                     float subTotalPrice = getSubtotalPrice();
                     tvSubtotal.setText("$" + subTotalPrice);
-                    tvShippingCost.setText("$" + mDataFoodItem.getShippingCost());
-                    tvTotal.setText("$" + (subTotalPrice + mDataFoodItem.getShippingCost()));
+                    tvShippingCost.setText("$" + shippingCost);
+                    tvTotal.setText("$" + (subTotalPrice + shippingCost));
                 } else {
+                    //if there is no item in the list
                     onBackPressed();
 
 //                    tvSubtotal.setText("$0.0");
@@ -93,8 +99,8 @@ public class CheckoutActivity extends AppCompatActivity {
             //set item cost
             float subTotalPrice = getSubtotalPrice();
             tvSubtotal.setText("$" + subTotalPrice);
-            tvShippingCost.setText("$" + mDataFoodItem.getShippingCost());
-            tvTotal.setText("$" + (subTotalPrice + mDataFoodItem.getShippingCost()));
+            tvShippingCost.setText("$" + shippingCost);
+            tvTotal.setText("$" + (subTotalPrice + shippingCost));
         }
     }
 
@@ -160,7 +166,7 @@ public class CheckoutActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (mDataFoodItem.getData().size() != checkoutMenuListViewAdapter.getCount()) {
             Log.d(TAG, "Selected item change found");
-            DataFoodItem dataFoodItem = new DataFoodItem(checkoutMenuListViewAdapter.getData(), mDataFoodItem.getShippingCost());
+            DataFoodItem dataFoodItem = new DataFoodItem(checkoutMenuListViewAdapter.getData(), mRestaurant);
             Intent intent = new Intent();
             intent.putExtra(INTENT_KEY_REVIEWED_CHECKOUT_DATA, DataFoodItem.getResponseString(dataFoodItem));
             setResult(RESULT_OK, intent);

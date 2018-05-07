@@ -9,15 +9,14 @@ import java.util.ArrayList;
 public class DataFoodItem extends ResponseBase {
 
     private ArrayList<FoodItem> data = new ArrayList<FoodItem>();
-
-    private float shippingCost = 0.0f;
+    private Restaurant restaurant;
 
     public DataFoodItem() {
     }
 
-    public DataFoodItem(ArrayList<FoodItem> data, float shippingCost) {
+    public DataFoodItem(ArrayList<FoodItem> data, Restaurant restaurant) {
         this.data = data;
-        this.shippingCost = shippingCost;
+        this.restaurant = restaurant;
     }
 
     public ArrayList<FoodItem> getData() {
@@ -28,19 +27,19 @@ public class DataFoodItem extends ResponseBase {
         this.data = data;
     }
 
-    public float getShippingCost() {
-        return shippingCost;
+    public Restaurant getRestaurant() {
+        return restaurant;
     }
 
-    public void setShippingCost(float shippingCost) {
-        this.shippingCost = shippingCost;
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
     }
 
     @Override
     public String toString() {
         return "{" +
                 "data=" + data +
-                ", shippingCost=" + shippingCost +
+                ", restaurant=" + restaurant +
                 '}';
     }
 }
