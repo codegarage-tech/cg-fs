@@ -8,18 +8,20 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.adapter.CheckoutMenuListViewAdapter;
 import com.rc.foodsignal.interfaces.OnQuantityChangeListener;
-import com.rc.foodsignal.model.DataCheckout;
 import com.rc.foodsignal.model.DataFoodItem;
 import com.rc.foodsignal.model.FoodItem;
 import com.rc.foodsignal.model.Restaurant;
 import com.rc.foodsignal.util.AppUtils;
 import com.reversecoder.library.event.OnSingleClickListener;
+import com.reversecoder.library.segmentradiogroup.SegmentedRadioGroup;
 import com.reversecoder.library.util.AllSettingsManager;
 
 import java.util.ArrayList;
@@ -47,6 +49,11 @@ public class CheckoutActivity extends AppCompatActivity {
     float shippingCost = 0.0f;
     Restaurant mRestaurant;
 
+    //Segmented Radio group
+    SegmentedRadioGroup segmentedRadioGroup;
+    RadioButton segmentedRadioButtonDelivery, segmentedRadioButtonTakeout;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +77,11 @@ public class CheckoutActivity extends AppCompatActivity {
         llDone = (LinearLayout) findViewById(R.id.ll_done);
         llDone.setVisibility(View.VISIBLE);
 
+        segmentedRadioGroup = (SegmentedRadioGroup) findViewById(R.id.sr_delivery_type);
+        segmentedRadioButtonDelivery = (RadioButton) findViewById(R.id.segmented_rbtn_delivery);
+        segmentedRadioButtonDelivery.setChecked(true);
+        segmentedRadioButtonTakeout = (RadioButton) findViewById(R.id.segmented_rbtn_take_out);
+
         tvSubtotal = (TextView) findViewById(R.id.tv_subtotal);
         tvShippingCost = (TextView) findViewById(R.id.tv_shipping_cost);
         tvTotal = (TextView) findViewById(R.id.tv_total);
@@ -78,17 +90,11 @@ public class CheckoutActivity extends AppCompatActivity {
             @Override
             public void OnQuantityChange() {
                 if (checkoutMenuListViewAdapter.getData().size() > 0) {
-                    float subTotalPrice = getSubtotalPrice();
-                    tvSubtotal.setText("$" + subTotalPrice);
-                    tvShippingCost.setText("$" + shippingCost);
-                    tvTotal.setText("$" + (subTotalPrice + shippingCost));
+                    //set item cost
+                    setTotalPrice();
                 } else {
                     //if there is no item in the list
                     onBackPressed();
-
-//                    tvSubtotal.setText("$0.0");
-//                    tvShippingCost.setText("$0.0");
-//                    tvTotal.setText("$0.0");
                 }
             }
         });
@@ -98,10 +104,28 @@ public class CheckoutActivity extends AppCompatActivity {
             checkoutMenuListViewAdapter.setData(foodItems);
 
             //set item cost
-            float subTotalPrice = getSubtotalPrice();
+            setTotalPrice();
+        }
+
+        segmentedRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                                           @Override
+                                                           public void onCheckedChanged(RadioGroup group, int checkedId) {
+                                                               setTotalPrice();
+                                                           }
+                                                       }
+        );
+    }
+
+    private void setTotalPrice() {
+        float subTotalPrice = getSubtotalPrice();
+        if (segmentedRadioButtonDelivery.isChecked()) {
             tvSubtotal.setText("$" + subTotalPrice);
             tvShippingCost.setText("$" + shippingCost);
             tvTotal.setText("$" + (subTotalPrice + shippingCost));
+        } else {
+            tvSubtotal.setText("$" + subTotalPrice);
+            tvShippingCost.setText("$" + "0.0");
+            tvTotal.setText("$" + subTotalPrice);
         }
     }
 
