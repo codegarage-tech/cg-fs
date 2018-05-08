@@ -16,8 +16,10 @@ import android.widget.Toast;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.adapter.CheckoutMenuListViewAdapter;
 import com.rc.foodsignal.interfaces.OnQuantityChangeListener;
+import com.rc.foodsignal.model.ParamCheckout;
 import com.rc.foodsignal.model.DataFoodItem;
 import com.rc.foodsignal.model.FoodItem;
+import com.rc.foodsignal.model.OrderItem;
 import com.rc.foodsignal.model.Restaurant;
 import com.rc.foodsignal.util.AppUtils;
 import com.reversecoder.library.event.OnSingleClickListener;
@@ -129,6 +131,16 @@ public class CheckoutActivity extends AppCompatActivity {
         }
     }
 
+    private float getTotalPrice() {
+        float totalPrice = 0.0f;
+        if (segmentedRadioButtonDelivery.isChecked()) {
+            totalPrice = getSubtotalPrice() + shippingCost;
+        } else {
+            totalPrice = getSubtotalPrice();
+        }
+        return totalPrice;
+    }
+
     public float getSubtotalPrice() {
         float subTotalPrice = 0.0f;
         try {
@@ -175,12 +187,25 @@ public class CheckoutActivity extends AppCompatActivity {
         llDone.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View view) {
-                float total = getSubtotalPrice();
-                if (total >= 10) {
-                    //DataCheckout dataCheckout = new DataCheckout(mRestaurant.getId(),total,)
+                float subTotal = getSubtotalPrice();
+                if (subTotal >= 10) {
+                    //arrange order items
+                    ArrayList<OrderItem> orderItems = new ArrayList<>();
+                    for (int i = 0; i < checkoutMenuListViewAdapter.getCount(); i++) {
+                        FoodItem mFoodItem = checkoutMenuListViewAdapter.getData().get(i);
+                        float itemPrice = getProductPrice(mFoodItem);
+                        Log.d(TAG, "total(itemPrice): " + itemPrice);
+                        Log.d(TAG, "total(itemQuantity): " + mFoodItem.getQuantity());
+//                        float priceWithQuantity = getProductPrice(mFoodItem) * mFoodItem.getQuantity();
+//                        Log.d(TAG, "total(priceWithQuantity): " + priceWithQuantity);
+
+                        OrderItem orderItem = new OrderItem(mFoodItem.getId(), mFoodItem.getQuantity(), itemPrice);
+                        orderItems.add(orderItem);
+                    }
+                    ParamCheckout paramCheckout = new ParamCheckout(mRestaurant.getId(), getTotalPrice(), subTotal, (segmentedRadioButtonDelivery.isChecked() ? "delivery" : "takeout"), shippingCost, "", "", "", orderItems);
 
                     Intent intentCardList = new Intent(CheckoutActivity.this, CardListActivity.class);
-                    intentCardList.putExtra(INTENT_KEY_CARD_LIST_CHECKOUT_DATA, total);
+                    intentCardList.putExtra(INTENT_KEY_CARD_LIST_CHECKOUT_DATA, ParamCheckout.getResponseString(paramCheckout));
                     startActivityForResult(intentCardList, INTENT_REQUEST_CODE_CARD_LIST);
                 } else {
                     Toast.makeText(CheckoutActivity.this, getString(R.string.toast_order_price_must_be_atleast_ten_dollar), Toast.LENGTH_SHORT).show();

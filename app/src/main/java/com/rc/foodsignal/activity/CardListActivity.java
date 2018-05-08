@@ -18,10 +18,14 @@ import android.widget.Toast;
 
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.adapter.CardListViewAdapter;
+import com.rc.foodsignal.model.ParamCheckout;
+import com.rc.foodsignal.model.ResponseSendOrderNotification;
 import com.rc.foodsignal.model.realm.RealmController;
 import com.rc.foodsignal.model.realm.StripeCard;
+import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
 import com.reversecoder.library.event.OnSingleClickListener;
+import com.reversecoder.library.httprequest.HttpRequestManager;
 import com.reversecoder.library.network.NetworkManager;
 import com.reversecoder.library.storage.SessionManager;
 import com.reversecoder.library.util.AllSettingsManager;
@@ -54,11 +58,11 @@ public class CardListActivity extends AppCompatActivity {
     ProgressDialog loadingDialog;
 
     LinearLayout llDeliveryInfo;
-    EditText edtReceiverName, edtReceiverAddress;
-    float checkoutAmount = 0.0f;
+    EditText edtReceiverName, edtReceiverAddress, edtReceiverEmailAddress;
     CardListViewAdapter cardListViewAdapter;
     ListView lvCard;
     RealmController realmController;
+    ParamCheckout paramCheckout;
     String TAG = AppUtils.getTagName(CardListActivity.class);
 
     @Override
@@ -72,9 +76,9 @@ public class CardListActivity extends AppCompatActivity {
 
     private void initUI() {
         Intent intent = getIntent();
-        float amount = intent.getFloatExtra(INTENT_KEY_CARD_LIST_CHECKOUT_DATA, 0.0f);
-        if (amount > 0) {
-            checkoutAmount = amount;
+        String data = intent.getStringExtra(INTENT_KEY_CARD_LIST_CHECKOUT_DATA);
+        if (!AllSettingsManager.isNullOrEmpty(data)) {
+            paramCheckout = ParamCheckout.getResponseObject(data, ParamCheckout.class);
         }
 
         ivBack = (ImageView) findViewById(R.id.iv_back);
@@ -86,6 +90,7 @@ public class CardListActivity extends AppCompatActivity {
 
         edtReceiverName = (EditText) findViewById(R.id.edt_receiver_name);
         edtReceiverAddress = (EditText) findViewById(R.id.edt_receiver_address);
+        edtReceiverEmailAddress = (EditText) findViewById(R.id.edt_receiver_email);
         lvCard = (ListView) findViewById(R.id.lv_card);
         cardListViewAdapter = new CardListViewAdapter(CardListActivity.this);
         lvCard.setAdapter(cardListViewAdapter);
@@ -162,14 +167,17 @@ public class CardListActivity extends AppCompatActivity {
             Toast.makeText(CardListActivity.this, getResources().getString(R.string.toast_please_add_atleast_one_card), Toast.LENGTH_SHORT).show();
             return;
         }
-
-        if (AllSettingsManager.isNullOrEmpty(edtReceiverName.getText().toString())) {
+        String mReceiverName = edtReceiverName.getText().toString(), mReceiverAddress = edtReceiverAddress.getText().toString(), mReceiverEmailAddress = edtReceiverEmailAddress.getText().toString();
+        if (AllSettingsManager.isNullOrEmpty(mReceiverName)) {
             Toast.makeText(CardListActivity.this, getString(R.string.toast_please_input_receiver_name), Toast.LENGTH_SHORT).show();
             return;
         }
-
-        if (AllSettingsManager.isNullOrEmpty(edtReceiverAddress.getText().toString())) {
+        if (AllSettingsManager.isNullOrEmpty(mReceiverAddress)) {
             Toast.makeText(CardListActivity.this, getString(R.string.toast_please_input_receiver_address), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (AllSettingsManager.isNullOrEmpty(mReceiverEmailAddress)) {
+            Toast.makeText(CardListActivity.this, getString(R.string.toast_please_input_receiver_email), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -194,7 +202,7 @@ public class CardListActivity extends AppCompatActivity {
                                 //Token successfully created.
                                 //Create a charge or save token to the server and use it later
 
-                                new doCharge(CardListActivity.this, token, checkoutAmount).execute();
+                                new doCharge(CardListActivity.this, token, paramCheckout.getTotal_amount()).execute();
                             }
 
                             public void onError(Exception error) {
@@ -235,8 +243,12 @@ public class CardListActivity extends AppCompatActivity {
         @Override
         protected Charge doInBackground(String... params) {
             try {
+                int amount = (int) (mAmount * 100);
+                Log.d(TAG, "ChargeAmount: " + amount + " cent");
+                Log.d(TAG, "ChargeAmount: $" + (int) mAmount);
+
                 Map<String, Object> chargeParams = new HashMap<String, Object>();
-                chargeParams.put("amount", (int) (mAmount * 100));
+                chargeParams.put("amount", amount);
                 chargeParams.put("currency", "usd");
                 chargeParams.put("description", "Charged $" + (int) mAmount + " from Android");
                 chargeParams.put("source", mToken.getId());
@@ -254,18 +266,13 @@ public class CardListActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Charge charge) {
-
-            dismissProgressDialog();
-
             if (charge != null && charge.getPaid() && charge.getStatus().equalsIgnoreCase("succeeded")) {
                 Log.d(TAG, "ChargeInfo: " + charge.toString());
-                Toast.makeText(getApplicationContext(), getString(R.string.toast_payment_is_successful), Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(), getString(R.string.toast_payment_is_successful), Toast.LENGTH_LONG).show();
 
-                //Send send successful payment status to checkout activity
-                Intent intent = new Intent();
-                setResult(RESULT_OK, intent);
-                finish();
+                new DoOrderTask(mContext, paramCheckout).execute();
             } else {
+                dismissProgressDialog();
                 Toast.makeText(getApplicationContext(), getString(R.string.toast_payment_is_not_successful), Toast.LENGTH_LONG).show();
             }
         }
@@ -294,5 +301,47 @@ public class CardListActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private class DoOrderTask extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
+
+        private Context mContext;
+        private ParamCheckout mParamCheckout;
+
+        public DoOrderTask(Context context, ParamCheckout paramCheckout) {
+            mContext = context;
+            mParamCheckout = paramCheckout;
+        }
+
+        @Override
+        protected HttpRequestManager.HttpResponse doInBackground(String... params) {
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getSendOrderUrl(), AllUrls.getSendOrderParam(mParamCheckout), null);
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(HttpRequestManager.HttpResponse result) {
+            dismissProgressDialog();
+
+            if (result != null && result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
+                Log.d(TAG, "success response from web: " + result.getResult().toString());
+                ResponseSendOrderNotification responseData = ResponseSendOrderNotification.getResponseObject(result.getResult().toString(), ResponseSendOrderNotification.class);
+                Log.d(TAG, "success response from object: " + responseData.toString());
+//
+                if (responseData.getStatus().equalsIgnoreCase("1") && (responseData.getData() != null)) {
+                    Log.d(TAG, "success wrapper: " + responseData.getData().toString());
+                    Toast.makeText(CardListActivity.this, getString(R.string.toast_payment_is_successful) + "\n" + responseData.getMsg(), Toast.LENGTH_SHORT).show();
+
+                    //Send send successful payment status to checkout activity
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK, intent);
+                    finish();
+                } else {
+                    Toast.makeText(CardListActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(CardListActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

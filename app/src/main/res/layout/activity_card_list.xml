@@ -19,17 +19,18 @@
     <LinearLayout
         android:id="@+id/ll_delivery_info"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/Off_white"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_margin="10dp"
             android:gravity="center_vertical">
 
             <TextView
@@ -37,6 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:text="Delivery Information:"
+                android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -45,22 +47,31 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:orientation="vertical">
 
             <EditText
                 android:id="@+id/edt_receiver_name"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:hint="Receiver Name" />
+                android:layout_height="50dp"
+                android:hint="Receiver Name"
+                android:textColor="@color/textColorPrimary" />
 
             <EditText
                 android:id="@+id/edt_receiver_address"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:hint="Receiver Address" />
+                android:layout_height="50dp"
+                android:hint="Receiver Address"
+                android:textColor="@color/textColorPrimary" />
+
+            <EditText
+                android:id="@+id/edt_receiver_email"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Receiver Email"
+                android:textColor="@color/textColorPrimary" />
 
         </LinearLayout>
 

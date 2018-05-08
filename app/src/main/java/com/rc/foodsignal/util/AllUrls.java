@@ -2,6 +2,7 @@ package com.rc.foodsignal.util;
 
 import android.util.Log;
 
+import com.rc.foodsignal.model.ParamCheckout;
 import com.rc.foodsignal.model.ParamFoodItem;
 import com.rc.foodsignal.model.ParamSendPush;
 import com.reversecoder.library.util.AllSettingsManager;
@@ -348,8 +349,26 @@ public class AllUrls {
     }
 
     public static String getAllNotificationsUrl(String appUserId) {
-        String url = BASE_URL + "notification/get_all_users_notification/"+appUserId;
+        String url = BASE_URL + "notification/get_all_users_notification/" + appUserId;
         Log.d(TAG, "getAllNotificationsUrl: " + url);
         return url;
+    }
+
+    public static String getSendOrderUrl() {
+        String url = BASE_URL + "orders/add";
+        Log.d(TAG, "getSendOrderUrl: " + url);
+        return url;
+    }
+
+    public static JSONObject getSendOrderParam(ParamCheckout paramSendOrder) {
+        JSONObject jsonObject;
+        try {
+            jsonObject = new JSONObject(ParamCheckout.getResponseString(paramSendOrder));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            jsonObject = new JSONObject();
+        }
+        Log.d(TAG, "getSendOrderParam: " + jsonObject.toString());
+        return jsonObject;
     }
 }

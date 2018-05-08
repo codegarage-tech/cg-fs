@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * @author Md. Rashadul Alam
  * Email: rashed.droid@gmail.com
  */
-public class DataCheckout extends ResponseBase {
+public class ParamCheckout extends ResponseBase {
 
     private String restaurant_id = "";
     private float total_amount = 0.0f;
@@ -18,7 +18,7 @@ public class DataCheckout extends ResponseBase {
     private String user_email = "";
     private ArrayList<OrderItem> order_items = new ArrayList<>();
 
-    public DataCheckout(String restaurant_id, float total_amount, float sub_total, String delivery_type, float shipping_cost, String user_name, String user_address, String user_email, ArrayList<OrderItem> order_items) {
+    public ParamCheckout(String restaurant_id, float total_amount, float sub_total, String delivery_type, float shipping_cost, String user_name, String user_address, String user_email, ArrayList<OrderItem> order_items) {
         this.restaurant_id = restaurant_id;
         this.total_amount = total_amount;
         this.sub_total = sub_total;
