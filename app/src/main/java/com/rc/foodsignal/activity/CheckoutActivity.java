@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.adapter.CheckoutMenuListViewAdapter;
 import com.rc.foodsignal.interfaces.OnQuantityChangeListener;
+import com.rc.foodsignal.model.DataCheckout;
 import com.rc.foodsignal.model.DataFoodItem;
 import com.rc.foodsignal.model.FoodItem;
 import com.rc.foodsignal.model.Restaurant;
@@ -23,7 +24,7 @@ import com.reversecoder.library.util.AllSettingsManager;
 
 import java.util.ArrayList;
 
-import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_CARD_LIST_CHECKOUT_AMOUNT;
+import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_CARD_LIST_CHECKOUT_DATA;
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_CHECKOUT_DATA;
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_REVIEWED_CHECKOUT_DATA;
 import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_CARD_LIST;
@@ -152,8 +153,10 @@ public class CheckoutActivity extends AppCompatActivity {
             public void onSingleClick(View view) {
                 float total = getSubtotalPrice();
                 if (total >= 10) {
+                    //DataCheckout dataCheckout = new DataCheckout(mRestaurant.getId(),total,)
+
                     Intent intentCardList = new Intent(CheckoutActivity.this, CardListActivity.class);
-                    intentCardList.putExtra(INTENT_KEY_CARD_LIST_CHECKOUT_AMOUNT, total);
+                    intentCardList.putExtra(INTENT_KEY_CARD_LIST_CHECKOUT_DATA, total);
                     startActivityForResult(intentCardList, INTENT_REQUEST_CODE_CARD_LIST);
                 } else {
                     Toast.makeText(CheckoutActivity.this, getString(R.string.toast_order_price_must_be_atleast_ten_dollar), Toast.LENGTH_SHORT).show();

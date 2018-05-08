@@ -36,7 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_CARD_ITEM;
-import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_CARD_LIST_CHECKOUT_AMOUNT;
+import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_CARD_LIST_CHECKOUT_DATA;
 import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_ADD_CARD;
 import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_CARD;
 import static com.rc.foodsignal.util.AllConstants.STRIPE_PUBLISHABLE_KEY;
@@ -72,7 +72,7 @@ public class CardListActivity extends AppCompatActivity {
 
     private void initUI() {
         Intent intent = getIntent();
-        float amount = intent.getFloatExtra(INTENT_KEY_CARD_LIST_CHECKOUT_AMOUNT, 0.0f);
+        float amount = intent.getFloatExtra(INTENT_KEY_CARD_LIST_CHECKOUT_DATA, 0.0f);
         if (amount > 0) {
             checkoutAmount = amount;
         }

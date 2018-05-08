@@ -50,7 +50,7 @@ public class AllConstants {
     public static final String INTENT_KEY_CARD_ITEM = "INTENT_KEY_CARD_ITEM";
     public static final String INTENT_KEY_CHECKOUT_DATA = "INTENT_KEY_CHECKOUT_DATA";
     public static final String INTENT_KEY_REVIEWED_CHECKOUT_DATA = "INTENT_KEY_REVIEWED_CHECKOUT_DATA";
-    public static final String INTENT_KEY_CARD_LIST_CHECKOUT_AMOUNT = "INTENT_KEY_CARD_LIST_CHECKOUT_AMOUNT";
+    public static final String INTENT_KEY_CARD_LIST_CHECKOUT_DATA = "INTENT_KEY_CARD_LIST_CHECKOUT_DATA";
 
     public static final int NAVIGATION_DRAWER_CLOSE_DELAY = 200;
 
