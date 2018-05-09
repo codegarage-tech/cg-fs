@@ -140,7 +140,7 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
         if (restaurant != null) {
             Log.d(TAG, "mRestaurant: " + restaurant.toString());
 
-            setFoodItemSliderData(restaurant.getAllFoodItems());
+            setFoodItemSliderData((mDetailIntentType == DetailIntentType.OTHER) ? restaurant.getAllFoodItems() : restaurant.getAllOfferFoodItems());
 
             setGoogleMapWithMarker(restaurant);
         }
@@ -450,17 +450,19 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
                     break;
                 case GCM:
                     mGcmData = intent.getParcelableExtra(INTENT_KEY_GCM_APP_USER_DATA_CONTENT);
-                    ResponseGcmRestaurantItem responseGcmRestaurantItem = ResponseGcmRestaurantItem.getResponseObject(mGcmData.getMessage(), ResponseGcmRestaurantItem.class);
+                    if (mGcmData != null) {
+                        ResponseGcmRestaurantItem responseGcmRestaurantItem = ResponseGcmRestaurantItem.getResponseObject(mGcmData.getMessage(), ResponseGcmRestaurantItem.class);
 
-                    if (responseGcmRestaurantItem.getStatus().equalsIgnoreCase("1")) {
-                        mRestaurant = responseGcmRestaurantItem.getData();
-                        mSelectedPosition = 0;
-                        fabFilter.setVisibility(View.GONE);
-                        Log.d(TAG, "Offer data: " + mRestaurant.toString());
+                        if (responseGcmRestaurantItem != null && responseGcmRestaurantItem.getStatus().equalsIgnoreCase("1")) {
+                            mRestaurant = responseGcmRestaurantItem.getData();
+                            mSelectedPosition = 0;
+                            fabFilter.setVisibility(View.GONE);
+                            Log.d(TAG, "GCM(restaurant): " + mRestaurant.toString());
 
-                        //Clear selection
-                        mSelectedData.clear();
-                        resetCounterView();
+                            //Clear selection
+                            mSelectedData.clear();
+                            resetCounterView();
+                        }
                     }
                     break;
             }
