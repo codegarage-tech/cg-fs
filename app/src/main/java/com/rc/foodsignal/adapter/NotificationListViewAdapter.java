@@ -16,14 +16,15 @@ import com.bumptech.glide.signature.ObjectKey;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.activity.RestaurantDetailActivity;
 import com.rc.foodsignal.model.Notification;
+import com.rc.foodsignal.model.ResponseGcmRestaurantItem;
+import com.reversecoder.gcm.model.GcmData;
 import com.reversecoder.gcm.util.DetailIntentType;
 import com.reversecoder.library.event.OnSingleClickListener;
 
 import java.util.ArrayList;
 
-import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_RESTAURANT_ITEM;
-import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_RESTAURANT_ITEM_POSITION;
 import static com.reversecoder.gcm.util.GcmConfig.INTENT_KEY_APP_USER_INTENT_DETAIL_TYPE;
+import static com.reversecoder.gcm.util.GcmConfig.INTENT_KEY_GCM_APP_USER_DATA_CONTENT;
 
 /**
  * @author Md. Rashadul Alam
@@ -124,13 +125,18 @@ public class NotificationListViewAdapter extends BaseAdapter {
         TextView tvRestaurantName = (TextView) vi.findViewById(R.id.tv_restaurant_name);
         tvRestaurantName.setText(notification.getDetails().getName());
 
+        TextView tvRestaurantAddress = (TextView) vi.findViewById(R.id.tv_restaurant_address);
+        tvRestaurantAddress.setText(notification.getDetails().getAddress());
+
         vi.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View view) {
+                ResponseGcmRestaurantItem responseGcmRestaurantItem = new ResponseGcmRestaurantItem("1", notification.getDetails());
+                GcmData gcmData = new GcmData(notification.getNotification(), mActivity.getString(com.reversecoder.gcm.R.string.txt_tap_for_more_details), ResponseGcmRestaurantItem.getResponseString(responseGcmRestaurantItem), "", "", "", "");
+
                 Intent intentRestaurantDetail = new Intent(mActivity, RestaurantDetailActivity.class);
                 intentRestaurantDetail.putExtra(INTENT_KEY_APP_USER_INTENT_DETAIL_TYPE, DetailIntentType.GCM.name());
-                intentRestaurantDetail.putExtra(INTENT_KEY_RESTAURANT_ITEM, notification.getDetails());
-                intentRestaurantDetail.putExtra(INTENT_KEY_RESTAURANT_ITEM_POSITION, 0);
+                intentRestaurantDetail.putExtra(INTENT_KEY_GCM_APP_USER_DATA_CONTENT, gcmData);
                 mActivity.startActivity(intentRestaurantDetail);
             }
         });

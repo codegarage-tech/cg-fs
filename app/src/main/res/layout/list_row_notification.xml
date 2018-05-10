@@ -43,11 +43,18 @@
             android:id="@+id/tv_restaurant_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:singleLine="true"
             android:text=""
+            android:layout_marginBottom="5dp"
             android:textColor="@color/textColorPrimary"
             android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_restaurant_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/textColorSecondary"
+            android:textSize="14sp" />
 
     </LinearLayout>
 
