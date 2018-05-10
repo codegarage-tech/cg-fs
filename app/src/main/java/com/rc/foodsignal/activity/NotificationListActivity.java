@@ -190,7 +190,7 @@ public class NotificationListActivity extends AppCompatActivity {
                 Log.d(TAG, "success response from object: " + responseData.toString());
 
                 if (responseData.getStatus().equalsIgnoreCase("success") && (responseData.getData().size() > 0)) {
-                    Log.d(TAG, "success wrapper: " + responseData.getData().get(0).toString());
+                    Log.d(TAG, "success wrapper: " + responseData.getData().toString());
 
                     //Update list view
                     notificationListViewAdapter.setData(responseData.getData());

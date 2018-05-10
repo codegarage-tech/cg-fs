@@ -31,6 +31,9 @@ public class FoodItem extends ResponseBase implements Parcelable {
     private String offer_title = "";
     private String offer_price = "";
     private String has_offer_price = "";
+    //For notification
+    private String percentage = "";
+
 
     public FoodItem(boolean isSelected, int offerPercentage, String id, String name, String menu_id, String menu_image, String price, String restaurant_id, String ingredients, String category_name, ArrayList<FoodImage> images, String offer_title, String offer_price) {
         this.isSelected = isSelected;
@@ -176,13 +179,13 @@ public class FoodItem extends ResponseBase implements Parcelable {
         this.quantity = quantity;
     }
 
-//    public int getSumPrice() {
-//        return sumPrice;
-//    }
-//
-//    public void setSumPrice(int sumPrice) {
-//        this.sumPrice = sumPrice;
-//    }
+    public String getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(String percentage) {
+        this.percentage = percentage;
+    }
 
     @Override
     public String toString() {
@@ -204,6 +207,7 @@ public class FoodItem extends ResponseBase implements Parcelable {
                 ", offer_title='" + offer_title + '\'' +
                 ", offer_price='" + offer_price + '\'' +
                 ", has_offer_price='" + has_offer_price + '\'' +
+                ", percentage='" + percentage + '\'' +
                 '}';
     }
 
@@ -260,6 +264,7 @@ public class FoodItem extends ResponseBase implements Parcelable {
         dest.writeList(images);
         dest.writeString(offer_price);
         dest.writeString(offer_title);
+        dest.writeString(percentage);
     }
 
     // Creator
@@ -286,5 +291,6 @@ public class FoodItem extends ResponseBase implements Parcelable {
         images = in.readArrayList(FoodImage.class.getClassLoader());
         offer_price = in.readString();
         offer_title = in.readString();
+        percentage = in.readString();
     }
 }

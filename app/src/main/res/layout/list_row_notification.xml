@@ -12,12 +12,10 @@
         android:gravity="center">
 
         <ImageView
-            android:id="@+id/iv_menu"
-            android:layout_width="70dp"
+            android:id="@+id/iv_restaurant"
+            android:layout_width="85dp"
             android:layout_height="70dp"
-            android:layout_margin="10dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/ic_default_restaurant" />
+            android:layout_margin="10dp" />
 
     </LinearLayout>
 
@@ -36,9 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:text="Offer"
+            android:text=""
             android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/medium_font_size"
             android:textStyle="bold" />
@@ -49,7 +45,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="Mezban Restaurant(dummy text)"
+            android:text=""
             android:textColor="@color/textColorPrimary"
             android:textSize="16sp" />
 

@@ -16,6 +16,7 @@ public class Notification extends ResponseBase implements Parcelable {
     private String notification = "";
     private String restaurant_id = "";
     private String datetime = "";
+    private Restaurant details;
 //    private ArrayList<Offer> notification_details = new ArrayList<>();
 
 //    public Notification(String id, String app_user_id, String notification, String restaurant_id, String datetime, ArrayList<Offer> notification_details) {
@@ -67,7 +68,15 @@ public class Notification extends ResponseBase implements Parcelable {
         this.datetime = datetime;
     }
 
-//    public ArrayList<Offer> getNotification_details() {
+    public Restaurant getDetails() {
+        return details;
+    }
+
+    public void setDetails(Restaurant details) {
+        this.details = details;
+    }
+
+    //    public ArrayList<Offer> getNotification_details() {
 //        return notification_details;
 //    }
 //
@@ -83,6 +92,7 @@ public class Notification extends ResponseBase implements Parcelable {
                 ", notification='" + notification + '\'' +
                 ", restaurant_id='" + restaurant_id + '\'' +
                 ", datetime='" + datetime + '\'' +
+                ", details='" + details + '\'' +
 //                ", notification_details=" + notification_details +
                 '}';
     }

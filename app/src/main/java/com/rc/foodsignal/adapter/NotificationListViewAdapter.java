@@ -2,16 +2,28 @@ package com.rc.foodsignal.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 import com.rc.foodsignal.R;
+import com.rc.foodsignal.activity.RestaurantDetailActivity;
 import com.rc.foodsignal.model.Notification;
+import com.reversecoder.gcm.util.DetailIntentType;
+import com.reversecoder.library.event.OnSingleClickListener;
 
 import java.util.ArrayList;
+
+import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_RESTAURANT_ITEM;
+import static com.rc.foodsignal.util.AllConstants.INTENT_KEY_RESTAURANT_ITEM_POSITION;
+import static com.reversecoder.gcm.util.GcmConfig.INTENT_KEY_APP_USER_INTENT_DETAIL_TYPE;
 
 /**
  * @author Md. Rashadul Alam
@@ -94,11 +106,34 @@ public class NotificationListViewAdapter extends BaseAdapter {
 
         final Notification notification = getItem(position);
 
+        ImageView ivRestaurant = (ImageView) vi.findViewById(R.id.iv_restaurant);
+        Glide
+                .with(mActivity)
+                .asBitmap()
+                .load(notification.getDetails().getImage())
+                .apply(new RequestOptions().signature(new ObjectKey(System.currentTimeMillis())))
+//                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
+                .apply(new RequestOptions().placeholder(R.drawable.ic_default_restaurant))
+                .apply(new RequestOptions().error(R.drawable.ic_default_restaurant))
+//                .apply(new RequestOptions().circleCropTransform())
+                .into(ivRestaurant);
+
         TextView tvOfferTitle = (TextView) vi.findViewById(R.id.tv_offer_title);
         tvOfferTitle.setText(notification.getNotification());
 
         TextView tvRestaurantName = (TextView) vi.findViewById(R.id.tv_restaurant_name);
-//        tvRestaurantName.setText(notification.getNotification());
+        tvRestaurantName.setText(notification.getDetails().getName());
+
+        vi.setOnClickListener(new OnSingleClickListener() {
+            @Override
+            public void onSingleClick(View view) {
+                Intent intentRestaurantDetail = new Intent(mActivity, RestaurantDetailActivity.class);
+                intentRestaurantDetail.putExtra(INTENT_KEY_APP_USER_INTENT_DETAIL_TYPE, DetailIntentType.GCM.name());
+                intentRestaurantDetail.putExtra(INTENT_KEY_RESTAURANT_ITEM, notification.getDetails());
+                intentRestaurantDetail.putExtra(INTENT_KEY_RESTAURANT_ITEM_POSITION, 0);
+                mActivity.startActivity(intentRestaurantDetail);
+            }
+        });
 
         return vi;
     }
