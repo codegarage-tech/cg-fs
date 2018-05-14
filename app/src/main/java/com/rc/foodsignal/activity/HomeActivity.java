@@ -199,6 +199,9 @@ public class HomeActivity extends BaseActivity implements AAH_FabulousFragment.C
         } else if (id == R.id.nav_notification) {
             Intent intentNotification = new Intent(HomeActivity.this, NotificationListActivity.class);
             startActivity(intentNotification);
+        } else if (id == R.id.nav_order) {
+            Intent intentOrder = new Intent(HomeActivity.this, OrderListActivity.class);
+            startActivity(intentOrder);
         } else if (id == R.id.nav_android_pay) {
             Intent intentAndroidPayCardList = new Intent(HomeActivity.this, AndroidPayCardListActivity.class);
             startActivity(intentAndroidPayCardList);
