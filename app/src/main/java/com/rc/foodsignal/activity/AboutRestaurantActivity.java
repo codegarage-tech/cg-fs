@@ -147,7 +147,7 @@ public class AboutRestaurantActivity extends AppCompatActivity {
                 .into(ivUser);
         edtName.setText((!AllSettingsManager.isNullOrEmpty(restaurantLoginInfo.getName())) ? restaurantLoginInfo.getName() : "");
         edtEmail.setText((!AllSettingsManager.isNullOrEmpty(restaurantLoginInfo.getEmail())) ? restaurantLoginInfo.getEmail() : "");
-        tvAddress.setText((!AllSettingsManager.isNullOrEmpty(restaurantLoginInfo.getAddress())) ? restaurantLoginInfo.getAddress() : "");
+        tvAddress.setText((!AllSettingsManager.isNullOrEmpty(AppUtils.formatLocationInfo(restaurantLoginInfo.getAddress()))) ? restaurantLoginInfo.getAddress() : "");
         edtPhone.setText((!AllSettingsManager.isNullOrEmpty(restaurantLoginInfo.getPhone())) ? restaurantLoginInfo.getPhone() : "");
         edtPassword.setText((!AllSettingsManager.isNullOrEmpty(restaurantLoginInfo.getPassword())) ? restaurantLoginInfo.getPassword() : "");
         edtShippingCost.setText((!AllSettingsManager.isNullOrEmpty(restaurantLoginInfo.getShipping_cost())) ? restaurantLoginInfo.getShipping_cost() : "");
@@ -246,7 +246,7 @@ public class AboutRestaurantActivity extends AppCompatActivity {
         private double mLat = -1, mLng = -1;
         private String mName = "", mAddress = "", mPhone = "", mEmail = "", mPassword = "", mRestaurantCategoryId = "", mShippingCost = "", mImage = "";
 
-        public DoUpdateRestaurantInfo(Context context, String name, double lat, String address, String phone, double lng, String email, String password, String restaurantCategoryId,  String shippingCost, String image) {
+        public DoUpdateRestaurantInfo(Context context, String name, double lat, String address, String phone, double lng, String email, String password, String restaurantCategoryId, String shippingCost, String image) {
             this.mContext = context;
             this.mName = name;
             this.mLat = lat;
@@ -293,7 +293,7 @@ public class AboutRestaurantActivity extends AppCompatActivity {
                 loadingDialog.dismiss();
             }
 
-            if (result !=null && result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
+            if (result != null && result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
                 Log.d(TAG, "success response from web: " + result.getResult().toString());
                 ResponseRestaurantLoginData responseData = ResponseRestaurantLoginData.getResponseObject(result.getResult().toString(), ResponseRestaurantLoginData.class);
 
@@ -452,7 +452,7 @@ public class AboutRestaurantActivity extends AppCompatActivity {
                 mLocation = data.getParcelableExtra(INTENT_KEY_SEARCH_ADDRESS);
                 String addressText = String.format("%s, %s, %s, %s", mLocation.getStreet(), mLocation.getCity(), mLocation.getState(), mLocation.getCountry());
                 Log.d("SearchLocationResult: ", mLocation.toString());
-                tvAddress.setText(addressText);
+                tvAddress.setText(AppUtils.formatLocationInfo(addressText));
             }
         }
     }

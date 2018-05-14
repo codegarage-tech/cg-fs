@@ -46,7 +46,7 @@ import static com.rc.foodsignal.util.AllConstants.SESSION_USER_BASIC_INFO;
 
 /**
  * @author Md. Rashadul Alam
- *         Email: rashed.droid@gmail.com
+ * Email: rashed.droid@gmail.com
  */
 public class AddLocationActivity extends BaseLocationActivity {
 
@@ -145,7 +145,7 @@ public class AddLocationActivity extends BaseLocationActivity {
 
                                                                        //Set previous data if exist
                                                                        if (selectedPlace != null && !selectedAddress.equalsIgnoreCase("")) {
-                                                                           acPlace.setText(selectedAddress);
+                                                                           acPlace.setText(AppUtils.formatLocationInfo(selectedAddress));
                                                                            acPlace.dismissDropDown();
                                                                            setPlaceSearchDetail(selectedPlace);
                                                                        }
@@ -282,7 +282,7 @@ public class AddLocationActivity extends BaseLocationActivity {
 
                 Log.d(TAG, "UserLocationAddress: " + locationAddress.toString());
                 String addressText = String.format("%s, %s, %s, %s", locationAddress.getStreetAddress(), locationAddress.getCity(), locationAddress.getState(), locationAddress.getCountry());
-                acPlace.setText(addressText);
+                acPlace.setText(AppUtils.formatLocationInfo(addressText));
                 acPlace.dismissDropDown();
 
                 tvStreet.setText(locationAddress.getStreetAddress());
@@ -371,7 +371,7 @@ public class AddLocationActivity extends BaseLocationActivity {
 
                     Intent intent = new Intent();
                     intent.putExtra(INTENT_KEY_ADDRESS_LIST, true);
-                    setResult(RESULT_OK,intent);
+                    setResult(RESULT_OK, intent);
                     finish();
                 } else {
                     Toast.makeText(AddLocationActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();

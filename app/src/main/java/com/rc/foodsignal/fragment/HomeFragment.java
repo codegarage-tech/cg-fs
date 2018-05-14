@@ -97,7 +97,7 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
             Log.d(TAG, "Session data: " + SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION));
             mLocation = Location.getResponseObject(SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION), Location.class);
 
-            ((HomeActivity) getActivity()).setToolbarTitle(String.format("%s, %s, %s, %s", mLocation.getStreet(), mLocation.getCity(), mLocation.getState(), mLocation.getCountry()));
+            ((HomeActivity) getActivity()).setToolbarTitle(AppUtils.formatLocationInfo(String.format("%s, %s, %s, %s", mLocation.getStreet(), mLocation.getCity(), mLocation.getState(), mLocation.getCountry())));
         }
 
         if (!NetworkManager.isConnected(getActivity())) {
@@ -330,7 +330,7 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
                             Log.d(TAG, "Session data: " + SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION));
                             mLocation = Location.getResponseObject(SessionManager.getStringSetting(getActivity(), SESSION_SELECTED_LOCATION), Location.class);
 
-                            ((HomeActivity) getActivity()).setToolbarTitle(String.format("%s, %s, %s, %s", mLocation.getStreet(), mLocation.getCity(), mLocation.getState(), mLocation.getCountry()));
+                            ((HomeActivity) getActivity()).setToolbarTitle(AppUtils.formatLocationInfo(String.format("%s, %s, %s, %s", mLocation.getStreet(), mLocation.getCity(), mLocation.getState(), mLocation.getCountry())));
                         }
 
                         //Search result depending on new location

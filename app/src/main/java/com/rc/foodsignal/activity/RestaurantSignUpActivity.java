@@ -169,7 +169,7 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
                 String mCategory = tvCategory.getText().toString(),
                         mName = edtName.getText().toString(),
                         mEmail = edtEmail.getText().toString(),
-                        mAddress = tvAddress.getText().toString(),
+                        mAddress = AppUtils.formatLocationInfo(tvAddress.getText().toString()),
                         mPhone = edtPhone.getText().toString(),
                         mPassword = edtPassword.getText().toString(),
                         mShippingCost = edtShippingCost.getText().toString();
@@ -273,7 +273,7 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
                 loadingDialog.dismiss();
             }
 
-            if (result !=null && result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
+            if (result != null && result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
                 Log.d(TAG, "success response from web: " + result.getResult().toString());
                 ResponseRestaurantLoginData responseData = ResponseRestaurantLoginData.getResponseObject(result.getResult().toString(), ResponseRestaurantLoginData.class);
 
@@ -421,7 +421,7 @@ public class RestaurantSignUpActivity extends AppCompatActivity {
                 mLocation = data.getParcelableExtra(INTENT_KEY_SEARCH_ADDRESS);
                 String addressText = String.format("%s, %s, %s, %s", mLocation.getStreet(), mLocation.getCity(), mLocation.getState(), mLocation.getCountry());
                 Log.d("SearchLocationResult: ", mLocation.toString());
-                tvAddress.setText(addressText);
+                tvAddress.setText(AppUtils.formatLocationInfo(addressText));
             }
         }
     }

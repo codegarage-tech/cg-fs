@@ -241,7 +241,7 @@ public class RestaurantDetailActivity extends AppCompatActivity implements AAH_F
         tsFoodItemIngredient.setText(foodItem.getIngredients());
         tvRestaurantEmail.setText(mRestaurant.getEmail());
         tvRestaurantPhone.setText(mRestaurant.getPhone());
-        tvRestaurantAddress.setText(mRestaurant.getAddress());
+        tvRestaurantAddress.setText(AppUtils.formatLocationInfo(mRestaurant.getAddress()));
 
         if (foodItem.isSelected()) {
             ivAddToCart.setBackgroundResource(R.drawable.ic_vector_cart_tick_empty_blue);

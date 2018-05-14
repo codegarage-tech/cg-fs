@@ -16,6 +16,7 @@ import com.rc.foodsignal.R;
 import com.rc.foodsignal.interfaces.OnPagerItemClickListener;
 import com.rc.foodsignal.model.FoodItem;
 import com.rc.foodsignal.model.Restaurant;
+import com.rc.foodsignal.util.AppUtils;
 import com.reversecoder.library.random.RandomManager;
 import com.reversecoder.library.util.AllSettingsManager;
 
@@ -89,7 +90,7 @@ public class RestaurantMenuPagerAdapter extends PagerAdapter {
         tvFoodName.setText((mItems.size() > 0) ? mItems.get(position).getName() : "");
         tvFoodIngredient.setText("Ingredient: " + ((mItems.size() > 0) ? mItems.get(position).getIngredients() : ""));
         tvRestaurantName.setText("Restaurant: " + mRestaurant.getName());
-        tvRestaurantAddress.setText("Address: " + mRestaurant.getAddress());
+        tvRestaurantAddress.setText("Address: " + AppUtils.formatLocationInfo(mRestaurant.getAddress()));
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override

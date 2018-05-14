@@ -10,7 +10,7 @@ import static android.content.Context.ACTIVITY_SERVICE;
 
 /**
  * @author Md. Rashadul Alam
- *         Email: rashed.droid@gmail.com
+ * Email: rashed.droid@gmail.com
  */
 public class AppUtils {
 
@@ -37,6 +37,14 @@ public class AppUtils {
 
     public static boolean isNullOrEmpty(String myString) {
         return myString == null ? true : myString.length() == 0 || myString.equalsIgnoreCase("null") || myString.equalsIgnoreCase("");
+    }
+
+    public static String formatLocationInfo(String myString) {
+        String location = "";
+        if (myString != null && myString.trim().length() > 0) {
+            location = myString.startsWith(",") ? myString.substring(1).trim().replaceAll(", ,", ",") : myString.replaceAll(", ,", ",");
+        }
+        return location;
     }
 
     public static String getTagName(Class<?> cls) {

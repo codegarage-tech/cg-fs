@@ -139,7 +139,7 @@ public class SearchLocationActivity extends BaseLocationActivity {
 
                                                                        //Set previous data if exist
                                                                        if (selectedPlace != null && !selectedAddress.equalsIgnoreCase("")) {
-                                                                           acPlace.setText(selectedAddress);
+                                                                           acPlace.setText(AppUtils.formatLocationInfo(selectedAddress));
                                                                            acPlace.dismissDropDown();
                                                                            setPlaceSearchDetail(selectedPlace);
                                                                        }
@@ -281,7 +281,7 @@ public class SearchLocationActivity extends BaseLocationActivity {
 
                 Log.d(TAG, "UserLocationAddress: " + locationAddress.toString());
                 String addressText = String.format("%s, %s, %s, %s", locationAddress.getStreetAddress(), locationAddress.getCity(), locationAddress.getState(), locationAddress.getCountry());
-                acPlace.setText(addressText);
+                acPlace.setText(AppUtils.formatLocationInfo(addressText));
                 acPlace.dismissDropDown();
 
                 tvStreet.setText(locationAddress.getStreetAddress());

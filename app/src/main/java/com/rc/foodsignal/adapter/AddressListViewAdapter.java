@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.model.Location;
+import com.rc.foodsignal.util.AppUtils;
 import com.reversecoder.library.storage.SessionManager;
 
 import java.util.ArrayList;
@@ -93,7 +94,7 @@ public class AddressListViewAdapter extends BaseAdapter {
         TextView tvStreet = (TextView) vi.findViewById(R.id.tv_street);
         tvStreet.setText(location.getStreet());
         TextView tvAddress = (TextView) vi.findViewById(R.id.tv_address);
-        tvAddress.setText(String.format("%s, %s, %s", location.getCity(), location.getState(), location.getCountry()));
+        tvAddress.setText(AppUtils.formatLocationInfo(String.format("%s, %s, %s", location.getCity(), location.getState(), location.getCountry())));
 
         LinearLayout llAddressCheck = (LinearLayout) vi.findViewById(R.id.ll_address_check);
         if (mLocation.getId().equalsIgnoreCase(location.getId())) {

@@ -18,11 +18,17 @@
             android:background="@drawable/toolbar_bg"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/ic_menu_location"
+                android:backgroundTint="@color/white" />
+
             <com.rc.foodsignal.view.CanaroTextView
                 android:id="@+id/tv_toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginRight="10dp"
                 android:ellipsize="end"
                 android:singleLine="true"
