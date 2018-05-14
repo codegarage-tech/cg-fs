@@ -53,7 +53,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
     //Segmented Radio group
     SegmentedRadioGroup segmentedRadioGroup;
-    RadioButton segmentedRadioButtonDelivery, segmentedRadioButtonTakeout;
+    RadioButton segmentedRadioButtonDelivery, segmentedRadioButtonPickup;
 
 
     @Override
@@ -82,7 +82,7 @@ public class CheckoutActivity extends AppCompatActivity {
         segmentedRadioGroup = (SegmentedRadioGroup) findViewById(R.id.sr_delivery_type);
         segmentedRadioButtonDelivery = (RadioButton) findViewById(R.id.segmented_rbtn_delivery);
         segmentedRadioButtonDelivery.setChecked(true);
-        segmentedRadioButtonTakeout = (RadioButton) findViewById(R.id.segmented_rbtn_take_out);
+        segmentedRadioButtonPickup = (RadioButton) findViewById(R.id.segmented_rbtn_pick_up);
 
         tvSubtotal = (TextView) findViewById(R.id.tv_subtotal);
         tvShippingCost = (TextView) findViewById(R.id.tv_shipping_cost);
@@ -202,7 +202,7 @@ public class CheckoutActivity extends AppCompatActivity {
                         OrderItem orderItem = new OrderItem(mFoodItem.getId(), mFoodItem.getQuantity(), itemPrice);
                         orderItems.add(orderItem);
                     }
-                    ParamCheckout paramCheckout = new ParamCheckout(mRestaurant.getId(), getTotalPrice(), subTotal, (segmentedRadioButtonDelivery.isChecked() ? "delivery" : "takeout"), shippingCost, "", "", "", orderItems);
+                    ParamCheckout paramCheckout = new ParamCheckout(mRestaurant.getId(), getTotalPrice(), subTotal, (segmentedRadioButtonDelivery.isChecked() ? "delivery" : "pickup"), shippingCost, "", "", "", orderItems);
 
                     Intent intentCardList = new Intent(CheckoutActivity.this, CardListActivity.class);
                     intentCardList.putExtra(INTENT_KEY_CARD_LIST_CHECKOUT_DATA, ParamCheckout.getResponseString(paramCheckout));

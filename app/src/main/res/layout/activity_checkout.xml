@@ -64,12 +64,12 @@
                 android:text="Delivery" />
 
             <RadioButton
-                android:id="@+id/segmented_rbtn_take_out"
+                android:id="@+id/segmented_rbtn_pick_up"
                 style="@style/SegmentedRadioButton"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
                 android:layout_weight=".5"
-                android:text="Take Out" />
+                android:text="Pick Up" />
 
         </com.reversecoder.library.segmentradiogroup.SegmentedRadioGroup>
 
