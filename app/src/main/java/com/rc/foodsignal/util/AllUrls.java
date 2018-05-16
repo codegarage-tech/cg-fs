@@ -371,4 +371,10 @@ public class AllUrls {
         Log.d(TAG, "getSendOrderParam: " + jsonObject.toString());
         return jsonObject;
     }
+
+    public static String getAllOrdersUrl(String restaurantId) {
+        String url = BASE_URL + "orders/lists/" + restaurantId;
+        Log.d(TAG, "getAllOrdersUrl: " + url);
+        return url;
+    }
 }
