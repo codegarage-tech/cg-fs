@@ -10,10 +10,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rc.foodsignal.R;
+import com.rc.foodsignal.adapter.OrderListViewAdapter;
+import com.rc.foodsignal.model.ResponseOrderList;
 import com.rc.foodsignal.model.RestaurantLoginData;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
@@ -39,6 +42,8 @@ public class OrderListActivity extends AppCompatActivity {
 
     String TAG = AppUtils.getTagName(OrderListActivity.class);
     ProgressDialog loadingDialog;
+    ListView lvOrder;
+    OrderListViewAdapter orderListViewAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,10 @@ public class OrderListActivity extends AppCompatActivity {
         llNotification = (LinearLayout) findViewById(R.id.ll_notification);
         tvTitle = (TextView) findViewById(R.id.text_title);
         tvTitle.setText(getString(R.string.title_activity_order));
+
+        lvOrder = (ListView) findViewById(R.id.lv_order);
+        orderListViewAdapter = new OrderListViewAdapter(OrderListActivity.this);
+        lvOrder.setAdapter(orderListViewAdapter);
 
         //set restaurant information
         if (!AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(OrderListActivity.this, SESSION_RESTAURANT_LOGIN_DATA))) {
@@ -126,17 +135,17 @@ public class OrderListActivity extends AppCompatActivity {
 
             if (result != null && result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
                 Log.d(TAG, "success response from web: " + result.getResult().toString());
-//                ResponseNotification responseData = ResponseNotification.getResponseObject(result.getResult().toString().replace("\\", "").trim(), ResponseNotification.class);
-//                Log.d(TAG, "success response from object: " + responseData.toString());
-//
-//                if (responseData.getStatus().equalsIgnoreCase("success") && (responseData.getData().size() > 0)) {
-//                    Log.d(TAG, "success wrapper: " + responseData.getData().toString());
-//
-//                    //Update list view
-//                    notificationListViewAdapter.setData(responseData.getData());
-//                } else {
-//                    Toast.makeText(OrderListActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
-//                }
+                ResponseOrderList responseData = ResponseOrderList.getResponseObject(result.getResult().toString(), ResponseOrderList.class);
+                Log.d(TAG, "success response from object: " + responseData.toString());
+
+                if (responseData.getStatus().equalsIgnoreCase("1") && (responseData.getData().size() > 0)) {
+                    Log.d(TAG, "success wrapper: " + responseData.getData().toString());
+
+                    //Update list view
+                    orderListViewAdapter.setData(responseData.getData());
+                } else {
+                    Toast.makeText(OrderListActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
+                }
 
             } else {
                 Toast.makeText(OrderListActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
