@@ -113,6 +113,22 @@ public class OrderListItem extends ResponseBase {
         this.menu_details = menu_details;
     }
 
+    public ArrayList<FoodItem> getAllFoodItems() {
+        ArrayList<FoodItem> mItems = new ArrayList<>();
+        if (getMenu_details() != null && getMenu_details().size() > 0) {
+            for (int i = 0; i < getMenu_details().size(); i++) {
+                FoodCategoryDetail foodCategoryDetail = getMenu_details().get(i);
+                if (foodCategoryDetail.getMenu_details() != null && foodCategoryDetail.getMenu_details().size() > 0) {
+                    for (int j = 0; j < foodCategoryDetail.getMenu_details().size(); j++) {
+                        FoodItem foodItem = foodCategoryDetail.getMenu_details().get(j);
+                        mItems.add(foodItem);
+                    }
+                }
+            }
+        }
+        return mItems;
+    }
+
     @Override
     public String toString() {
         return "OrderListItem{" +

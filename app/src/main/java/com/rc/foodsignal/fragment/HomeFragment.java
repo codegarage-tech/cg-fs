@@ -1,6 +1,8 @@
 package com.rc.foodsignal.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -63,6 +65,7 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
     Location mLocation;
     RecyclerView recyclerViewFood;
     RestaurantAdapter restaurantAdapter;
+    ProgressDialog loadingDialog;
 
     //Fabulous Filter
     private ArrayMap<String, List<String>> appliedFilters = new ArrayMap<>();
@@ -179,6 +182,21 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
 
         @Override
         protected void onPreExecute() {
+            loadingDialog = new ProgressDialog(mContext);
+            loadingDialog.setMessage(getResources().getString(R.string.txt_loading));
+            loadingDialog.setIndeterminate(false);
+            loadingDialog.setCancelable(true);
+            loadingDialog.setCanceledOnTouchOutside(false);
+            loadingDialog.show();
+            loadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface arg0) {
+                    if (loadingDialog != null
+                            && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
+                }
+            });
         }
 
         @Override
@@ -189,6 +207,11 @@ public class HomeFragment extends Fragment implements OnFragmentBackPressedListe
 
         @Override
         protected void onPostExecute(HttpRequestManager.HttpResponse result) {
+
+            if (loadingDialog != null
+                    && loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
+            }
 
             if (result != null && result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
                 Log.d(TAG, "success response from web: " + result.getResult().toString());

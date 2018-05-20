@@ -10,4 +10,7 @@
     <color name="textColorSecondary">#757575</color>
 
     <color name="colorGray">#757575</color>
+
+    <color name="colorBackground">@color/colorPrimary</color>
+    <color name="separatorColor">#18102C</color>
 </resources>
