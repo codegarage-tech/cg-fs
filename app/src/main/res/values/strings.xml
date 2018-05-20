@@ -55,6 +55,7 @@
     <string name="toast_please_input_valid_card_information">Please input valid card information</string>
     <string name="toast_please_input_receiver_name">Please input receiver name</string>
     <string name="toast_please_input_receiver_address">Please input receiver address</string>
+    <string name="toast_please_input_receiver_phone">Please input receiver phone</string>
     <string name="toast_please_input_receiver_email">Please input receiver email</string>
     <string name="toast_something_went_wrong">Something went wrong!</string>
 

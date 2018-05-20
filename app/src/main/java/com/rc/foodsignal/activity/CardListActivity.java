@@ -58,7 +58,7 @@ public class CardListActivity extends AppCompatActivity {
     ProgressDialog loadingDialog;
 
     LinearLayout llDeliveryInfo;
-    EditText edtReceiverName, edtReceiverAddress, edtReceiverEmailAddress;
+    EditText edtReceiverName, edtReceiverAddress, edtReceiverPhone, edtReceiverEmailAddress;
     CardListViewAdapter cardListViewAdapter;
     ListView lvCard;
     RealmController realmController;
@@ -90,6 +90,7 @@ public class CardListActivity extends AppCompatActivity {
 
         edtReceiverName = (EditText) findViewById(R.id.edt_receiver_name);
         edtReceiverAddress = (EditText) findViewById(R.id.edt_receiver_address);
+        edtReceiverPhone = (EditText) findViewById(R.id.edt_receiver_phone);
         edtReceiverEmailAddress = (EditText) findViewById(R.id.edt_receiver_email);
         lvCard = (ListView) findViewById(R.id.lv_card);
         cardListViewAdapter = new CardListViewAdapter(CardListActivity.this);
@@ -167,13 +168,17 @@ public class CardListActivity extends AppCompatActivity {
             Toast.makeText(CardListActivity.this, getResources().getString(R.string.toast_please_add_atleast_one_card), Toast.LENGTH_SHORT).show();
             return;
         }
-        String mReceiverName = edtReceiverName.getText().toString(), mReceiverAddress = edtReceiverAddress.getText().toString(), mReceiverEmailAddress = edtReceiverEmailAddress.getText().toString();
+        String mReceiverName = edtReceiverName.getText().toString(), mReceiverAddress = edtReceiverAddress.getText().toString(),mReceiverPhone =edtReceiverPhone.getText().toString() , mReceiverEmailAddress = edtReceiverEmailAddress.getText().toString();
         if (AllSettingsManager.isNullOrEmpty(mReceiverName)) {
             Toast.makeText(CardListActivity.this, getString(R.string.toast_please_input_receiver_name), Toast.LENGTH_SHORT).show();
             return;
         }
         if (AllSettingsManager.isNullOrEmpty(mReceiverAddress)) {
             Toast.makeText(CardListActivity.this, getString(R.string.toast_please_input_receiver_address), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (AllSettingsManager.isNullOrEmpty(mReceiverPhone)) {
+            Toast.makeText(CardListActivity.this, getString(R.string.toast_please_input_receiver_phone), Toast.LENGTH_SHORT).show();
             return;
         }
         if (AllSettingsManager.isNullOrEmpty(mReceiverEmailAddress)) {
@@ -187,6 +192,12 @@ public class CardListActivity extends AppCompatActivity {
         }
 
         initProgressDialog();
+
+        //Set delivery info
+        paramCheckout.setUser_name(mReceiverName);
+        paramCheckout.setUser_address(mReceiverAddress);
+        paramCheckout.setUser_phone(mReceiverPhone);
+        paramCheckout.setUser_email(mReceiverEmailAddress);
 
         StripeCard stripeCard = ((StripeCard) StripeCard.getResponseObject(SessionManager.getStringSetting(CardListActivity.this, SESSION_SELECTED_CARD), StripeCard.class));
 
@@ -330,7 +341,7 @@ public class CardListActivity extends AppCompatActivity {
 //
                 if (responseData.getStatus().equalsIgnoreCase("1") && (responseData.getData() != null)) {
                     Log.d(TAG, "success wrapper: " + responseData.getData().toString());
-                    Toast.makeText(CardListActivity.this, getString(R.string.toast_payment_is_successful) + "\n" + responseData.getMsg(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CardListActivity.this, getString(R.string.toast_payment_is_successful) + "\n" + responseData.getMsg(), Toast.LENGTH_LONG).show();
 
                     //Send send successful payment status to checkout activity
                     Intent intent = new Intent();

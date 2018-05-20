@@ -55,7 +55,6 @@ public class CheckoutActivity extends AppCompatActivity {
     SegmentedRadioGroup segmentedRadioGroup;
     RadioButton segmentedRadioButtonDelivery, segmentedRadioButtonPickup;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -202,7 +201,7 @@ public class CheckoutActivity extends AppCompatActivity {
                         OrderItem orderItem = new OrderItem(mFoodItem.getId(), mFoodItem.getQuantity(), itemPrice);
                         orderItems.add(orderItem);
                     }
-                    ParamCheckout paramCheckout = new ParamCheckout(mRestaurant.getId(), getTotalPrice(), subTotal, (segmentedRadioButtonDelivery.isChecked() ? "delivery" : "pickup"), shippingCost, "", "", "", orderItems);
+                    ParamCheckout paramCheckout = new ParamCheckout(mRestaurant.getId(), getTotalPrice(), subTotal, (segmentedRadioButtonDelivery.isChecked() ? "delivery" : "pickup"), shippingCost, "", "", "","", orderItems);
 
                     Intent intentCardList = new Intent(CheckoutActivity.this, CardListActivity.class);
                     intentCardList.putExtra(INTENT_KEY_CARD_LIST_CHECKOUT_DATA, ParamCheckout.getResponseString(paramCheckout));

@@ -33,7 +33,9 @@ public class FoodItem extends ResponseBase implements Parcelable {
     private String has_offer_price = "";
     //For notification
     private String percentage = "";
-
+    //For order
+    private String order_item_quantity = "";
+    private String order_item_price = "";
 
     public FoodItem(boolean isSelected, int offerPercentage, String id, String name, String menu_id, String menu_image, String price, String restaurant_id, String ingredients, String category_name, ArrayList<FoodImage> images, String offer_title, String offer_price) {
         this.isSelected = isSelected;
@@ -187,6 +189,22 @@ public class FoodItem extends ResponseBase implements Parcelable {
         this.percentage = percentage;
     }
 
+    public String getOrder_item_quantity() {
+        return order_item_quantity;
+    }
+
+    public void setOrder_item_quantity(String order_item_quantity) {
+        this.order_item_quantity = order_item_quantity;
+    }
+
+    public String getOrder_item_price() {
+        return order_item_price;
+    }
+
+    public void setOrder_item_price(String order_item_price) {
+        this.order_item_price = order_item_price;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -208,6 +226,8 @@ public class FoodItem extends ResponseBase implements Parcelable {
                 ", offer_price='" + offer_price + '\'' +
                 ", has_offer_price='" + has_offer_price + '\'' +
                 ", percentage='" + percentage + '\'' +
+                ", order_item_quantity='" + order_item_quantity + '\'' +
+                ", order_item_price='" + order_item_price + '\'' +
                 '}';
     }
 

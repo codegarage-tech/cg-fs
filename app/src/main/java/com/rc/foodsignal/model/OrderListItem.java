@@ -17,6 +17,7 @@ public class OrderListItem extends ResponseBase {
     private String delivery_type = "";
     private String shipping_cost = "";
     private String sub_total = "";
+    private String user_phone = "";
     private ArrayList<FoodCategoryDetail> menu_details = new ArrayList<>();
 
     public OrderListItem(String id, String restaurant_id, String total_amount, String user_name, String user_address, String user_email, String delivery_type, String shipping_cost, String sub_total, ArrayList<FoodCategoryDetail> menu_details) {
@@ -124,6 +125,7 @@ public class OrderListItem extends ResponseBase {
                 ", delivery_type='" + delivery_type + '\'' +
                 ", shipping_cost='" + shipping_cost + '\'' +
                 ", sub_total='" + sub_total + '\'' +
+                ", user_phone='" + user_phone + '\'' +
                 ", menu_details=" + menu_details +
                 '}';
     }
