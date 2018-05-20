@@ -3,6 +3,8 @@ package com.rc.foodsignal.activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +32,7 @@ import com.reversecoder.library.util.AllSettingsManager;
 import java.util.ArrayList;
 
 import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_LOGIN_DATA;
+import static com.rc.foodsignal.util.AppUtils.isSimSupport;
 
 /**
  * @author Md. Rashadul Alam
@@ -47,8 +50,6 @@ public class OrderListActivityTest extends AppCompatActivity {
     String TAG = AppUtils.getTagName(OrderListActivityTest.class);
     ProgressDialog loadingDialog;
     ExpandingList expandingListOrder;
-//    ListView lvOrder;
-//    OrderListViewAdapter orderListViewAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,9 +68,6 @@ public class OrderListActivityTest extends AppCompatActivity {
         tvTitle.setText(getString(R.string.title_activity_order));
 
         expandingListOrder = findViewById(R.id.expanding_list_order);
-//        lvOrder = (ListView) findViewById(R.id.lv_order);
-//        orderListViewAdapter = new OrderListViewAdapter(OrderListActivityTest.this);
-//        lvOrder.setAdapter(orderListViewAdapter);
 
         //set restaurant information
         if (!AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(OrderListActivityTest.this, SESSION_RESTAURANT_LOGIN_DATA))) {
@@ -97,21 +95,12 @@ public class OrderListActivityTest extends AppCompatActivity {
     }
 
     private void createExpandingItems(ArrayList<OrderListItem> orderListItems) {
-//        addItem("John", new String[]{"House", "Boat", "Candy", "Collection", "Sport", "Ball", "Head"}, R.color.pink, R.drawable.ic_ghost);
-//        addItem("Mary", new String[]{"Dog", "Horse", "Boat"}, R.color.blue, R.drawable.ic_ghost);
-//        addItem("Ana", new String[]{"Cat"}, R.color.purple, R.drawable.ic_ghost);
-//        addItem("Peter", new String[]{"Parrot", "Elephant", "Coffee"}, R.color.yellow, R.drawable.ic_ghost);
-//        addItem("Joseph", new String[]{}, R.color.orange, R.drawable.ic_ghost);
-//        addItem("Paul", new String[]{"Golf", "Football"}, R.color.green, R.drawable.ic_ghost);
-//        addItem("Larry", new String[]{"Ferrari", "Mazda", "Honda", "Toyota", "Fiat"}, R.color.blue, R.drawable.ic_ghost);
-//        addItem("Moe", new String[]{"Beans", "Rice", "Meat"}, R.color.yellow, R.drawable.ic_ghost);
-//        addItem("Bart", new String[]{"Hamburger", "Ice cream", "Candy"}, R.color.purple, R.drawable.ic_ghost);
         for (int i = 0; i < orderListItems.size(); i++) {
             addItem(orderListItems.get(i), R.color.blue, R.drawable.ic_ghost);
         }
     }
 
-    private void addItem(OrderListItem orderListItem, int colorRes, int iconRes) {
+    private void addItem(final OrderListItem orderListItem, int colorRes, int iconRes) {
         //Let's create an item with R.layout.expanding_layout
         final ExpandingItem item = expandingListOrder.createNewItem(R.layout.expanding_layout);
 
@@ -126,46 +115,51 @@ public class OrderListActivityTest extends AppCompatActivity {
             //We can create items in batch.
             ArrayList<FoodItem> foodItems = orderListItem.getAllFoodItems();
             item.createSubItems(foodItems.size());
-            for (int i = 0; i < item.getSubItemsCount(); i++) {
+            for (int i = 0; i < foodItems.size(); i++) {
                 //Let's get the created sub item by its index
                 final View view = item.getSubItemView(i);
 
                 //Let's set some values in
+                if (i == (item.getSubItemsCount() - 1)) {
+                    ((View) view.findViewById(R.id.view_divider)).setVisibility(View.VISIBLE);
+                } else {
+                    ((View) view.findViewById(R.id.view_divider)).setVisibility(View.GONE);
+                }
                 configureSubItem(item, view, foodItems.get(i));
             }
             item.findViewById(R.id.iv_user_email).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    showInsertDialog(new OnItemCreated() {
-//                        @Override
-//                        public void itemCreated(String title) {
-//                            View newSubItem = item.createSubItem();
-//                            configureSubItem(item, newSubItem, title);
-//                        }
-//                    });
-
-                    Toast.makeText(OrderListActivityTest.this, "Email",Toast.LENGTH_SHORT).show();
+                    if (!AllSettingsManager.isNullOrEmpty(orderListItem.getUser_email().trim())) {
+                        /***********************************
+                         * Need to check internet connection
+                         **********************************/
+                        Intent callIntent = new Intent(Intent.ACTION_SENDTO);
+                        callIntent.setData(Uri.parse("mailto:" + orderListItem.getUser_email().trim()));
+                        startActivity(callIntent);
+                    }
                 }
             });
 
             item.findViewById(R.id.iv_user_phone).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    mExpandingList.removeItem(item);
-                    Toast.makeText(OrderListActivityTest.this, "Phone",Toast.LENGTH_SHORT).show();
+                    if (!AllSettingsManager.isNullOrEmpty(orderListItem.getUser_phone().trim())) {
+                        if (isSimSupport(OrderListActivityTest.this)) {
+                            Intent callIntent = new Intent(Intent.ACTION_CALL);
+                            callIntent.setData(Uri.parse("tel:" + orderListItem.getUser_phone().trim()));
+                            startActivity(callIntent);
+                        } else {
+                            Toast.makeText(OrderListActivityTest.this, getString(R.string.toast_your_sim_card_is_absent), Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 }
             });
         }
     }
 
     private void configureSubItem(final ExpandingItem item, final View view, FoodItem foodItem) {
-        ((TextView) view.findViewById(R.id.sub_title)).setText(foodItem.getName());
-//        view.findViewById(R.id.remove_sub_item).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                item.removeSubItem(view);
-//            }
-//        });
+        ((TextView) view.findViewById(R.id.tv_item_name)).setText(foodItem.getName());
     }
 
     private class OrderListTask extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {

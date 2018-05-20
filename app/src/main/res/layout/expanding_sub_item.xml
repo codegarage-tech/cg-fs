@@ -1,31 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="48dp">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/sub_title"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:gravity="center_vertical"
-        android:text="sdfdsafsfsf"
-        android:textColor="@color/textColorSecondary"
-        android:textSize="18sp" />
-
-    <ImageView
-        android:id="@+id/remove_sub_item"
-        android:layout_width="48dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:padding="16dp"
-        android:src="@drawable/ic_delete" />
-</RelativeLayout>
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tv_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:text=""
+            android:textColor="@color/textColorSecondary"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_item_calculation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:text=""
+            android:textColor="@color/textColorSecondary"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimary"
+        android:visibility="gone" />
+
+</LinearLayout>

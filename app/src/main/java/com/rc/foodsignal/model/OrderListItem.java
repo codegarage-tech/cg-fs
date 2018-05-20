@@ -105,6 +105,14 @@ public class OrderListItem extends ResponseBase {
         this.sub_total = sub_total;
     }
 
+    public String getUser_phone() {
+        return user_phone;
+    }
+
+    public void setUser_phone(String user_phone) {
+        this.user_phone = user_phone;
+    }
+
     public ArrayList<FoodCategoryDetail> getMenu_details() {
         return menu_details;
     }
