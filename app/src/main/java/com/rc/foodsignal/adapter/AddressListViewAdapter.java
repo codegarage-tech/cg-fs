@@ -5,12 +5,17 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.daimajia.swipe.SimpleSwipeListener;
+import com.daimajia.swipe.SwipeLayout;
+import com.daimajia.swipe.adapters.BaseSwipeAdapter;
+import com.daimajia.swipe.util.Attributes;
 import com.rc.foodsignal.R;
+import com.rc.foodsignal.animation.Techniques;
+import com.rc.foodsignal.animation.YoYo;
 import com.rc.foodsignal.model.Location;
 import com.rc.foodsignal.util.AppUtils;
 import com.reversecoder.library.storage.SessionManager;
@@ -22,9 +27,9 @@ import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_LOCATION;
 
 /**
  * @author Md. Rashadul Alam
- *         Email: rashed.droid@gmail.com
+ * Email: rashed.droid@gmail.com
  */
-public class AddressListViewAdapter extends BaseAdapter {
+public class AddressListViewAdapter extends BaseSwipeAdapter {
 
     private Activity mActivity;
     private ArrayList<Location> mData;
@@ -38,6 +43,7 @@ public class AddressListViewAdapter extends BaseAdapter {
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         mLocation = Location.getResponseObject(SessionManager.getStringSetting(mActivity, SESSION_SELECTED_LOCATION), Location.class);
+        setMode(Attributes.Mode.Single);
     }
 
     public ArrayList<Location> getData() {
@@ -83,11 +89,17 @@ public class AddressListViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, final ViewGroup parent) {
+    public View generateView(int position, ViewGroup parent) {
 
-        View vi = convertView;
-        if (convertView == null)
-            vi = inflater.inflate(R.layout.list_row_address, null);
+        View vi = LayoutInflater.from(mActivity).inflate(R.layout.list_row_address, null);
+
+        final SwipeLayout swipeLayout = (SwipeLayout) vi.findViewById(R.id.swipe);
+        swipeLayout.addSwipeListener(new SimpleSwipeListener() {
+            @Override
+            public void onOpen(SwipeLayout layout) {
+                YoYo.with(Techniques.Tada).duration(500).delay(100).playOn(layout.findViewById(R.id.iv_trash));
+            }
+        });
 
         final Location location = getItem(position);
 
@@ -109,19 +121,44 @@ public class AddressListViewAdapter extends BaseAdapter {
             tvAddress.setTextColor(mActivity.getResources().getColor(R.color.textColorSecondary));
         }
 
-        vi.setOnClickListener(new View.OnClickListener() {
+        vi.findViewById(R.id.btn_delete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(mActivity, "click delete", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        vi.findViewById(R.id.ll_item_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(mActivity, "click item", Toast.LENGTH_SHORT).show();
                 mLocation = location;
                 SessionManager.setStringSetting(mActivity, SESSION_SELECTED_LOCATION, mLocation.toString());
                 SessionManager.setBooleanSetting(mActivity, SESSION_IS_LOCATION_ADDED, true);
-                notifyDataSetChanged();
+                notifyDatasetChanged();
+            }
+        });
+
+        vi.findViewById(R.id.ll_item_view).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                swipeLayout.open(true);
+                return false;
             }
         });
 
         return vi;
     }
 
+    @Override
+    public int getSwipeLayoutResourceId(int position) {
+        return R.id.swipe;
+    }
+
+    @Override
+    public void fillValues(int position, View convertView) {
+
+    }
 //    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        Log.d(TAG, "onActivityResult");
 //
