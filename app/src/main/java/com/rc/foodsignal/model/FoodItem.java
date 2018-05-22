@@ -37,6 +37,11 @@ public class FoodItem extends ResponseBase implements Parcelable {
     private String order_item_quantity = "";
     private String order_item_price = "";
 
+    public FoodItem(String name, String price) {
+        this.name = name;
+        this.price = price;
+    }
+
     public FoodItem(boolean isSelected, int offerPercentage, String id, String name, String menu_id, String menu_image, String price, String restaurant_id, String ingredients, String category_name, ArrayList<FoodImage> images, String offer_title, String offer_price) {
         this.isSelected = isSelected;
         this.offerPercentage = offerPercentage;

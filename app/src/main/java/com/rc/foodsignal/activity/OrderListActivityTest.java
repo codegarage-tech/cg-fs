@@ -114,19 +114,33 @@ public class OrderListActivityTest extends AppCompatActivity {
 
             //We can create items in batch.
             ArrayList<FoodItem> foodItems = orderListItem.getAllFoodItems();
-            item.createSubItems(foodItems.size());
-            for (int i = 0; i < foodItems.size(); i++) {
-                //Let's get the created sub item by its index
-                final View view = item.getSubItemView(i);
+            if (foodItems.size() > 0) {
+                //Here plus 3 for subtotal, shipping cost and total cost
+                item.createSubItems(foodItems.size()+3);
+                for (int i = 0; i < foodItems.size(); i++) {
+                    //Let's get the created sub item by its index
+                    final View view = item.getSubItemView(i);
 
-                //Let's set some values in
-                if (i == (item.getSubItemsCount() - 1)) {
-                    ((View) view.findViewById(R.id.view_divider)).setVisibility(View.VISIBLE);
-                } else {
-                    ((View) view.findViewById(R.id.view_divider)).setVisibility(View.GONE);
+                    //Let's set some values in
+                    if (i == (foodItems.size() - 1)) {
+                        ((View) view.findViewById(R.id.view_divider)).setVisibility(View.VISIBLE);
+                    } else {
+                        ((View) view.findViewById(R.id.view_divider)).setVisibility(View.GONE);
+                    }
+                    configureSubItem(item, view, foodItems.get(i));
                 }
-                configureSubItem(item, view, foodItems.get(i));
+
+                //For subtotal cost items
+                final View subTotlaView = item.getSubItemView(foodItems.size());
+                configureSubItem(item, subTotlaView, new FoodItem("SubTotal","5.00"));
+                //For shipping cost items
+                final View shippingCostView = item.getSubItemView(foodItems.size()+1);
+                configureSubItem(item, shippingCostView, new FoodItem("Shipping Cost","2.00"));
+                //For total cost items
+                final View totalCostView = item.getSubItemView(foodItems.size()+2);
+                configureSubItem(item, totalCostView, new FoodItem("Total Cost","7.00"));
             }
+
             item.findViewById(R.id.iv_user_email).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
