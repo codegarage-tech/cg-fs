@@ -2,8 +2,11 @@ package com.rc.foodsignal.adapter;
 
 import android.animation.Animator;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -21,7 +25,13 @@ import com.github.florent37.expansionpanel.OnExpansionListener;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.activity.AboutRestaurantMenuActivity;
 import com.rc.foodsignal.animation.flytocart.CircleAnimationUtil;
+import com.rc.foodsignal.dialog.DeleteRestaurantMenuDialog;
 import com.rc.foodsignal.model.FoodItem;
+import com.rc.foodsignal.model.ResponseDeleteFoodMenuItem;
+import com.rc.foodsignal.util.AllUrls;
+import com.rc.foodsignal.util.AppUtils;
+import com.rc.foodsignal.util.HttpRequestManager;
+import com.reversecoder.library.network.NetworkManager;
 import com.steelkiwi.library.IncrementProductView;
 import com.steelkiwi.library.listener.OnStateListener;
 
@@ -32,7 +42,7 @@ import static com.rc.foodsignal.util.AllConstants.INTENT_REQUEST_CODE_RESTAURANT
 
 /**
  * @author Md. Rashadul Alam
- *         Email: rashed.droid@gmail.com
+ * Email: rashed.droid@gmail.com
  */
 public class RestaurantMenuListViewAdapter extends BaseAdapter {
 
@@ -43,6 +53,7 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
     private View mDestinationView;
     private TextView tvOfferCounter;
     private ArrayList<FoodItem> mSelectedData;
+    private ProgressDialog loadingDialog;
 
     public RestaurantMenuListViewAdapter(Activity activity, View destinationView, TextView offerCounterView) {
         mActivity = activity;
@@ -65,6 +76,14 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
     public void addData(FoodItem foodItem) {
         if (getCount() > 0) {
             mData.add(foodItem);
+            notifyDataSetChanged();
+        }
+    }
+
+    public void removeData(FoodItem foodItem) {
+        if (getCount() > 0) {
+            int position = getItemPosition(foodItem);
+            mData.remove(position);
             notifyDataSetChanged();
         }
     }
@@ -143,6 +162,36 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
 
         final TextView tvMenuIngredient = (TextView) vi.findViewById(R.id.tv_menu_ingredient);
         tvMenuIngredient.setText("Ingredient: " + foodItem.getIngredients());
+
+        TextView tvMenuDelete = (TextView) vi.findViewById(R.id.tv_menu_delete);
+        tvMenuDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DeleteRestaurantMenuDialog deleteRestaurantMenuDialog = new DeleteRestaurantMenuDialog(mActivity, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                break;
+                            case DialogInterface.BUTTON_POSITIVE:
+                                if (!mSelectedData.contains(foodItem)) {
+                                    if (!NetworkManager.isConnected(mActivity)) {
+                                        Toast.makeText(mActivity, mActivity.getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+
+                                    new DeleteFoodMenuTask(mActivity, foodItem).execute();
+                                } else {
+                                    Toast.makeText(mActivity, mActivity.getResources().getString(R.string.toast_you_can_not_delete_the_selected_item), Toast.LENGTH_SHORT).show();
+                                }
+
+                                break;
+                        }
+                    }
+                });
+                deleteRestaurantMenuDialog.createView().show();
+            }
+        });
 
         //Expansion panel
         ExpansionHeader expansionHeader = (ExpansionHeader) vi.findViewById(R.id.expansion_header);
@@ -272,6 +321,68 @@ public class RestaurantMenuListViewAdapter extends BaseAdapter {
             tvOfferCounter.setVisibility(View.VISIBLE);
         } else {
             tvOfferCounter.setVisibility(View.GONE);
+        }
+    }
+
+    private class DeleteFoodMenuTask extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
+
+        private Context mContext;
+        private FoodItem mFoodItem;
+
+        public DeleteFoodMenuTask(Context context, FoodItem foodItem) {
+            this.mContext = context;
+            this.mFoodItem = foodItem;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            loadingDialog = new ProgressDialog(mContext);
+            loadingDialog.setMessage(mContext.getResources().getString(R.string.txt_loading));
+            loadingDialog.setIndeterminate(false);
+            loadingDialog.setCancelable(true);
+            loadingDialog.setCanceledOnTouchOutside(false);
+            loadingDialog.show();
+            loadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface arg0) {
+                    if (loadingDialog != null
+                            && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
+                }
+            });
+        }
+
+        @Override
+        protected HttpRequestManager.HttpResponse doInBackground(String... params) {
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doGetRequest(AllUrls.getDeleteFoodMenuUrl(mFoodItem.getId()));
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(HttpRequestManager.HttpResponse result) {
+
+            if (loadingDialog != null
+                    && loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
+            }
+
+            if (result != null && result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
+                Log.d(TAG, "success response from web: " + result.getResult().toString());
+                ResponseDeleteFoodMenuItem responseData = ResponseDeleteFoodMenuItem.getResponseObject(result.getResult().toString(), ResponseDeleteFoodMenuItem.class);
+
+                if (responseData.getStatus().equalsIgnoreCase("success")) {
+                    Log.d(TAG, "success wrapper: " + responseData.toString());
+                    Toast.makeText(mContext, responseData.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    //Update listview
+                    removeData(mFoodItem);
+                } else {
+                    Toast.makeText(mContext, mContext.getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(mContext, mContext.getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

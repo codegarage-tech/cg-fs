@@ -383,4 +383,10 @@ public class AllUrls {
         Log.d(TAG, "getDeleteLocationUrl: " + url);
         return url;
     }
+
+    public static String getDeleteFoodMenuUrl(String foodMenuId) {
+        String url = BASE_URL + "food_menu/delete/" + foodMenuId;
+        Log.d(TAG, "getDeleteFoodMenuUrl: " + url);
+        return url;
+    }
 }

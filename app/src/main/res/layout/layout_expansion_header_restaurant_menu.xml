@@ -10,7 +10,7 @@
         android:id="@+id/header_view"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight=".85"
+        android:layout_weight=".75"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -33,7 +33,7 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:layout_weight=".55"
+            android:layout_weight=".50"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
@@ -42,6 +42,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:text=""
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="@dimen/medium_font_size"
@@ -52,6 +54,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:text=""
                 android:textColor="@color/textColorPrimary"
                 android:textSize="@dimen/medium_font_size" />
@@ -60,11 +64,29 @@
                 android:id="@+id/tv_menu_ingredient"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:text=""
                 android:textColor="@color/textColorPrimary"
                 android:textSize="@dimen/medium_font_size" />
 
         </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight=".10"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/tv_menu_delete"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/ic_trash"
+            android:backgroundTint="@color/red"
+            android:padding="5dp" />
 
     </LinearLayout>
 
