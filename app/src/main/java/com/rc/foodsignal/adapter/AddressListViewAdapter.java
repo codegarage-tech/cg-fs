@@ -1,23 +1,30 @@
 package com.rc.foodsignal.adapter;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
-import com.daimajia.swipe.adapters.BaseSwipeAdapter;
-import com.daimajia.swipe.util.Attributes;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.animation.Techniques;
 import com.rc.foodsignal.animation.YoYo;
 import com.rc.foodsignal.model.Location;
+import com.rc.foodsignal.model.ResponseDeleteLocation;
+import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
+import com.rc.foodsignal.util.HttpRequestManager;
+import com.reversecoder.library.network.NetworkManager;
 import com.reversecoder.library.storage.SessionManager;
 
 import java.util.ArrayList;
@@ -29,13 +36,14 @@ import static com.rc.foodsignal.util.AllConstants.SESSION_SELECTED_LOCATION;
  * @author Md. Rashadul Alam
  * Email: rashed.droid@gmail.com
  */
-public class AddressListViewAdapter extends BaseSwipeAdapter {
+public class AddressListViewAdapter extends BaseAdapter {
 
     private Activity mActivity;
     private ArrayList<Location> mData;
     private static LayoutInflater inflater = null;
     private String TAG = AddressListViewAdapter.class.getSimpleName();
-    Location mLocation;
+    private Location mLocation;
+    private ProgressDialog loadingDialog;
 
     public AddressListViewAdapter(Activity activity) {
         mActivity = activity;
@@ -43,7 +51,7 @@ public class AddressListViewAdapter extends BaseSwipeAdapter {
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         mLocation = Location.getResponseObject(SessionManager.getStringSetting(mActivity, SESSION_SELECTED_LOCATION), Location.class);
-        setMode(Attributes.Mode.Single);
+//        setMode(Attributes.Mode.Single);
     }
 
     public ArrayList<Location> getData() {
@@ -63,15 +71,20 @@ public class AddressListViewAdapter extends BaseSwipeAdapter {
         notifyDataSetChanged();
     }
 
-    public int getItemPosition(Location music) {
+    public void removeData(Location location){
+        int position = getItemPosition(location);
+        mData.remove(position);
+        notifyDataSetChanged();
+    }
+
+    public int getItemPosition(Location location) {
         for (int i = 0; i < mData.size(); i++) {
-            if ((mData.get(i)).getStreet().contains(music.getStreet())) {
+            if ((mData.get(i)).getStreet().contains(location.getStreet())) {
                 return i;
             }
         }
         return -1;
     }
-
 
     @Override
     public int getCount() {
@@ -89,9 +102,11 @@ public class AddressListViewAdapter extends BaseSwipeAdapter {
     }
 
     @Override
-    public View generateView(int position, ViewGroup parent) {
+    public View getView(final int position, final View convertView, final ViewGroup parent) {
 
-        View vi = LayoutInflater.from(mActivity).inflate(R.layout.list_row_address, null);
+        View vi = convertView;
+        if (convertView == null)
+            vi = inflater.inflate(R.layout.list_row_address, null);
 
         final SwipeLayout swipeLayout = (SwipeLayout) vi.findViewById(R.id.swipe);
         swipeLayout.addSwipeListener(new SimpleSwipeListener() {
@@ -124,18 +139,27 @@ public class AddressListViewAdapter extends BaseSwipeAdapter {
         vi.findViewById(R.id.btn_delete).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mActivity, "click delete", Toast.LENGTH_SHORT).show();
+                swipeLayout.close(true);
+                if (mLocation.getId().equalsIgnoreCase(location.getId())) {
+                    Toast.makeText(mActivity, mActivity.getResources().getString(R.string.toast_you_can_not_delete_the_selected_item), Toast.LENGTH_SHORT).show();
+                } else {
+                    if (!NetworkManager.isConnected(mActivity)) {
+                        Toast.makeText(mActivity, mActivity.getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    new DeleteLocationTask(mActivity, location).execute();
+                }
             }
         });
 
         vi.findViewById(R.id.ll_item_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mActivity, "click item", Toast.LENGTH_SHORT).show();
                 mLocation = location;
                 SessionManager.setStringSetting(mActivity, SESSION_SELECTED_LOCATION, mLocation.toString());
                 SessionManager.setBooleanSetting(mActivity, SESSION_IS_LOCATION_ADDED, true);
-                notifyDatasetChanged();
+                notifyDataSetChanged();
             }
         });
 
@@ -150,15 +174,77 @@ public class AddressListViewAdapter extends BaseSwipeAdapter {
         return vi;
     }
 
-    @Override
-    public int getSwipeLayoutResourceId(int position) {
-        return R.id.swipe;
+    private class DeleteLocationTask extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
+
+        private Context mContext;
+        private Location mLocation;
+
+        public DeleteLocationTask(Context context, Location location) {
+            this.mContext = context;
+            this.mLocation = location;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            loadingDialog = new ProgressDialog(mContext);
+            loadingDialog.setMessage(mContext.getResources().getString(R.string.txt_loading));
+            loadingDialog.setIndeterminate(false);
+            loadingDialog.setCancelable(true);
+            loadingDialog.setCanceledOnTouchOutside(false);
+            loadingDialog.show();
+            loadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface arg0) {
+                    if (loadingDialog != null
+                            && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
+                }
+            });
+        }
+
+        @Override
+        protected HttpRequestManager.HttpResponse doInBackground(String... params) {
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doGetRequest(AllUrls.getDeleteLocationUrl(mLocation.getId()));
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(HttpRequestManager.HttpResponse result) {
+
+            if (loadingDialog != null
+                    && loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
+            }
+
+            if (result != null && result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
+                Log.d(TAG, "success response from web: " + result.getResult().toString());
+                ResponseDeleteLocation responseData = ResponseDeleteLocation.getResponseObject(result.getResult().toString(), ResponseDeleteLocation.class);
+
+                if (responseData.getStatus().equalsIgnoreCase("success")) {
+                    Log.d(TAG, "success wrapper: " + responseData.toString());
+                    Toast.makeText(mContext, responseData.getMsg(), Toast.LENGTH_SHORT).show();
+
+                    //Update listview
+                    removeData(mLocation);
+                } else {
+                    Toast.makeText(mContext, mContext.getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(mContext, mContext.getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
-    @Override
-    public void fillValues(int position, View convertView) {
-
-    }
+//    @Override
+//    public int getSwipeLayoutResourceId(int position) {
+//        return R.id.swipe;
+//    }
+//
+//    @Override
+//    public void fillValues(int position, View convertView) {
+//
+//    }
 //    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        Log.d(TAG, "onActivityResult");
 //

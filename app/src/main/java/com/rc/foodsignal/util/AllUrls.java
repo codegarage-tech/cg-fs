@@ -377,4 +377,10 @@ public class AllUrls {
         Log.d(TAG, "getAllOrdersUrl: " + url);
         return url;
     }
+
+    public static String getDeleteLocationUrl(String locationId) {
+        String url = BASE_URL + "signup/delete_location/" + locationId;
+        Log.d(TAG, "getDeleteLocationUrl: " + url);
+        return url;
+    }
 }
