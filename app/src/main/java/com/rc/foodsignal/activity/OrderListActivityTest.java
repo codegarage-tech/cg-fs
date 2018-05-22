@@ -96,7 +96,7 @@ public class OrderListActivityTest extends AppCompatActivity {
 
     private void createExpandingItems(ArrayList<OrderListItem> orderListItems) {
         for (int i = 0; i < orderListItems.size(); i++) {
-            addItem(orderListItems.get(i), R.color.blue, R.drawable.ic_ghost);
+            addItem(orderListItems.get(i), R.color.blue, R.drawable.ic_vector_bag_empty_white);
         }
     }
 
@@ -116,7 +116,7 @@ public class OrderListActivityTest extends AppCompatActivity {
             ArrayList<FoodItem> foodItems = orderListItem.getAllFoodItems();
             if (foodItems.size() > 0) {
                 //Here plus 3 for subtotal, shipping cost and total cost
-                item.createSubItems(foodItems.size()+3);
+                item.createSubItems(foodItems.size() + 3);
                 for (int i = 0; i < foodItems.size(); i++) {
                     //Let's get the created sub item by its index
                     final View view = item.getSubItemView(i);
@@ -132,13 +132,13 @@ public class OrderListActivityTest extends AppCompatActivity {
 
                 //For subtotal cost items
                 final View subTotlaView = item.getSubItemView(foodItems.size());
-                configureSubItem(item, subTotlaView, new FoodItem("SubTotal","5.00"));
+                configureSubItem(item, subTotlaView, new FoodItem(getString(R.string.txt_subtotal), orderListItem.getSub_total()));
                 //For shipping cost items
-                final View shippingCostView = item.getSubItemView(foodItems.size()+1);
-                configureSubItem(item, shippingCostView, new FoodItem("Shipping Cost","2.00"));
+                final View shippingCostView = item.getSubItemView(foodItems.size() + 1);
+                configureSubItem(item, shippingCostView, new FoodItem(getString(R.string.txt_shipping_cost), (orderListItem.getDelivery_type().equalsIgnoreCase(getString(R.string.txt_delivery))) ? orderListItem.getShipping_cost() : "00.00"));
                 //For total cost items
-                final View totalCostView = item.getSubItemView(foodItems.size()+2);
-                configureSubItem(item, totalCostView, new FoodItem("Total Cost","7.00"));
+                final View totalCostView = item.getSubItemView(foodItems.size() + 2);
+                configureSubItem(item, totalCostView, new FoodItem(getString(R.string.txt_total), orderListItem.getTotal_amount()));
             }
 
             item.findViewById(R.id.iv_user_email).setOnClickListener(new View.OnClickListener() {
@@ -173,7 +173,15 @@ public class OrderListActivityTest extends AppCompatActivity {
     }
 
     private void configureSubItem(final ExpandingItem item, final View view, FoodItem foodItem) {
-        ((TextView) view.findViewById(R.id.tv_item_name)).setText(foodItem.getName());
+        if (foodItem.getName().contains(getString(R.string.txt_subtotal))
+                || foodItem.getName().contains(getString(R.string.txt_shipping_cost))
+                || foodItem.getName().contains(getString(R.string.txt_total))) {
+            ((TextView) view.findViewById(R.id.tv_item_name)).setText(foodItem.getName());
+            ((TextView) view.findViewById(R.id.tv_item_calculation)).setText("$" + foodItem.getPrice());
+        } else {
+            ((TextView) view.findViewById(R.id.tv_item_name)).setText(foodItem.getName());
+            ((TextView) view.findViewById(R.id.tv_item_calculation)).setText(foodItem.getOrder_item_quantity() + " x $" + foodItem.getOrder_item_price());
+        }
     }
 
     private class OrderListTask extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {

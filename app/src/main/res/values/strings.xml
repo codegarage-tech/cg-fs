@@ -64,6 +64,11 @@
     <string name="txt_loading_message">Loading, please wait.</string>
     <string name="txt_no_data_found">No data found.</string>
     <string name="txt_loading">Loading...</string>
+    <string name="txt_subtotal">Subtotal</string>
+    <string name="txt_shipping_cost">Shiping cost</string>
+    <string name="txt_total">Total</string>
+    <string name="txt_delivery">delivery</string>
+    <string name="txt_pickup">pickup</string>
 
     <!-- Dialog -->
     <string name="dialog_btn_ok">OK</string>

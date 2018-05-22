@@ -16,10 +16,10 @@ import android.widget.Toast;
 import com.rc.foodsignal.R;
 import com.rc.foodsignal.adapter.CheckoutMenuListViewAdapter;
 import com.rc.foodsignal.interfaces.OnQuantityChangeListener;
-import com.rc.foodsignal.model.ParamCheckout;
 import com.rc.foodsignal.model.DataFoodItem;
 import com.rc.foodsignal.model.FoodItem;
 import com.rc.foodsignal.model.OrderItem;
+import com.rc.foodsignal.model.ParamCheckout;
 import com.rc.foodsignal.model.Restaurant;
 import com.rc.foodsignal.util.AppUtils;
 import com.reversecoder.library.event.OnSingleClickListener;
@@ -201,7 +201,7 @@ public class CheckoutActivity extends AppCompatActivity {
                         OrderItem orderItem = new OrderItem(mFoodItem.getId(), mFoodItem.getQuantity(), itemPrice);
                         orderItems.add(orderItem);
                     }
-                    ParamCheckout paramCheckout = new ParamCheckout(mRestaurant.getId(), getTotalPrice(), subTotal, (segmentedRadioButtonDelivery.isChecked() ? "delivery" : "pickup"), shippingCost, "", "", "","", orderItems);
+                    ParamCheckout paramCheckout = new ParamCheckout(mRestaurant.getId(), getTotalPrice(), subTotal, (segmentedRadioButtonDelivery.isChecked() ? getString(R.string.txt_delivery) : getString(R.string.txt_pickup)), shippingCost, "", "", "", "", orderItems);
 
                     Intent intentCardList = new Intent(CheckoutActivity.this, CardListActivity.class);
                     intentCardList.putExtra(INTENT_KEY_CARD_LIST_CHECKOUT_DATA, ParamCheckout.getResponseString(paramCheckout));
