@@ -1,3 +1,4 @@
 <resources>
     <string name="txt_tap_for_more_details">Tap for more details.</string>
+    <string name="txt_order_title">A new order Received</string>
 </resources>

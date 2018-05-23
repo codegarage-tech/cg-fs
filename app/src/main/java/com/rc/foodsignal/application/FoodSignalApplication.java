@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatDelegate;
 
+import com.rc.foodsignal.activity.OrderListActivityTest;
 import com.rc.foodsignal.activity.RestaurantDetailActivity;
 import com.reversecoder.gcm.GcmManager;
 
@@ -35,7 +36,10 @@ public class FoodSignalApplication extends Application {
         initTypeface();
 
         //Initialize GCM content class
-        GcmManager.initGcmManager(mContext, new GcmManager.GcmBuilder().setContentClass(RestaurantDetailActivity.class).buildGcmManager());
+        GcmManager.initGcmManager(mContext, new GcmManager.GcmBuilder()
+                .setContentRestaurantDetailClass(RestaurantDetailActivity.class)
+                .setContentOrderListClass(OrderListActivityTest.class)
+                .buildGcmManager());
 
         //Realm Database
         Realm.init(this);

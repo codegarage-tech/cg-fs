@@ -80,7 +80,12 @@ public class GcmIntentService extends IntentService {
     }
 
     private void sendNotification(Context context, GcmData gcmData) {
-        Intent intentGcmDetail = new Intent(context, GcmManager.getContentClass());
+        Intent intentGcmDetail;
+        if (gcmData.getTitle().equalsIgnoreCase(getString(R.string.txt_order_title))) {
+            intentGcmDetail = new Intent(context, GcmManager.getContentOrderListClass());
+        } else {
+            intentGcmDetail = new Intent(context, GcmManager.getContentRestaurantDetailClass());
+        }
         intentGcmDetail.putExtra(INTENT_KEY_APP_USER_INTENT_DETAIL_TYPE, DetailIntentType.GCM.name());
         intentGcmDetail.putExtra(INTENT_KEY_GCM_APP_USER_DATA_CONTENT, gcmData);
 //        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
