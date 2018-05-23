@@ -179,8 +179,22 @@ public class OrderListActivityTest extends AppCompatActivity {
             ((TextView) view.findViewById(R.id.tv_item_name)).setText(foodItem.getName());
             ((TextView) view.findViewById(R.id.tv_item_calculation)).setText("$" + foodItem.getPrice());
         } else {
+            int itemQuantity = 0;
+            float itemPrice = 0.0f;
+            float priceWithQuantity = 0.0f;
+            try {
+                itemQuantity = Integer.parseInt(foodItem.getOrder_item_quantity());
+                itemPrice = Float.parseFloat(foodItem.getOrder_item_price());
+                Log.d(TAG, "total(itemQuantity): " + itemQuantity);
+                Log.d(TAG, "total(itemPrice): " + itemPrice);
+                priceWithQuantity = itemQuantity * itemPrice;
+                Log.d(TAG, "total(priceWithQuantity): " + priceWithQuantity);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
             ((TextView) view.findViewById(R.id.tv_item_name)).setText(foodItem.getName());
-            ((TextView) view.findViewById(R.id.tv_item_calculation)).setText(foodItem.getOrder_item_quantity() + " x $" + foodItem.getOrder_item_price());
+            ((TextView) view.findViewById(R.id.tv_item_calculation)).setText(foodItem.getOrder_item_quantity() + " x $" + foodItem.getOrder_item_price() + " = $" + priceWithQuantity);
         }
     }
 
