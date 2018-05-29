@@ -372,9 +372,15 @@ public class AllUrls {
         return jsonObject;
     }
 
-    public static String getAllOrdersUrl(String restaurantId) {
+    public static String getRestaurantOrdersUrl(String restaurantId) {
         String url = BASE_URL + "orders/lists/" + restaurantId;
-        Log.d(TAG, "getAllOrdersUrl: " + url);
+        Log.d(TAG, "getRestaurantOrdersUrl: " + url);
+        return url;
+    }
+
+    public static String getUserOrdersUrl(String userId) {
+        String url = BASE_URL + "orders/users_lists/" + userId;
+        Log.d(TAG, "getUserOrdersUrl: " + url);
         return url;
     }
 

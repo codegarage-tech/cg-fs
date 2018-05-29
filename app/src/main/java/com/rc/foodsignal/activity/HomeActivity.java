@@ -201,7 +201,7 @@ public class HomeActivity extends BaseActivity implements AAH_FabulousFragment.C
             startActivity(intentNotification);
         } else if (id == R.id.nav_order) {
             Intent intentOrder;
-            if (SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_RESTAURANT_LOGGED_IN, false)) {
+            if (!SessionManager.getBooleanSetting(HomeActivity.this, SESSION_IS_RESTAURANT_LOGGED_IN, false)) {
                 intentOrder = new Intent(HomeActivity.this, UserOrderListActivity.class);
             } else {
                 intentOrder = new Intent(HomeActivity.this, RestaurantOrderListActivity.class);

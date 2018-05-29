@@ -245,7 +245,7 @@ public class RestaurantOrderListActivity extends AppCompatActivity {
 
         @Override
         protected HttpRequestManager.HttpResponse doInBackground(String... params) {
-            HttpRequestManager.HttpResponse response = HttpRequestManager.doGetRequest(AllUrls.getAllOrdersUrl(mRestaurantId));
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doGetRequest(AllUrls.getRestaurantOrdersUrl(mRestaurantId));
             return response;
         }
 

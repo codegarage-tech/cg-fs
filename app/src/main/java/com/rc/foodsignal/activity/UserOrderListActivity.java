@@ -21,7 +21,7 @@ import com.rc.foodsignal.R;
 import com.rc.foodsignal.model.FoodItem;
 import com.rc.foodsignal.model.OrderListItem;
 import com.rc.foodsignal.model.ResponseOrderList;
-import com.rc.foodsignal.model.RestaurantLoginData;
+import com.rc.foodsignal.model.UserBasicInfo;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
 import com.rc.foodsignal.util.HttpRequestManager;
@@ -32,12 +32,12 @@ import com.reversecoder.library.util.AllSettingsManager;
 
 import java.util.ArrayList;
 
-import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_LOGIN_DATA;
+import static com.rc.foodsignal.util.AllConstants.SESSION_USER_BASIC_INFO;
 import static com.rc.foodsignal.util.AppUtils.isSimSupport;
 
 /**
  * @author Md. Rashadul Alam
- * Email: rashed.droid@gmail.com
+ *         Email: rashed.droid@gmail.com
  */
 public class UserOrderListActivity extends AppCompatActivity {
 
@@ -46,7 +46,7 @@ public class UserOrderListActivity extends AppCompatActivity {
     ImageView ivBack;
     LinearLayout llNotification;
 
-    RestaurantLoginData restaurantLoginData;
+    UserBasicInfo userBasicInfo;
     OrderListTask orderListTask;
     DetailIntentType mDetailIntentType = DetailIntentType.OTHER;
     String TAG = AppUtils.getTagName(UserOrderListActivity.class);
@@ -85,15 +85,15 @@ public class UserOrderListActivity extends AppCompatActivity {
     }
 
     private void setData() {
-        if (!AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(UserOrderListActivity.this, SESSION_RESTAURANT_LOGIN_DATA))) {
-            restaurantLoginData = RestaurantLoginData.getResponseObject(SessionManager.getStringSetting(UserOrderListActivity.this, SESSION_RESTAURANT_LOGIN_DATA), RestaurantLoginData.class);
-            Log.d("LoginUser: ", restaurantLoginData.toString());
+        if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(UserOrderListActivity.this, SESSION_USER_BASIC_INFO))) {
+            Log.d(TAG, "Session data: " + SessionManager.getStringSetting(UserOrderListActivity.this, SESSION_USER_BASIC_INFO));
+            userBasicInfo = UserBasicInfo.getResponseObject(SessionManager.getStringSetting(UserOrderListActivity.this, SESSION_USER_BASIC_INFO), UserBasicInfo.class);
 
-            if (restaurantLoginData != null) {
+            if (userBasicInfo != null) {
                 if (!NetworkManager.isConnected(UserOrderListActivity.this)) {
                     Toast.makeText(UserOrderListActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
                 } else {
-                    orderListTask = new OrderListTask(UserOrderListActivity.this, restaurantLoginData.getId());
+                    orderListTask = new OrderListTask(UserOrderListActivity.this, userBasicInfo.getUser_id());
                     orderListTask.execute();
                 }
             }
@@ -217,11 +217,11 @@ public class UserOrderListActivity extends AppCompatActivity {
     private class OrderListTask extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
 
         private Context mContext;
-        private String mRestaurantId = "";
+        private String mUserId = "";
 
-        public OrderListTask(Context context, String restaurantId) {
+        public OrderListTask(Context context, String userId) {
             mContext = context;
-            mRestaurantId = restaurantId;
+            mUserId = userId;
         }
 
         @Override
@@ -245,7 +245,7 @@ public class UserOrderListActivity extends AppCompatActivity {
 
         @Override
         protected HttpRequestManager.HttpResponse doInBackground(String... params) {
-            HttpRequestManager.HttpResponse response = HttpRequestManager.doGetRequest(AllUrls.getAllOrdersUrl(mRestaurantId));
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doGetRequest(AllUrls.getUserOrdersUrl(mUserId));
             return response;
         }
 
