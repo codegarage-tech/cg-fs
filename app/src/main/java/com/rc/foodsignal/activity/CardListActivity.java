@@ -24,6 +24,7 @@ import com.rc.foodsignal.model.realm.RealmController;
 import com.rc.foodsignal.model.realm.StripeCard;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
+import com.reversecoder.gcm.GcmManager;
 import com.reversecoder.library.event.OnSingleClickListener;
 import com.reversecoder.library.httprequest.HttpRequestManager;
 import com.reversecoder.library.network.NetworkManager;
@@ -48,7 +49,7 @@ import static com.rc.foodsignal.util.AllConstants.STRIPE_SECRET_KEY;
 
 /**
  * @author Md. Rashadul Alam
- * Email: rashed.droid@gmail.com
+ *         Email: rashed.droid@gmail.com
  */
 public class CardListActivity extends AppCompatActivity {
 
@@ -168,7 +169,7 @@ public class CardListActivity extends AppCompatActivity {
             Toast.makeText(CardListActivity.this, getResources().getString(R.string.toast_please_add_atleast_one_card), Toast.LENGTH_SHORT).show();
             return;
         }
-        String mReceiverName = edtReceiverName.getText().toString(), mReceiverAddress = edtReceiverAddress.getText().toString(),mReceiverPhone =edtReceiverPhone.getText().toString() , mReceiverEmailAddress = edtReceiverEmailAddress.getText().toString();
+        String mReceiverName = edtReceiverName.getText().toString(), mReceiverAddress = edtReceiverAddress.getText().toString(), mReceiverPhone = edtReceiverPhone.getText().toString(), mReceiverEmailAddress = edtReceiverEmailAddress.getText().toString();
         if (AllSettingsManager.isNullOrEmpty(mReceiverName)) {
             Toast.makeText(CardListActivity.this, getString(R.string.toast_please_input_receiver_name), Toast.LENGTH_SHORT).show();
             return;
@@ -326,7 +327,17 @@ public class CardListActivity extends AppCompatActivity {
 
         @Override
         protected HttpRequestManager.HttpResponse doInBackground(String... params) {
-            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getSendOrderUrl(), AllUrls.getSendOrderParam(mParamCheckout), null);
+            HttpRequestManager.HttpResponse response = null;
+            try {
+                //Get GCM registration id
+                String mPushId = GcmManager.getDevicePushId(CardListActivity.this);
+                paramCheckout.setDevice_id(mPushId);
+                Log.d(TAG, "final param: " + paramCheckout.toString());
+
+                response = HttpRequestManager.doRestPostRequest(AllUrls.getSendOrderUrl(), AllUrls.getSendOrderParam(mParamCheckout), null);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             return response;
         }
 

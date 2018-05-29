@@ -17,9 +17,12 @@ public class ParamCheckout extends ResponseBase {
     private String user_address = "";
     private String user_phone = "";
     private String user_email = "";
+    private String user_id = "";
+    private String device_id = "";
+    private String device_type = "android";
     private ArrayList<OrderItem> order_items = new ArrayList<>();
 
-    public ParamCheckout(String restaurant_id, float total_amount, float sub_total, String delivery_type, float shipping_cost, String user_name, String user_address, String user_phone, String user_email, ArrayList<OrderItem> order_items) {
+    public ParamCheckout(String restaurant_id, float total_amount, float sub_total, String delivery_type, float shipping_cost, String user_name, String user_address, String user_phone, String user_email, String user_id, String device_id, String device_type, ArrayList<OrderItem> order_items) {
         this.restaurant_id = restaurant_id;
         this.total_amount = total_amount;
         this.sub_total = sub_total;
@@ -29,6 +32,9 @@ public class ParamCheckout extends ResponseBase {
         this.user_address = user_address;
         this.user_phone = user_phone;
         this.user_email = user_email;
+        this.user_id = user_id;
+        this.device_id = device_id;
+        this.device_type = device_type;
         this.order_items = order_items;
     }
 
@@ -104,6 +110,30 @@ public class ParamCheckout extends ResponseBase {
         this.user_email = user_email;
     }
 
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getDevice_id() {
+        return device_id;
+    }
+
+    public void setDevice_id(String device_id) {
+        this.device_id = device_id;
+    }
+
+    public String getDevice_type() {
+        return device_type;
+    }
+
+    public void setDevice_type(String device_type) {
+        this.device_type = device_type;
+    }
+
     public ArrayList<OrderItem> getOrder_items() {
         return order_items;
     }
@@ -124,6 +154,9 @@ public class ParamCheckout extends ResponseBase {
                 ", user_address='" + user_address + '\'' +
                 ", user_phone='" + user_phone + '\'' +
                 ", user_email='" + user_email + '\'' +
+                ", user_id='" + user_id + '\'' +
+                ", device_id='" + device_id + '\'' +
+                ", device_type='" + device_type + '\'' +
                 ", order_items=" + order_items +
                 '}';
     }

@@ -1,6 +1,11 @@
 package com.reversecoder.gcm;
 
 import android.content.Context;
+import android.util.Log;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
+import static com.reversecoder.gcm.util.GcmConfig.GCM_SENDER_ID;
 
 /**
  * @author Md. Rashadul Alam
@@ -55,5 +60,18 @@ public class GcmManager {
         public GcmBuilder buildGcmManager() {
             return this;
         }
+    }
+
+    public static String getDevicePushId(Context context) {
+        //Get GCM registration id
+        String mPushId = "";
+        try {
+            GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
+            mPushId = gcm.register(GCM_SENDER_ID);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        Log.d(GcmManager.class.getSimpleName(), "mPushId: " + mPushId);
+        return mPushId;
     }
 }
