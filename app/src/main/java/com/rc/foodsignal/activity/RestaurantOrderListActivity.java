@@ -39,7 +39,7 @@ import static com.rc.foodsignal.util.AppUtils.isSimSupport;
  * @author Md. Rashadul Alam
  * Email: rashed.droid@gmail.com
  */
-public class OrderListActivity extends AppCompatActivity {
+public class RestaurantOrderListActivity extends AppCompatActivity {
 
     //Toolbar
     TextView tvTitle;
@@ -49,7 +49,7 @@ public class OrderListActivity extends AppCompatActivity {
     RestaurantLoginData restaurantLoginData;
     OrderListTask orderListTask;
     DetailIntentType mDetailIntentType = DetailIntentType.OTHER;
-    String TAG = AppUtils.getTagName(OrderListActivity.class);
+    String TAG = AppUtils.getTagName(RestaurantOrderListActivity.class);
     ProgressDialog loadingDialog;
     ExpandingList expandingListOrder;
 
@@ -67,7 +67,7 @@ public class OrderListActivity extends AppCompatActivity {
         ivBack = (ImageView) findViewById(R.id.iv_back);
         llNotification = (LinearLayout) findViewById(R.id.ll_notification);
         tvTitle = (TextView) findViewById(R.id.text_title);
-        tvTitle.setText(getString(R.string.title_activity_order));
+        tvTitle.setText(getString(R.string.title_activity_order_restaurant));
 
         expandingListOrder = findViewById(R.id.expanding_list_order);
 
@@ -85,15 +85,15 @@ public class OrderListActivity extends AppCompatActivity {
     }
 
     private void setData() {
-        if (!AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(OrderListActivity.this, SESSION_RESTAURANT_LOGIN_DATA))) {
-            restaurantLoginData = RestaurantLoginData.getResponseObject(SessionManager.getStringSetting(OrderListActivity.this, SESSION_RESTAURANT_LOGIN_DATA), RestaurantLoginData.class);
+        if (!AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(RestaurantOrderListActivity.this, SESSION_RESTAURANT_LOGIN_DATA))) {
+            restaurantLoginData = RestaurantLoginData.getResponseObject(SessionManager.getStringSetting(RestaurantOrderListActivity.this, SESSION_RESTAURANT_LOGIN_DATA), RestaurantLoginData.class);
             Log.d("LoginUser: ", restaurantLoginData.toString());
 
             if (restaurantLoginData != null) {
-                if (!NetworkManager.isConnected(OrderListActivity.this)) {
-                    Toast.makeText(OrderListActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
+                if (!NetworkManager.isConnected(RestaurantOrderListActivity.this)) {
+                    Toast.makeText(RestaurantOrderListActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
                 } else {
-                    orderListTask = new OrderListTask(OrderListActivity.this, restaurantLoginData.getId());
+                    orderListTask = new OrderListTask(RestaurantOrderListActivity.this, restaurantLoginData.getId());
                     orderListTask.execute();
                 }
             }
@@ -175,12 +175,12 @@ public class OrderListActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if (!AllSettingsManager.isNullOrEmpty(orderListItem.getUser_phone().trim())) {
-                        if (isSimSupport(OrderListActivity.this)) {
+                        if (isSimSupport(RestaurantOrderListActivity.this)) {
                             Intent callIntent = new Intent(Intent.ACTION_CALL);
                             callIntent.setData(Uri.parse("tel:" + orderListItem.getUser_phone().trim()));
                             startActivity(callIntent);
                         } else {
-                            Toast.makeText(OrderListActivity.this, getString(R.string.toast_your_sim_card_is_absent), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RestaurantOrderListActivity.this, getString(R.string.toast_your_sim_card_is_absent), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -268,11 +268,11 @@ public class OrderListActivity extends AppCompatActivity {
                     //Update list view
                     createExpandingItems(responseData.getData());
                 } else {
-                    Toast.makeText(OrderListActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RestaurantOrderListActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
                 }
 
             } else {
-                Toast.makeText(OrderListActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
+                Toast.makeText(RestaurantOrderListActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
             }
         }
     }

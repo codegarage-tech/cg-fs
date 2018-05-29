@@ -144,8 +144,14 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name="com.rc.foodsignal.activity.OrderListActivity"
-            android:label="@string/title_activity_order"
+            android:name="com.rc.foodsignal.activity.RestaurantOrderListActivity"
+            android:label="@string/title_activity_order_restaurant"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name="com.rc.foodsignal.activity.UserOrderListActivity"
+            android:label="@string/title_activity_order_user"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 

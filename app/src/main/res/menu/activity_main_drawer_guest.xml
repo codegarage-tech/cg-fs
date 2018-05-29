@@ -17,6 +17,10 @@
             android:icon="@drawable/ic_menu_notification"
             android:title="Notification" />
         <item
+            android:id="@+id/nav_order"
+            android:icon="@drawable/ic_menu_order"
+            android:title="User Order" />
+        <item
             android:id="@+id/nav_android_pay"
             android:icon="@drawable/ic_menu_google_pay"
             android:title="Android Pay" />
