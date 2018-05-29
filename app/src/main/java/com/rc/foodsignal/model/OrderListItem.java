@@ -18,9 +18,14 @@ public class OrderListItem extends ResponseBase {
     private String shipping_cost = "";
     private String sub_total = "";
     private String user_phone = "";
+    private String user_id = "";
+    private String is_order_accepted = "";
+    private String device_id = "";
+    private String device_type = "";
+    private String refund_requested = "";
     private ArrayList<FoodCategoryDetail> menu_details = new ArrayList<>();
 
-    public OrderListItem(String id, String restaurant_id, String total_amount, String user_name, String user_address, String user_email, String delivery_type, String shipping_cost, String sub_total, ArrayList<FoodCategoryDetail> menu_details) {
+    public OrderListItem(String id, String restaurant_id, String total_amount, String user_name, String user_address, String user_email, String delivery_type, String shipping_cost, String sub_total, String user_phone, String user_id, String is_order_accepted, String device_id, String device_type, String refund_requested, ArrayList<FoodCategoryDetail> menu_details) {
         this.id = id;
         this.restaurant_id = restaurant_id;
         this.total_amount = total_amount;
@@ -30,6 +35,12 @@ public class OrderListItem extends ResponseBase {
         this.delivery_type = delivery_type;
         this.shipping_cost = shipping_cost;
         this.sub_total = sub_total;
+        this.user_phone = user_phone;
+        this.user_id = user_id;
+        this.is_order_accepted = is_order_accepted;
+        this.device_id = device_id;
+        this.device_type = device_type;
+        this.refund_requested = refund_requested;
         this.menu_details = menu_details;
     }
 
@@ -113,6 +124,46 @@ public class OrderListItem extends ResponseBase {
         this.user_phone = user_phone;
     }
 
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getIs_order_accepted() {
+        return is_order_accepted;
+    }
+
+    public void setIs_order_accepted(String is_order_accepted) {
+        this.is_order_accepted = is_order_accepted;
+    }
+
+    public String getDevice_id() {
+        return device_id;
+    }
+
+    public void setDevice_id(String device_id) {
+        this.device_id = device_id;
+    }
+
+    public String getDevice_type() {
+        return device_type;
+    }
+
+    public void setDevice_type(String device_type) {
+        this.device_type = device_type;
+    }
+
+    public String getRefund_requested() {
+        return refund_requested;
+    }
+
+    public void setRefund_requested(String refund_requested) {
+        this.refund_requested = refund_requested;
+    }
+
     public ArrayList<FoodCategoryDetail> getMenu_details() {
         return menu_details;
     }
@@ -150,6 +201,11 @@ public class OrderListItem extends ResponseBase {
                 ", shipping_cost='" + shipping_cost + '\'' +
                 ", sub_total='" + sub_total + '\'' +
                 ", user_phone='" + user_phone + '\'' +
+                ", user_id='" + user_id + '\'' +
+                ", is_order_accepted='" + is_order_accepted + '\'' +
+                ", device_id='" + device_id + '\'' +
+                ", device_type='" + device_type + '\'' +
+                ", refund_requested='" + refund_requested + '\'' +
                 ", menu_details=" + menu_details +
                 '}';
     }
