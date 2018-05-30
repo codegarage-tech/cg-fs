@@ -70,6 +70,9 @@
     <string name="txt_total">Total</string>
     <string name="txt_delivery">delivery</string>
     <string name="txt_pickup">pickup</string>
+    <string name="txt_request_pending">Request pending</string>
+    <string name="txt_request_canceled">Request canceled</string>
+    <string name="txt_request_accepted">Request accepted</string>
 
     <!-- Dialog -->
     <string name="dialog_btn_ok">OK</string>

@@ -127,7 +127,7 @@ public class RestaurantOrderListActivity extends AppCompatActivity {
             //It is possible to get any view inside the inflated layout. Let's set the text in the item
             ((TextView) item.findViewById(R.id.tv_user_name)).setText(orderListItem.getUser_name());
             ((TextView) item.findViewById(R.id.tv_user_address)).setText(orderListItem.getUser_address());
-            ((TextView) item.findViewById(R.id.tv_order_status)).setText("Pending");
+            ((TextView) item.findViewById(R.id.tv_order_status)).setText((AllSettingsManager.isNullOrEmpty(orderListItem.getIs_order_accepted())) ? getString(R.string.txt_request_pending) : ((orderListItem.getIs_order_accepted().equalsIgnoreCase("0")) ? getString(R.string.txt_request_canceled) : getString(R.string.txt_request_accepted)));
 
             //We can create items in batch.
             ArrayList<FoodItem> foodItems = orderListItem.getAllFoodItems();
