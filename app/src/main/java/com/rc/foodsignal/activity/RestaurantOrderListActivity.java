@@ -37,7 +37,7 @@ import static com.rc.foodsignal.util.AppUtils.isSimSupport;
 
 /**
  * @author Md. Rashadul Alam
- * Email: rashed.droid@gmail.com
+ *         Email: rashed.droid@gmail.com
  */
 public class RestaurantOrderListActivity extends AppCompatActivity {
 
@@ -127,6 +127,7 @@ public class RestaurantOrderListActivity extends AppCompatActivity {
             //It is possible to get any view inside the inflated layout. Let's set the text in the item
             ((TextView) item.findViewById(R.id.tv_user_name)).setText(orderListItem.getUser_name());
             ((TextView) item.findViewById(R.id.tv_user_address)).setText(orderListItem.getUser_address());
+            ((TextView) item.findViewById(R.id.tv_order_status)).setText("Pending");
 
             //We can create items in batch.
             ArrayList<FoodItem> foodItems = orderListItem.getAllFoodItems();
@@ -183,6 +184,13 @@ public class RestaurantOrderListActivity extends AppCompatActivity {
                             Toast.makeText(RestaurantOrderListActivity.this, getString(R.string.toast_your_sim_card_is_absent), Toast.LENGTH_SHORT).show();
                         }
                     }
+                }
+            });
+
+            item.findViewById(R.id.iv_order_process).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
                 }
             });
         }
