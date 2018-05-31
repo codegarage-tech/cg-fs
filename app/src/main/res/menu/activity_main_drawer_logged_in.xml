@@ -17,10 +17,6 @@
             android:icon="@drawable/ic_menu_notification"
             android:title="Notification" />
         <item
-            android:id="@+id/nav_order"
-            android:icon="@drawable/ic_menu_order"
-            android:title="Restaurant Order" />
-        <item
             android:id="@+id/nav_android_pay"
             android:icon="@drawable/ic_menu_google_pay"
             android:title="Android Pay" />
@@ -45,6 +41,10 @@
                 android:id="@+id/nav_about_restaurant"
                 android:icon="@drawable/ic_menu_about_restaurant"
                 android:title="About Restaurant" />
+            <item
+                android:id="@+id/nav_order"
+                android:icon="@drawable/ic_menu_order"
+                android:title="Restaurant Order" />
             <item
                 android:id="@+id/nav_menu"
                 android:icon="@drawable/ic_action_menu"

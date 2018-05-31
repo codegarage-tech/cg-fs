@@ -39,7 +39,7 @@ public class FoodSignalApplication extends Application {
         //Initialize GCM content class
         GcmManager.initGcmManager(mContext, new GcmManager.GcmBuilder()
                 .setContentRestaurantDetailClass(RestaurantDetailActivity.class)
-                .setContentRestaurantOrderListClass(UserOrderListActivity.class)
+                .setContentUserOrderListClass(UserOrderListActivity.class)
                 .setContentRestaurantOrderListClass(RestaurantOrderListActivity.class)
                 .buildGcmManager());
 

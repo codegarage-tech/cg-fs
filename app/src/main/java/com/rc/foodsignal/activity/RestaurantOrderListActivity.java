@@ -22,6 +22,7 @@ import com.rc.foodsignal.dialog.OrderProcessingDialog;
 import com.rc.foodsignal.model.FoodItem;
 import com.rc.foodsignal.model.OrderListItem;
 import com.rc.foodsignal.model.ResponseOrderList;
+import com.rc.foodsignal.model.ResponseOrderStatus;
 import com.rc.foodsignal.model.RestaurantLoginData;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
@@ -39,7 +40,7 @@ import static com.rc.foodsignal.util.AppUtils.isSimSupport;
 
 /**
  * @author Md. Rashadul Alam
- *         Email: rashed.droid@gmail.com
+ * Email: rashed.droid@gmail.com
  */
 public class RestaurantOrderListActivity extends AppCompatActivity {
 
@@ -137,8 +138,8 @@ public class RestaurantOrderListActivity extends AppCompatActivity {
             ((TextView) item.findViewById(R.id.tv_user_name)).setText(orderListItem.getUser_name());
             ((TextView) item.findViewById(R.id.tv_user_address)).setText(orderListItem.getUser_address());
 
-            TextView tvOrderStatus = (TextView) item.findViewById(R.id.tv_order_status);
-            tvOrderStatus.setText((AllSettingsManager.isNullOrEmpty(orderListItem.getIs_order_accepted())) ? getString(R.string.txt_request_pending) : ((orderListItem.getIs_order_accepted().equalsIgnoreCase("0")) ? getString(R.string.txt_request_canceled) : getString(R.string.txt_request_accepted)));
+            //Order status
+            setStatusData(item, orderListItem.getIs_order_accepted());
 
             //We can create items in batch.
             ArrayList<FoodItem> foodItems = orderListItem.getAllFoodItems();
@@ -326,7 +327,7 @@ public class RestaurantOrderListActivity extends AppCompatActivity {
         private String mIsOrderAccepted = "";
         private ExpandingItem mExpandingItem;
 
-        public OrderProcessingTask(Context context, ExpandingItem expandingItem, String orderId, String isOrderAccepted) {
+        private OrderProcessingTask(Context context, ExpandingItem expandingItem, String orderId, String isOrderAccepted) {
             mContext = context;
             mOrderId = orderId;
             mIsOrderAccepted = isOrderAccepted;
@@ -368,21 +369,54 @@ public class RestaurantOrderListActivity extends AppCompatActivity {
 
             if (result != null && result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
                 Log.d(TAG, "success response from web: " + result.getResult().toString());
-//                ResponseOrderList responseData = ResponseOrderList.getResponseObject(result.getResult().toString(), ResponseOrderList.class);
-//                Log.d(TAG, "success response from object: " + responseData.toString());
-//
-//                if (responseData.getStatus().equalsIgnoreCase("1") && (responseData.getData().size() > 0)) {
-//                    Log.d(TAG, "success wrapper: " + responseData.getData().toString());
-//
+                ResponseOrderStatus responseData = ResponseOrderStatus.getResponseObject(result.getResult().toString(), ResponseOrderStatus.class);
+                Log.d(TAG, "success response from object: " + responseData.toString());
+
+                if (responseData.getStatus().equalsIgnoreCase("1")) {
+                    Toast.makeText(RestaurantOrderListActivity.this, responseData.getMsg(), Toast.LENGTH_SHORT).show();
+
+                    setStatusData(mExpandingItem, mIsOrderAccepted);
 //                    //Update list view
 //                    createExpandingItems(responseData.getData());
-//                } else {
-//                    Toast.makeText(RestaurantOrderListActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
-//                }
+                } else {
+                    Toast.makeText(RestaurantOrderListActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
+                }
 
             } else {
                 Toast.makeText(RestaurantOrderListActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    private void setStatusData(ExpandingItem expandingItem, String isOrderAccepted){
+        TextView tvOrderStatus = (TextView) expandingItem.findViewById(R.id.tv_order_status);
+        ImageView ivOrderStatus = (ImageView) expandingItem.findViewById(R.id.iv_order_process);
+        String strOrderStatus = "";
+
+        if(isOrderAccepted.equalsIgnoreCase("1")){
+            strOrderStatus = getString(R.string.txt_request_accepted);
+
+            tvOrderStatus.setText(strOrderStatus);
+            tvOrderStatus.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+
+            ivOrderStatus.setBackgroundResource(R.drawable.ic_vector_accepted);
+            ivOrderStatus.setEnabled(false);
+        }else if(isOrderAccepted.equalsIgnoreCase("0")){
+            strOrderStatus = getString(R.string.txt_request_canceled);
+
+            tvOrderStatus.setText(strOrderStatus);
+            tvOrderStatus.setTextColor(getResources().getColor(R.color.red));
+
+            ivOrderStatus.setBackgroundResource(R.drawable.ic_vector_canceled);
+            ivOrderStatus.setEnabled(false);
+        }else{
+            strOrderStatus = getString(R.string.txt_request_pending);
+
+            tvOrderStatus.setText(strOrderStatus);
+            tvOrderStatus.setTextColor(getResources().getColor(R.color.blue));
+
+            ivOrderStatus.setBackgroundResource(R.drawable.ic_vector_pending);
+            ivOrderStatus.setEnabled(true);
         }
     }
 }
