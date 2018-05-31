@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.diegodobelo.expandingview.ExpandingItem;
 import com.diegodobelo.expandingview.ExpandingList;
 import com.rc.foodsignal.R;
+import com.rc.foodsignal.dialog.OrderProcessingDialog;
+import com.rc.foodsignal.dialog.RefundProcessingDialog;
 import com.rc.foodsignal.model.FoodItem;
 import com.rc.foodsignal.model.OrderListItem;
 import com.rc.foodsignal.model.ResponseOrderList;
@@ -128,6 +130,9 @@ public class UserOrderListActivity extends AppCompatActivity {
             ((TextView) item.findViewById(R.id.tv_user_name)).setText(orderListItem.getUser_name());
             ((TextView) item.findViewById(R.id.tv_user_address)).setText(orderListItem.getUser_address());
 
+            //Order status
+            setStatusData(item, orderListItem.getIs_order_accepted());
+
             //We can create items in batch.
             ArrayList<FoodItem> foodItems = orderListItem.getAllFoodItems();
             if (foodItems.size() > 0) {
@@ -183,6 +188,36 @@ public class UserOrderListActivity extends AppCompatActivity {
                             Toast.makeText(UserOrderListActivity.this, getString(R.string.toast_your_sim_card_is_absent), Toast.LENGTH_SHORT).show();
                         }
                     }
+                }
+            });
+
+            item.findViewById(R.id.iv_order_process).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    RefundProcessingDialog refundProcessingDialog = new RefundProcessingDialog(UserOrderListActivity.this, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+//                            int orderProcessingStatus = -1;
+                            switch (which) {
+                                case DialogInterface.BUTTON_NEGATIVE:
+//                                    orderProcessingStatus = 0;
+                                    break;
+                                case DialogInterface.BUTTON_POSITIVE:
+//                                    orderProcessingStatus = 1;
+                                    break;
+                            }
+//
+//                            if (!NetworkManager.isConnected(UserOrderListActivity.this)) {
+//                                Toast.makeText(UserOrderListActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                if (orderProcessingStatus != -1) {
+//                                    orderProcessingTask = new RestaurantOrderListActivity.OrderProcessingTask(RestaurantOrderListActivity.this, item, orderListItem.getId(), orderProcessingStatus + "");
+//                                    orderProcessingTask.execute();
+//                                }
+//                            }
+                        }
+                    });
+                    refundProcessingDialog.createView().show();
                 }
             });
         }
@@ -274,6 +309,38 @@ public class UserOrderListActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(UserOrderListActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    private void setStatusData(ExpandingItem expandingItem, String isOrderAccepted){
+        TextView tvOrderStatus = (TextView) expandingItem.findViewById(R.id.tv_order_status);
+        ImageView ivOrderStatus = (ImageView) expandingItem.findViewById(R.id.iv_order_process);
+        String strOrderStatus = "";
+
+        if(isOrderAccepted.equalsIgnoreCase("1")){
+            strOrderStatus = getString(R.string.txt_request_accepted);
+
+            tvOrderStatus.setText(strOrderStatus);
+            tvOrderStatus.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+
+            ivOrderStatus.setBackgroundResource(R.drawable.ic_vector_accepted);
+            ivOrderStatus.setEnabled(false);
+        }else if(isOrderAccepted.equalsIgnoreCase("0")){
+            strOrderStatus = getString(R.string.txt_request_canceled);
+
+            tvOrderStatus.setText(strOrderStatus);
+            tvOrderStatus.setTextColor(getResources().getColor(R.color.red));
+
+            ivOrderStatus.setBackgroundResource(R.drawable.ic_vector_refund);
+            ivOrderStatus.setEnabled(true);
+        }else{
+            strOrderStatus = getString(R.string.txt_request_pending);
+
+            tvOrderStatus.setText(strOrderStatus);
+            tvOrderStatus.setTextColor(getResources().getColor(R.color.blue));
+
+            ivOrderStatus.setBackgroundResource(R.drawable.ic_vector_pending);
+            ivOrderStatus.setEnabled(false);
         }
     }
 }
