@@ -94,7 +94,6 @@ public class ExpandingList extends ScrollView {
         mContainer.removeView(item);
     }
 
-
     /**
      * Method to remove all items.
      */

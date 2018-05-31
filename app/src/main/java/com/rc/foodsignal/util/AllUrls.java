@@ -395,4 +395,19 @@ public class AllUrls {
         Log.d(TAG, "getDeleteFoodMenuUrl: " + url);
         return url;
     }
+
+    public static String getOrderProcessingUrl() {
+        String url = BASE_URL + "orders/update_order_status";
+        Log.d(TAG, "getOrderProcessingUrl: " + url);
+        return url;
+    }
+
+    public static JSONObject getOrderProcessingParameters(String orderId, String isOrderAccepted) {
+        JSONObject params = HttpRequestManager.HttpParameter.getInstance()
+                .addJSONParam("order_id", orderId)
+                .addJSONParam("is_order_accepted", isOrderAccepted)
+                .getJSONParam();
+        Log.d(TAG, "getOrderProcessingParameters: " + params.toString());
+        return params;
+    }
 }

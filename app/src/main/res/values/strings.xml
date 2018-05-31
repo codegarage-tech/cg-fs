@@ -60,6 +60,7 @@
     <string name="toast_please_input_receiver_email">Please input receiver email</string>
     <string name="toast_something_went_wrong">Something went wrong!</string>
     <string name="toast_you_can_not_delete_the_selected_item">You can not delete the selected item</string>
+    <string name="toast_you_need_to_login_as_restaurant_owner">You need to login as restaurant owner</string>
 
     <!-- Message -->
     <string name="txt_loading_message">Loading, please wait.</string>
@@ -78,6 +79,7 @@
     <string name="dialog_btn_ok">OK</string>
     <string name="dialog_btn_cancel">CANCEL</string>
     <string name="dialog_delete_menu_title">Do you want to delete this item?</string>
+    <string name="dialog_order_processing_title">Do you want to accept the order?</string>
 
     <!-- Pro Swipe Button -->
     <string name="txt_off_notification">Off Notification</string>

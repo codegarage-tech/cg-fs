@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatDelegate;
 
 import com.rc.foodsignal.activity.RestaurantOrderListActivity;
 import com.rc.foodsignal.activity.RestaurantDetailActivity;
+import com.rc.foodsignal.activity.UserOrderListActivity;
 import com.reversecoder.gcm.GcmManager;
 
 import io.realm.Realm;
@@ -38,7 +39,8 @@ public class FoodSignalApplication extends Application {
         //Initialize GCM content class
         GcmManager.initGcmManager(mContext, new GcmManager.GcmBuilder()
                 .setContentRestaurantDetailClass(RestaurantDetailActivity.class)
-                .setContentOrderListClass(RestaurantOrderListActivity.class)
+                .setContentRestaurantOrderListClass(UserOrderListActivity.class)
+                .setContentRestaurantOrderListClass(RestaurantOrderListActivity.class)
                 .buildGcmManager());
 
         //Realm Database

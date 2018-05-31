@@ -24,7 +24,7 @@ import static com.reversecoder.gcm.util.GcmConfig.INTENT_KEY_GCM_APP_USER_DATA_C
 
 /**
  * @author Md. Rashadul Alam
- * Email: rashed.droid@gmail.com
+ *         Email: rashed.droid@gmail.com
  */
 public class GcmIntentService extends IntentService {
 
@@ -82,7 +82,10 @@ public class GcmIntentService extends IntentService {
     private void sendNotification(Context context, GcmData gcmData) {
         Intent intentGcmDetail;
         if (gcmData.getTitle().equalsIgnoreCase(getString(R.string.txt_order_title))) {
-            intentGcmDetail = new Intent(context, GcmManager.getContentOrderListClass());
+            intentGcmDetail = new Intent(context, GcmManager.getContentRestaurantOrderListClass());
+        } else if (gcmData.getTitle().equalsIgnoreCase(getString(R.string.txt_order_title_accepted))
+                || gcmData.getTitle().equalsIgnoreCase(getString(R.string.txt_order_title_canceled))) {
+            intentGcmDetail = new Intent(context, GcmManager.getContentUserOrderListClass());
         } else {
             intentGcmDetail = new Intent(context, GcmManager.getContentRestaurantDetailClass());
         }

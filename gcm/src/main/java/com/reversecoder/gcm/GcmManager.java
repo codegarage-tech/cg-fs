@@ -28,13 +28,18 @@ public class GcmManager {
         return mGcmBuilder.getContentRestaurantDetailClass();
     }
 
-    public static Class<?> getContentOrderListClass() {
-        return mGcmBuilder.getContentOrderListClass();
+    public static Class<?> getContentRestaurantOrderListClass() {
+        return mGcmBuilder.getContentRestaurantOrderListClass();
+    }
+
+    public static Class<?> getContentUserOrderListClass() {
+        return mGcmBuilder.getContentUserOrderListClass();
     }
 
     public static class GcmBuilder {
         private Class<?> classRestaurantDetail;
-        private Class<?> classOrderList;
+        private Class<?> classRestaurantOrderList;
+        private Class<?> classUserOrderList;
 
         public GcmBuilder() {
         }
@@ -48,13 +53,22 @@ public class GcmManager {
             return classRestaurantDetail;
         }
 
-        public Class<?> getContentOrderListClass() {
-            return classOrderList;
+        public Class<?> getContentRestaurantOrderListClass() {
+            return classRestaurantOrderList;
         }
 
-        public GcmBuilder setContentOrderListClass(Class<?> classOrderList) {
-            this.classOrderList = classOrderList;
+        public GcmBuilder setContentRestaurantOrderListClass(Class<?> classOrderList) {
+            this.classRestaurantOrderList = classOrderList;
             return this;
+        }
+
+        public GcmBuilder setContentUserOrderListClass(Class<?> classOrderList) {
+            this.classUserOrderList = classOrderList;
+            return this;
+        }
+
+        public Class<?> getContentUserOrderListClass() {
+            return classUserOrderList;
         }
 
         public GcmBuilder buildGcmManager() {

@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.diegodobelo.expandingview.ExpandingItem;
 import com.diegodobelo.expandingview.ExpandingList;
 import com.rc.foodsignal.R;
+import com.rc.foodsignal.dialog.OrderProcessingDialog;
 import com.rc.foodsignal.model.FoodItem;
 import com.rc.foodsignal.model.OrderListItem;
 import com.rc.foodsignal.model.ResponseOrderList;
@@ -32,6 +33,7 @@ import com.reversecoder.library.util.AllSettingsManager;
 
 import java.util.ArrayList;
 
+import static com.rc.foodsignal.util.AllConstants.SESSION_IS_RESTAURANT_LOGGED_IN;
 import static com.rc.foodsignal.util.AllConstants.SESSION_RESTAURANT_LOGIN_DATA;
 import static com.rc.foodsignal.util.AppUtils.isSimSupport;
 
@@ -48,6 +50,7 @@ public class RestaurantOrderListActivity extends AppCompatActivity {
 
     RestaurantLoginData restaurantLoginData;
     OrderListTask orderListTask;
+    OrderProcessingTask orderProcessingTask;
     DetailIntentType mDetailIntentType = DetailIntentType.OTHER;
     String TAG = AppUtils.getTagName(RestaurantOrderListActivity.class);
     ProgressDialog loadingDialog;
@@ -85,18 +88,24 @@ public class RestaurantOrderListActivity extends AppCompatActivity {
     }
 
     private void setData() {
-        if (!AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(RestaurantOrderListActivity.this, SESSION_RESTAURANT_LOGIN_DATA))) {
-            restaurantLoginData = RestaurantLoginData.getResponseObject(SessionManager.getStringSetting(RestaurantOrderListActivity.this, SESSION_RESTAURANT_LOGIN_DATA), RestaurantLoginData.class);
-            Log.d("LoginUser: ", restaurantLoginData.toString());
+        if (SessionManager.getBooleanSetting(RestaurantOrderListActivity.this, SESSION_IS_RESTAURANT_LOGGED_IN, false)) {
 
-            if (restaurantLoginData != null) {
-                if (!NetworkManager.isConnected(RestaurantOrderListActivity.this)) {
-                    Toast.makeText(RestaurantOrderListActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
-                } else {
-                    orderListTask = new OrderListTask(RestaurantOrderListActivity.this, restaurantLoginData.getId());
-                    orderListTask.execute();
+            if (!AllSettingsManager.isNullOrEmpty(SessionManager.getStringSetting(RestaurantOrderListActivity.this, SESSION_RESTAURANT_LOGIN_DATA))) {
+                restaurantLoginData = RestaurantLoginData.getResponseObject(SessionManager.getStringSetting(RestaurantOrderListActivity.this, SESSION_RESTAURANT_LOGIN_DATA), RestaurantLoginData.class);
+                Log.d("LoginUser: ", restaurantLoginData.toString());
+
+                if (restaurantLoginData != null) {
+                    if (!NetworkManager.isConnected(RestaurantOrderListActivity.this)) {
+                        Toast.makeText(RestaurantOrderListActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
+                    } else {
+                        orderListTask = new OrderListTask(RestaurantOrderListActivity.this, restaurantLoginData.getId());
+                        orderListTask.execute();
+                    }
                 }
             }
+        } else {
+            Toast.makeText(RestaurantOrderListActivity.this, getResources().getString(R.string.toast_you_need_to_login_as_restaurant_owner), Toast.LENGTH_LONG).show();
+            onBackPressed();
         }
     }
 
@@ -127,7 +136,9 @@ public class RestaurantOrderListActivity extends AppCompatActivity {
             //It is possible to get any view inside the inflated layout. Let's set the text in the item
             ((TextView) item.findViewById(R.id.tv_user_name)).setText(orderListItem.getUser_name());
             ((TextView) item.findViewById(R.id.tv_user_address)).setText(orderListItem.getUser_address());
-            ((TextView) item.findViewById(R.id.tv_order_status)).setText((AllSettingsManager.isNullOrEmpty(orderListItem.getIs_order_accepted())) ? getString(R.string.txt_request_pending) : ((orderListItem.getIs_order_accepted().equalsIgnoreCase("0")) ? getString(R.string.txt_request_canceled) : getString(R.string.txt_request_accepted)));
+
+            TextView tvOrderStatus = (TextView) item.findViewById(R.id.tv_order_status);
+            tvOrderStatus.setText((AllSettingsManager.isNullOrEmpty(orderListItem.getIs_order_accepted())) ? getString(R.string.txt_request_pending) : ((orderListItem.getIs_order_accepted().equalsIgnoreCase("0")) ? getString(R.string.txt_request_canceled) : getString(R.string.txt_request_accepted)));
 
             //We can create items in batch.
             ArrayList<FoodItem> foodItems = orderListItem.getAllFoodItems();
@@ -190,7 +201,30 @@ public class RestaurantOrderListActivity extends AppCompatActivity {
             item.findViewById(R.id.iv_order_process).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    OrderProcessingDialog orderProcessingDialog = new OrderProcessingDialog(RestaurantOrderListActivity.this, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            int orderProcessingStatus = -1;
+                            switch (which) {
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    orderProcessingStatus = 0;
+                                    break;
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    orderProcessingStatus = 1;
+                                    break;
+                            }
 
+                            if (!NetworkManager.isConnected(RestaurantOrderListActivity.this)) {
+                                Toast.makeText(RestaurantOrderListActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
+                            } else {
+                                if (orderProcessingStatus != -1) {
+                                    orderProcessingTask = new OrderProcessingTask(RestaurantOrderListActivity.this, item, orderListItem.getId(), orderProcessingStatus + "");
+                                    orderProcessingTask.execute();
+                                }
+                            }
+                        }
+                    });
+                    orderProcessingDialog.createView().show();
                 }
             });
         }
@@ -278,6 +312,73 @@ public class RestaurantOrderListActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(RestaurantOrderListActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
                 }
+
+            } else {
+                Toast.makeText(RestaurantOrderListActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private class OrderProcessingTask extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
+
+        private Context mContext;
+        private String mOrderId = "";
+        private String mIsOrderAccepted = "";
+        private ExpandingItem mExpandingItem;
+
+        public OrderProcessingTask(Context context, ExpandingItem expandingItem, String orderId, String isOrderAccepted) {
+            mContext = context;
+            mOrderId = orderId;
+            mIsOrderAccepted = isOrderAccepted;
+            mExpandingItem = expandingItem;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            loadingDialog = new ProgressDialog(mContext);
+            loadingDialog.setMessage(getResources().getString(R.string.txt_loading));
+            loadingDialog.setIndeterminate(false);
+            loadingDialog.setCancelable(true);
+            loadingDialog.setCanceledOnTouchOutside(false);
+            loadingDialog.show();
+            loadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface arg0) {
+                    if (loadingDialog != null
+                            && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
+                }
+            });
+        }
+
+        @Override
+        protected HttpRequestManager.HttpResponse doInBackground(String... params) {
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getOrderProcessingUrl(), AllUrls.getOrderProcessingParameters(mOrderId, mIsOrderAccepted), null);
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(HttpRequestManager.HttpResponse result) {
+
+            if (loadingDialog != null
+                    && loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
+            }
+
+            if (result != null && result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
+                Log.d(TAG, "success response from web: " + result.getResult().toString());
+//                ResponseOrderList responseData = ResponseOrderList.getResponseObject(result.getResult().toString(), ResponseOrderList.class);
+//                Log.d(TAG, "success response from object: " + responseData.toString());
+//
+//                if (responseData.getStatus().equalsIgnoreCase("1") && (responseData.getData().size() > 0)) {
+//                    Log.d(TAG, "success wrapper: " + responseData.getData().toString());
+//
+//                    //Update list view
+//                    createExpandingItems(responseData.getData());
+//                } else {
+//                    Toast.makeText(RestaurantOrderListActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
+//                }
 
             } else {
                 Toast.makeText(RestaurantOrderListActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
