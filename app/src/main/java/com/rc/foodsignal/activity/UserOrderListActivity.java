@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.diegodobelo.expandingview.ExpandingItem;
 import com.diegodobelo.expandingview.ExpandingList;
 import com.rc.foodsignal.R;
-import com.rc.foodsignal.dialog.OrderProcessingDialog;
 import com.rc.foodsignal.dialog.RefundProcessingDialog;
 import com.rc.foodsignal.model.FoodItem;
 import com.rc.foodsignal.model.OrderListItem;
@@ -34,6 +33,7 @@ import com.reversecoder.library.util.AllSettingsManager;
 
 import java.util.ArrayList;
 
+import static com.rc.foodsignal.util.AllConstants.SESSION_IS_RESTAURANT_LOGGED_IN;
 import static com.rc.foodsignal.util.AllConstants.SESSION_USER_BASIC_INFO;
 import static com.rc.foodsignal.util.AppUtils.isSimSupport;
 
@@ -87,18 +87,24 @@ public class UserOrderListActivity extends AppCompatActivity {
     }
 
     private void setData() {
-        if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(UserOrderListActivity.this, SESSION_USER_BASIC_INFO))) {
-            Log.d(TAG, "Session data: " + SessionManager.getStringSetting(UserOrderListActivity.this, SESSION_USER_BASIC_INFO));
-            userBasicInfo = UserBasicInfo.getResponseObject(SessionManager.getStringSetting(UserOrderListActivity.this, SESSION_USER_BASIC_INFO), UserBasicInfo.class);
+        if (!SessionManager.getBooleanSetting(UserOrderListActivity.this, SESSION_IS_RESTAURANT_LOGGED_IN, false)) {
 
-            if (userBasicInfo != null) {
-                if (!NetworkManager.isConnected(UserOrderListActivity.this)) {
-                    Toast.makeText(UserOrderListActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
-                } else {
-                    orderListTask = new OrderListTask(UserOrderListActivity.this, userBasicInfo.getUser_id());
-                    orderListTask.execute();
+            if (!AppUtils.isNullOrEmpty(SessionManager.getStringSetting(UserOrderListActivity.this, SESSION_USER_BASIC_INFO))) {
+                Log.d(TAG, "Session data: " + SessionManager.getStringSetting(UserOrderListActivity.this, SESSION_USER_BASIC_INFO));
+                userBasicInfo = UserBasicInfo.getResponseObject(SessionManager.getStringSetting(UserOrderListActivity.this, SESSION_USER_BASIC_INFO), UserBasicInfo.class);
+
+                if (userBasicInfo != null) {
+                    if (!NetworkManager.isConnected(UserOrderListActivity.this)) {
+                        Toast.makeText(UserOrderListActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
+                    } else {
+                        orderListTask = new OrderListTask(UserOrderListActivity.this, userBasicInfo.getUser_id());
+                        orderListTask.execute();
+                    }
                 }
             }
+        } else {
+            Toast.makeText(UserOrderListActivity.this, getResources().getString(R.string.toast_you_need_to_logout_for_being_app_user), Toast.LENGTH_LONG).show();
+            onBackPressed();
         }
     }
 
@@ -312,12 +318,12 @@ public class UserOrderListActivity extends AppCompatActivity {
         }
     }
 
-    private void setStatusData(ExpandingItem expandingItem, String isOrderAccepted){
+    private void setStatusData(ExpandingItem expandingItem, String isOrderAccepted) {
         TextView tvOrderStatus = (TextView) expandingItem.findViewById(R.id.tv_order_status);
         ImageView ivOrderStatus = (ImageView) expandingItem.findViewById(R.id.iv_order_process);
         String strOrderStatus = "";
 
-        if(isOrderAccepted.equalsIgnoreCase("1")){
+        if (isOrderAccepted.equalsIgnoreCase("1")) {
             strOrderStatus = getString(R.string.txt_request_accepted);
 
             tvOrderStatus.setText(strOrderStatus);
@@ -325,7 +331,7 @@ public class UserOrderListActivity extends AppCompatActivity {
 
             ivOrderStatus.setBackgroundResource(R.drawable.ic_vector_accepted);
             ivOrderStatus.setEnabled(false);
-        }else if(isOrderAccepted.equalsIgnoreCase("0")){
+        } else if (isOrderAccepted.equalsIgnoreCase("0")) {
             strOrderStatus = getString(R.string.txt_request_canceled);
 
             tvOrderStatus.setText(strOrderStatus);
@@ -333,7 +339,7 @@ public class UserOrderListActivity extends AppCompatActivity {
 
             ivOrderStatus.setBackgroundResource(R.drawable.ic_vector_refund);
             ivOrderStatus.setEnabled(true);
-        }else{
+        } else {
             strOrderStatus = getString(R.string.txt_request_pending);
 
             tvOrderStatus.setText(strOrderStatus);

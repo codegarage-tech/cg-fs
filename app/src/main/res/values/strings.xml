@@ -61,6 +61,7 @@
     <string name="toast_something_went_wrong">Something went wrong!</string>
     <string name="toast_you_can_not_delete_the_selected_item">You can not delete the selected item</string>
     <string name="toast_you_need_to_login_as_restaurant_owner">You need to login as restaurant owner</string>
+    <string name="toast_you_need_to_logout_for_being_app_user">You need to logout for being app user</string>
 
     <!-- Message -->
     <string name="txt_loading_message">Loading, please wait.</string>
