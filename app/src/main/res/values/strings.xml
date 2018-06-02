@@ -75,6 +75,8 @@
     <string name="txt_request_pending">Request pending</string>
     <string name="txt_request_canceled">Request canceled</string>
     <string name="txt_request_accepted">Request accepted</string>
+    <string name="txt_request_for_refund">Request for refund</string>
+    <string name="txt_refunded">Refunded</string>
 
     <!-- Dialog -->
     <string name="dialog_btn_ok">OK</string>

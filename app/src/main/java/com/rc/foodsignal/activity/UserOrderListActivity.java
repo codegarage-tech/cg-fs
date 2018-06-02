@@ -137,7 +137,7 @@ public class UserOrderListActivity extends AppCompatActivity {
             ((TextView) item.findViewById(R.id.tv_user_address)).setText(orderListItem.getUser_address());
 
             //Order status
-            setStatusData(item, orderListItem.getIs_order_accepted());
+            setStatusData(item, orderListItem.getIs_order_accepted(), orderListItem.getIs_refunded());
 
             //We can create items in batch.
             ArrayList<FoodItem> foodItems = orderListItem.getAllFoodItems();
@@ -318,7 +318,7 @@ public class UserOrderListActivity extends AppCompatActivity {
         }
     }
 
-    private void setStatusData(ExpandingItem expandingItem, String isOrderAccepted) {
+    private void setStatusData(ExpandingItem expandingItem, String isOrderAccepted, String isRefunded) {
         TextView tvOrderStatus = (TextView) expandingItem.findViewById(R.id.tv_order_status);
         ImageView ivOrderStatus = (ImageView) expandingItem.findViewById(R.id.iv_order_process);
         String strOrderStatus = "";
@@ -332,13 +332,18 @@ public class UserOrderListActivity extends AppCompatActivity {
             ivOrderStatus.setBackgroundResource(R.drawable.ic_vector_accepted);
             ivOrderStatus.setEnabled(false);
         } else if (isOrderAccepted.equalsIgnoreCase("0")) {
-            strOrderStatus = getString(R.string.txt_request_canceled);
+            if(isRefunded.equalsIgnoreCase("0")){
+                strOrderStatus = getString(R.string.txt_request_for_refund);
+                ivOrderStatus.setEnabled(true);
+            }else if(isRefunded.equalsIgnoreCase("1")){
+                strOrderStatus = getString(R.string.txt_refunded);
+                ivOrderStatus.setEnabled(false);
+            }
 
             tvOrderStatus.setText(strOrderStatus);
             tvOrderStatus.setTextColor(getResources().getColor(R.color.red));
 
-            ivOrderStatus.setBackgroundResource(R.drawable.ic_vector_refund);
-            ivOrderStatus.setEnabled(true);
+            ivOrderStatus.setBackgroundResource(R.drawable.ic_vector_canceled);
         } else {
             strOrderStatus = getString(R.string.txt_request_pending);
 

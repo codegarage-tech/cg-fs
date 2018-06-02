@@ -22,10 +22,10 @@ public class OrderListItem extends ResponseBase {
     private String is_order_accepted = "";
     private String device_id = "";
     private String device_type = "";
-    private String refund_requested = "";
+    private String is_refunded = "";
     private ArrayList<FoodCategoryDetail> menu_details = new ArrayList<>();
 
-    public OrderListItem(String id, String restaurant_id, String total_amount, String user_name, String user_address, String user_email, String delivery_type, String shipping_cost, String sub_total, String user_phone, String user_id, String is_order_accepted, String device_id, String device_type, String refund_requested, ArrayList<FoodCategoryDetail> menu_details) {
+    public OrderListItem(String id, String restaurant_id, String total_amount, String user_name, String user_address, String user_email, String delivery_type, String shipping_cost, String sub_total, String user_phone, String user_id, String is_order_accepted, String device_id, String device_type, String is_refunded, ArrayList<FoodCategoryDetail> menu_details) {
         this.id = id;
         this.restaurant_id = restaurant_id;
         this.total_amount = total_amount;
@@ -40,7 +40,7 @@ public class OrderListItem extends ResponseBase {
         this.is_order_accepted = is_order_accepted;
         this.device_id = device_id;
         this.device_type = device_type;
-        this.refund_requested = refund_requested;
+        this.is_refunded = is_refunded;
         this.menu_details = menu_details;
     }
 
@@ -156,12 +156,12 @@ public class OrderListItem extends ResponseBase {
         this.device_type = device_type;
     }
 
-    public String getRefund_requested() {
-        return refund_requested;
+    public String getIs_refunded() {
+        return is_refunded;
     }
 
-    public void setRefund_requested(String refund_requested) {
-        this.refund_requested = refund_requested;
+    public void setIs_refunded(String is_refunded) {
+        this.is_refunded = is_refunded;
     }
 
     public ArrayList<FoodCategoryDetail> getMenu_details() {
@@ -190,7 +190,7 @@ public class OrderListItem extends ResponseBase {
 
     @Override
     public String toString() {
-        return "OrderListItem{" +
+        return "{" +
                 "id='" + id + '\'' +
                 ", restaurant_id='" + restaurant_id + '\'' +
                 ", total_amount='" + total_amount + '\'' +
@@ -205,7 +205,7 @@ public class OrderListItem extends ResponseBase {
                 ", is_order_accepted='" + is_order_accepted + '\'' +
                 ", device_id='" + device_id + '\'' +
                 ", device_type='" + device_type + '\'' +
-                ", refund_requested='" + refund_requested + '\'' +
+                ", is_refunded='" + is_refunded + '\'' +
                 ", menu_details=" + menu_details +
                 '}';
     }

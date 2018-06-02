@@ -410,4 +410,19 @@ public class AllUrls {
         Log.d(TAG, "getOrderProcessingParameters: " + params.toString());
         return params;
     }
+
+    public static String getRefundRequestUrl() {
+        String url = BASE_URL + "orders/update_refund_status";
+        Log.d(TAG, "getRefundRequestUrl: " + url);
+        return url;
+    }
+
+//    public static JSONObject getRefundRequestParameters(String orderId) {
+//        JSONObject params = HttpRequestManager.HttpParameter.getInstance()
+//                .addJSONParam("order_id", orderId)
+//                .addJSONParam("refund_requested", isOrderAccepted)
+//                .getJSONParam();
+//        Log.d(TAG, "getRefundRequestParameters: " + params.toString());
+//        return params;
+//    }
 }
