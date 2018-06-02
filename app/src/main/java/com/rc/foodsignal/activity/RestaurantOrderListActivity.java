@@ -139,7 +139,7 @@ public class RestaurantOrderListActivity extends AppCompatActivity {
             ((TextView) item.findViewById(R.id.tv_user_address)).setText(orderListItem.getUser_address());
 
             //Order status
-            setStatusData(item, orderListItem.getIs_order_accepted());
+            setStatusData(item, orderListItem);
 
             //We can create items in batch.
             ArrayList<FoodItem> foodItems = orderListItem.getAllFoodItems();
@@ -219,7 +219,7 @@ public class RestaurantOrderListActivity extends AppCompatActivity {
                                 Toast.makeText(RestaurantOrderListActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
                             } else {
                                 if (orderProcessingStatus != -1) {
-                                    orderProcessingTask = new OrderProcessingTask(RestaurantOrderListActivity.this, item, orderListItem.getId(), orderProcessingStatus + "");
+                                    orderProcessingTask = new OrderProcessingTask(RestaurantOrderListActivity.this, item, orderListItem, orderProcessingStatus + "");
                                     orderProcessingTask.execute();
                                 }
                             }
@@ -323,13 +323,13 @@ public class RestaurantOrderListActivity extends AppCompatActivity {
     private class OrderProcessingTask extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
 
         private Context mContext;
-        private String mOrderId = "";
+        private OrderListItem mOrderListItem;
         private String mIsOrderAccepted = "";
         private ExpandingItem mExpandingItem;
 
-        private OrderProcessingTask(Context context, ExpandingItem expandingItem, String orderId, String isOrderAccepted) {
+        private OrderProcessingTask(Context context, ExpandingItem expandingItem, OrderListItem orderListItem, String isOrderAccepted) {
             mContext = context;
-            mOrderId = orderId;
+            mOrderListItem = orderListItem;
             mIsOrderAccepted = isOrderAccepted;
             mExpandingItem = expandingItem;
         }
@@ -355,7 +355,7 @@ public class RestaurantOrderListActivity extends AppCompatActivity {
 
         @Override
         protected HttpRequestManager.HttpResponse doInBackground(String... params) {
-            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getOrderProcessingUrl(), AllUrls.getOrderProcessingParameters(mOrderId, mIsOrderAccepted), null);
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getOrderProcessingUrl(), AllUrls.getOrderProcessingParameters(mOrderListItem.getId(), mIsOrderAccepted), null);
             return response;
         }
 
@@ -375,25 +375,24 @@ public class RestaurantOrderListActivity extends AppCompatActivity {
                 if (responseData.getStatus().equalsIgnoreCase("1")) {
                     Toast.makeText(RestaurantOrderListActivity.this, responseData.getMsg(), Toast.LENGTH_SHORT).show();
 
-                    setStatusData(mExpandingItem, mIsOrderAccepted);
-//                    //Update list view
-//                    createExpandingItems(responseData.getData());
+                    //Update list view
+                    mOrderListItem.setIs_order_accepted(mIsOrderAccepted);
+                    setStatusData(mExpandingItem, mOrderListItem);
                 } else {
                     Toast.makeText(RestaurantOrderListActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
                 }
-
             } else {
                 Toast.makeText(RestaurantOrderListActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private void setStatusData(ExpandingItem expandingItem, String isOrderAccepted){
+    private void setStatusData(ExpandingItem expandingItem, OrderListItem orderListItem) {
         TextView tvOrderStatus = (TextView) expandingItem.findViewById(R.id.tv_order_status);
         ImageView ivOrderStatus = (ImageView) expandingItem.findViewById(R.id.iv_order_process);
         String strOrderStatus = "";
 
-        if(isOrderAccepted.equalsIgnoreCase("1")){
+        if (orderListItem.getIs_order_accepted().equalsIgnoreCase("1")) {
             strOrderStatus = getString(R.string.txt_request_accepted);
 
             tvOrderStatus.setText(strOrderStatus);
@@ -401,15 +400,19 @@ public class RestaurantOrderListActivity extends AppCompatActivity {
 
             ivOrderStatus.setBackgroundResource(R.drawable.ic_vector_accepted);
             ivOrderStatus.setEnabled(false);
-        }else if(isOrderAccepted.equalsIgnoreCase("0")){
-            strOrderStatus = getString(R.string.txt_request_canceled);
+        } else if (orderListItem.getIs_order_accepted().equalsIgnoreCase("0")) {
+            if (orderListItem.getIs_refunded().equalsIgnoreCase("1")) {
+                strOrderStatus = getString(R.string.txt_refunded);
+            } else {
+                strOrderStatus = getString(R.string.txt_request_canceled);
+            }
 
             tvOrderStatus.setText(strOrderStatus);
             tvOrderStatus.setTextColor(getResources().getColor(R.color.red));
 
             ivOrderStatus.setBackgroundResource(R.drawable.ic_vector_canceled);
             ivOrderStatus.setEnabled(false);
-        }else{
+        } else {
             strOrderStatus = getString(R.string.txt_request_pending);
 
             tvOrderStatus.setText(strOrderStatus);

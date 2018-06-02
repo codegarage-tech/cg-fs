@@ -22,6 +22,7 @@ import com.rc.foodsignal.dialog.RefundProcessingDialog;
 import com.rc.foodsignal.model.FoodItem;
 import com.rc.foodsignal.model.OrderListItem;
 import com.rc.foodsignal.model.ResponseOrderList;
+import com.rc.foodsignal.model.ResponseOrderStatus;
 import com.rc.foodsignal.model.UserBasicInfo;
 import com.rc.foodsignal.util.AllUrls;
 import com.rc.foodsignal.util.AppUtils;
@@ -50,6 +51,7 @@ public class UserOrderListActivity extends AppCompatActivity {
 
     UserBasicInfo userBasicInfo;
     OrderListTask orderListTask;
+    RefundRequestTask refundRequestTask;
     DetailIntentType mDetailIntentType = DetailIntentType.OTHER;
     String TAG = AppUtils.getTagName(UserOrderListActivity.class);
     ProgressDialog loadingDialog;
@@ -137,7 +139,7 @@ public class UserOrderListActivity extends AppCompatActivity {
             ((TextView) item.findViewById(R.id.tv_user_address)).setText(orderListItem.getRestaurant_address());
 
             //Order status
-            setStatusData(item, orderListItem.getIs_order_accepted(), orderListItem.getIs_refunded());
+            setStatusData(item, orderListItem);
 
             //We can create items in batch.
             ArrayList<FoodItem> foodItems = orderListItem.getAllFoodItems();
@@ -203,24 +205,18 @@ public class UserOrderListActivity extends AppCompatActivity {
                     RefundProcessingDialog refundProcessingDialog = new RefundProcessingDialog(UserOrderListActivity.this, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-//                            int orderProcessingStatus = -1;
                             switch (which) {
                                 case DialogInterface.BUTTON_NEGATIVE:
-//                                    orderProcessingStatus = 0;
                                     break;
                                 case DialogInterface.BUTTON_POSITIVE:
-//                                    orderProcessingStatus = 1;
+                                    if (!NetworkManager.isConnected(UserOrderListActivity.this)) {
+                                        Toast.makeText(UserOrderListActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        refundRequestTask = new RefundRequestTask(UserOrderListActivity.this, orderListItem, item);
+                                        refundRequestTask.execute();
+                                    }
                                     break;
                             }
-//
-//                            if (!NetworkManager.isConnected(UserOrderListActivity.this)) {
-//                                Toast.makeText(UserOrderListActivity.this, getResources().getString(R.string.toast_network_error), Toast.LENGTH_SHORT).show();
-//                            } else {
-//                                if (orderProcessingStatus != -1) {
-//                                    orderProcessingTask = new RestaurantOrderListActivity.OrderProcessingTask(RestaurantOrderListActivity.this, item, orderListItem.getId(), orderProcessingStatus + "");
-//                                    orderProcessingTask.execute();
-//                                }
-//                            }
                         }
                     });
                     refundProcessingDialog.createView().show();
@@ -318,12 +314,77 @@ public class UserOrderListActivity extends AppCompatActivity {
         }
     }
 
-    private void setStatusData(ExpandingItem expandingItem, String isOrderAccepted, String isRefunded) {
+    private class RefundRequestTask extends AsyncTask<String, String, HttpRequestManager.HttpResponse> {
+
+        private Context mContext;
+        private OrderListItem mOrderListItem;
+        private ExpandingItem mExpandingItem;
+
+        public RefundRequestTask(Context mContext, OrderListItem orderListItem, ExpandingItem expandingItem) {
+            this.mContext = mContext;
+            this.mOrderListItem = orderListItem;
+            this.mExpandingItem = expandingItem;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            loadingDialog = new ProgressDialog(mContext);
+            loadingDialog.setMessage(getResources().getString(R.string.txt_loading));
+            loadingDialog.setIndeterminate(false);
+            loadingDialog.setCancelable(true);
+            loadingDialog.setCanceledOnTouchOutside(false);
+            loadingDialog.show();
+            loadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface arg0) {
+                    if (loadingDialog != null
+                            && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
+                }
+            });
+        }
+
+        @Override
+        protected HttpRequestManager.HttpResponse doInBackground(String... params) {
+            HttpRequestManager.HttpResponse response = HttpRequestManager.doRestPostRequest(AllUrls.getRefundRequestUrl(), AllUrls.getRefundRequestParameters(mOrderListItem.getId()), null);
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(HttpRequestManager.HttpResponse result) {
+
+            if (loadingDialog != null
+                    && loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
+            }
+
+            if (result != null && result.isSuccess() && !AppUtils.isNullOrEmpty(result.getResult().toString())) {
+                Log.d(TAG, "success response from web: " + result.getResult().toString());
+                ResponseOrderStatus responseData = ResponseOrderStatus.getResponseObject(result.getResult().toString(), ResponseOrderStatus.class);
+                Log.d(TAG, "success response from object: " + responseData.toString());
+
+                if (responseData.getStatus().equalsIgnoreCase("1")) {
+                    Toast.makeText(UserOrderListActivity.this, responseData.getMsg(), Toast.LENGTH_SHORT).show();
+
+                    //Update list view
+                    mOrderListItem.setIs_refunded("1");
+                    setStatusData(mExpandingItem, mOrderListItem);
+                } else {
+                    Toast.makeText(UserOrderListActivity.this, getResources().getString(R.string.toast_no_info_found), Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(UserOrderListActivity.this, getResources().getString(R.string.toast_could_not_retrieve_info), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void setStatusData(ExpandingItem expandingItem, OrderListItem orderListItem) {
         TextView tvOrderStatus = (TextView) expandingItem.findViewById(R.id.tv_order_status);
         ImageView ivOrderStatus = (ImageView) expandingItem.findViewById(R.id.iv_order_process);
         String strOrderStatus = "";
 
-        if (isOrderAccepted.equalsIgnoreCase("1")) {
+        if (orderListItem.getIs_order_accepted().equalsIgnoreCase("1")) {
             strOrderStatus = getString(R.string.txt_request_accepted);
 
             tvOrderStatus.setText(strOrderStatus);
@@ -331,12 +392,15 @@ public class UserOrderListActivity extends AppCompatActivity {
 
             ivOrderStatus.setBackgroundResource(R.drawable.ic_vector_accepted);
             ivOrderStatus.setEnabled(false);
-        } else if (isOrderAccepted.equalsIgnoreCase("0")) {
-            if (isRefunded.equalsIgnoreCase("0")) {
+        } else if (orderListItem.getIs_order_accepted().equalsIgnoreCase("0")) {
+            if (orderListItem.getIs_refunded().equalsIgnoreCase("0")) {
                 strOrderStatus = getString(R.string.txt_request_for_refund);
                 ivOrderStatus.setEnabled(true);
-            } else if (isRefunded.equalsIgnoreCase("1")) {
+            } else if (orderListItem.getIs_refunded().equalsIgnoreCase("1")) {
                 strOrderStatus = getString(R.string.txt_refunded);
+                ivOrderStatus.setEnabled(false);
+            }else{
+                strOrderStatus = getString(R.string.txt_request_canceled);
                 ivOrderStatus.setEnabled(false);
             }
 

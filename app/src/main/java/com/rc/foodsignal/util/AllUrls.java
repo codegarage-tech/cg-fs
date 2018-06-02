@@ -417,12 +417,11 @@ public class AllUrls {
         return url;
     }
 
-//    public static JSONObject getRefundRequestParameters(String orderId) {
-//        JSONObject params = HttpRequestManager.HttpParameter.getInstance()
-//                .addJSONParam("order_id", orderId)
-//                .addJSONParam("refund_requested", isOrderAccepted)
-//                .getJSONParam();
-//        Log.d(TAG, "getRefundRequestParameters: " + params.toString());
-//        return params;
-//    }
+    public static JSONObject getRefundRequestParameters(String orderId) {
+        JSONObject params = HttpRequestManager.HttpParameter.getInstance()
+                .addJSONParam("order_id", orderId)
+                .getJSONParam();
+        Log.d(TAG, "getRefundRequestParameters: " + params.toString());
+        return params;
+    }
 }
