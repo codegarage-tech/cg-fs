@@ -23,9 +23,15 @@ public class OrderListItem extends ResponseBase {
     private String device_id = "";
     private String device_type = "";
     private String is_refunded = "";
+    private String transaction_id = "";
+    private String restaurant_name = "";
+    private String restaurant_image = "";
+    private String restaurant_address = "";
+    private String restaurant_email = "";
+    private String restaurant_phone = "";
     private ArrayList<FoodCategoryDetail> menu_details = new ArrayList<>();
 
-    public OrderListItem(String id, String restaurant_id, String total_amount, String user_name, String user_address, String user_email, String delivery_type, String shipping_cost, String sub_total, String user_phone, String user_id, String is_order_accepted, String device_id, String device_type, String is_refunded, ArrayList<FoodCategoryDetail> menu_details) {
+    public OrderListItem(String id, String restaurant_id, String total_amount, String user_name, String user_address, String user_email, String delivery_type, String shipping_cost, String sub_total, String user_phone, String user_id, String is_order_accepted, String device_id, String device_type, String is_refunded, String transaction_id, String restaurant_name, String restaurant_image, String restaurant_address, String restaurant_email, String restaurant_phone, ArrayList<FoodCategoryDetail> menu_details) {
         this.id = id;
         this.restaurant_id = restaurant_id;
         this.total_amount = total_amount;
@@ -41,6 +47,12 @@ public class OrderListItem extends ResponseBase {
         this.device_id = device_id;
         this.device_type = device_type;
         this.is_refunded = is_refunded;
+        this.transaction_id = transaction_id;
+        this.restaurant_name = restaurant_name;
+        this.restaurant_image = restaurant_image;
+        this.restaurant_address = restaurant_address;
+        this.restaurant_email = restaurant_email;
+        this.restaurant_phone = restaurant_phone;
         this.menu_details = menu_details;
     }
 
@@ -164,6 +176,54 @@ public class OrderListItem extends ResponseBase {
         this.is_refunded = is_refunded;
     }
 
+    public String getTransaction_id() {
+        return transaction_id;
+    }
+
+    public void setTransaction_id(String transaction_id) {
+        this.transaction_id = transaction_id;
+    }
+
+    public String getRestaurant_name() {
+        return restaurant_name;
+    }
+
+    public void setRestaurant_name(String restaurant_name) {
+        this.restaurant_name = restaurant_name;
+    }
+
+    public String getRestaurant_image() {
+        return restaurant_image;
+    }
+
+    public void setRestaurant_image(String restaurant_image) {
+        this.restaurant_image = restaurant_image;
+    }
+
+    public String getRestaurant_address() {
+        return restaurant_address;
+    }
+
+    public void setRestaurant_address(String restaurant_address) {
+        this.restaurant_address = restaurant_address;
+    }
+
+    public String getRestaurant_email() {
+        return restaurant_email;
+    }
+
+    public void setRestaurant_email(String restaurant_email) {
+        this.restaurant_email = restaurant_email;
+    }
+
+    public String getRestaurant_phone() {
+        return restaurant_phone;
+    }
+
+    public void setRestaurant_phone(String restaurant_phone) {
+        this.restaurant_phone = restaurant_phone;
+    }
+
     public ArrayList<FoodCategoryDetail> getMenu_details() {
         return menu_details;
     }
@@ -206,6 +266,12 @@ public class OrderListItem extends ResponseBase {
                 ", device_id='" + device_id + '\'' +
                 ", device_type='" + device_type + '\'' +
                 ", is_refunded='" + is_refunded + '\'' +
+                ", transaction_id='" + transaction_id + '\'' +
+                ", restaurant_name='" + restaurant_name + '\'' +
+                ", restaurant_image='" + restaurant_image + '\'' +
+                ", restaurant_address='" + restaurant_address + '\'' +
+                ", restaurant_email='" + restaurant_email + '\'' +
+                ", restaurant_phone='" + restaurant_phone + '\'' +
                 ", menu_details=" + menu_details +
                 '}';
     }

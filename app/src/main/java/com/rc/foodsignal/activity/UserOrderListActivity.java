@@ -39,7 +39,7 @@ import static com.rc.foodsignal.util.AppUtils.isSimSupport;
 
 /**
  * @author Md. Rashadul Alam
- *         Email: rashed.droid@gmail.com
+ * Email: rashed.droid@gmail.com
  */
 public class UserOrderListActivity extends AppCompatActivity {
 
@@ -133,8 +133,8 @@ public class UserOrderListActivity extends AppCompatActivity {
             item.setIndicatorColorRes(colorRes);
             item.setIndicatorIconRes(iconRes);
             //It is possible to get any view inside the inflated layout. Let's set the text in the item
-            ((TextView) item.findViewById(R.id.tv_user_name)).setText(orderListItem.getUser_name());
-            ((TextView) item.findViewById(R.id.tv_user_address)).setText(orderListItem.getUser_address());
+            ((TextView) item.findViewById(R.id.tv_user_name)).setText(orderListItem.getRestaurant_name());
+            ((TextView) item.findViewById(R.id.tv_user_address)).setText(orderListItem.getRestaurant_address());
 
             //Order status
             setStatusData(item, orderListItem.getIs_order_accepted(), orderListItem.getIs_refunded());
@@ -176,7 +176,7 @@ public class UserOrderListActivity extends AppCompatActivity {
                          * Need to check internet connection
                          **********************************/
                         Intent callIntent = new Intent(Intent.ACTION_SENDTO);
-                        callIntent.setData(Uri.parse("mailto:" + orderListItem.getUser_email().trim()));
+                        callIntent.setData(Uri.parse("mailto:" + orderListItem.getRestaurant_email().trim()));
                         startActivity(callIntent);
                     }
                 }
@@ -188,7 +188,7 @@ public class UserOrderListActivity extends AppCompatActivity {
                     if (!AllSettingsManager.isNullOrEmpty(orderListItem.getUser_phone().trim())) {
                         if (isSimSupport(UserOrderListActivity.this)) {
                             Intent callIntent = new Intent(Intent.ACTION_CALL);
-                            callIntent.setData(Uri.parse("tel:" + orderListItem.getUser_phone().trim()));
+                            callIntent.setData(Uri.parse("tel:" + orderListItem.getRestaurant_phone().trim()));
                             startActivity(callIntent);
                         } else {
                             Toast.makeText(UserOrderListActivity.this, getString(R.string.toast_your_sim_card_is_absent), Toast.LENGTH_SHORT).show();
@@ -332,10 +332,10 @@ public class UserOrderListActivity extends AppCompatActivity {
             ivOrderStatus.setBackgroundResource(R.drawable.ic_vector_accepted);
             ivOrderStatus.setEnabled(false);
         } else if (isOrderAccepted.equalsIgnoreCase("0")) {
-            if(isRefunded.equalsIgnoreCase("0")){
+            if (isRefunded.equalsIgnoreCase("0")) {
                 strOrderStatus = getString(R.string.txt_request_for_refund);
                 ivOrderStatus.setEnabled(true);
-            }else if(isRefunded.equalsIgnoreCase("1")){
+            } else if (isRefunded.equalsIgnoreCase("1")) {
                 strOrderStatus = getString(R.string.txt_refunded);
                 ivOrderStatus.setEnabled(false);
             }
