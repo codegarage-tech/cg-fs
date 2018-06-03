@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class ParamCheckout extends ResponseBase {
 
     private String restaurant_id = "";
+    private String transaction_id = "";
     private float total_amount = 0.0f;
     private float sub_total = 0.0f;
     private String delivery_type = "";
@@ -22,8 +23,9 @@ public class ParamCheckout extends ResponseBase {
     private String device_type = "android";
     private ArrayList<OrderItem> order_items = new ArrayList<>();
 
-    public ParamCheckout(String restaurant_id, float total_amount, float sub_total, String delivery_type, float shipping_cost, String user_name, String user_address, String user_phone, String user_email, String user_id, String device_id, String device_type, ArrayList<OrderItem> order_items) {
+    public ParamCheckout(String restaurant_id, String transaction_id, float total_amount, float sub_total, String delivery_type, float shipping_cost, String user_name, String user_address, String user_phone, String user_email, String user_id, String device_id, String device_type, ArrayList<OrderItem> order_items) {
         this.restaurant_id = restaurant_id;
+        this.transaction_id = transaction_id;
         this.total_amount = total_amount;
         this.sub_total = sub_total;
         this.delivery_type = delivery_type;
@@ -44,6 +46,14 @@ public class ParamCheckout extends ResponseBase {
 
     public void setRestaurant_id(String restaurant_id) {
         this.restaurant_id = restaurant_id;
+    }
+
+    public String getTransaction_id() {
+        return transaction_id;
+    }
+
+    public void setTransaction_id(String transaction_id) {
+        this.transaction_id = transaction_id;
     }
 
     public float getTotal_amount() {
@@ -146,6 +156,7 @@ public class ParamCheckout extends ResponseBase {
     public String toString() {
         return "{" +
                 "restaurant_id='" + restaurant_id + '\'' +
+                ", transaction_id='" + transaction_id + '\'' +
                 ", total_amount=" + total_amount +
                 ", sub_total=" + sub_total +
                 ", delivery_type='" + delivery_type + '\'' +

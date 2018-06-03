@@ -210,7 +210,7 @@ public class CheckoutActivity extends AppCompatActivity {
                         OrderItem orderItem = new OrderItem(mFoodItem.getId(), mFoodItem.getQuantity(), itemPrice);
                         orderItems.add(orderItem);
                     }
-                    ParamCheckout paramCheckout = new ParamCheckout(mRestaurant.getId(), getTotalPrice(), subTotal, (segmentedRadioButtonDelivery.isChecked() ? getString(R.string.txt_delivery) : getString(R.string.txt_pickup)), shippingCost, "", "", "", "", userBasicInfo.getUser_id(), "", "android", orderItems);
+                    ParamCheckout paramCheckout = new ParamCheckout(mRestaurant.getId(), "", getTotalPrice(), subTotal, (segmentedRadioButtonDelivery.isChecked() ? getString(R.string.txt_delivery) : getString(R.string.txt_pickup)), shippingCost, "", "", "", "", userBasicInfo.getUser_id(), "", "android", orderItems);
 
                     Intent intentCardList = new Intent(CheckoutActivity.this, CardListActivity.class);
                     intentCardList.putExtra(INTENT_KEY_CARD_LIST_CHECKOUT_DATA, ParamCheckout.getResponseString(paramCheckout));

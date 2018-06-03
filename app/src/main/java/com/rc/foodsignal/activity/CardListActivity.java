@@ -279,8 +279,10 @@ public class CardListActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Charge charge) {
             if (charge != null && charge.getPaid() && charge.getStatus().equalsIgnoreCase("succeeded")) {
-                Log.d(TAG, "ChargeInfo: " + charge.toString());
-//                Toast.makeText(getApplicationContext(), getString(R.string.toast_payment_is_successful), Toast.LENGTH_LONG).show();
+                Log.d(TAG, "ChargeInfo: " + charge.toString()+"\nTransaction_id: "+charge.getId());
+
+                //Set transaction id
+                paramCheckout.setTransaction_id(charge.getId());
 
                 new DoOrderTask(mContext, paramCheckout).execute();
             } else {
