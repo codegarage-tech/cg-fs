@@ -69,8 +69,8 @@ public class RestaurantLoginActivity extends AppCompatActivity {
 //        edtEmail.setText("niloy.cste1@gmail.com");
 //        edtPassword.setText("1234567");
 
-        edtEmail.setText("rashed.droid1@gmail.com");
-        edtPassword.setText("123456");
+//        edtEmail.setText("rashed.droid1@gmail.com");
+//        edtPassword.setText("123456");
     }
 
     private void initLoginAction() {
