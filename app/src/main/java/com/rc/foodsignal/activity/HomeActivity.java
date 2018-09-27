@@ -138,12 +138,12 @@ public class HomeActivity extends BaseActivity implements AAH_FabulousFragment.C
 
         Glide
                 .with(HomeActivity.this)
-                .load(R.mipmap.ic_launcher_round)
+                .load(R.mipmap.ic_launcher)
                 .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
-                .apply(new RequestOptions().circleCropTransform())
+//                .apply(new RequestOptions().circleCropTransform())
                 .into(userAvatar);
         userName.setText(getString(R.string.app_name));
-        userInfo.setText(getString(R.string.app_version_name));
+        userInfo.setText(AppUtils.getAppVersion(HomeActivity.this));
     }
 
     public void setToolbarTitle(String title) {

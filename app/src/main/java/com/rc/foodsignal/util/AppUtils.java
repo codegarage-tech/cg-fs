@@ -3,6 +3,8 @@ package com.rc.foodsignal.util;
 import android.animation.ValueAnimator;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.telephony.TelephonyManager;
 import android.view.View;
 
@@ -13,6 +15,17 @@ import static android.content.Context.ACTIVITY_SERVICE;
  * Email: rashed.droid@gmail.com
  */
 public class AppUtils {
+
+    public static String getAppVersion(Context context) {
+        String appVersion = "";
+        try {
+            PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            appVersion = pInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return appVersion;
+    }
 
     public static ValueAnimator flashView(final View viewGroup, long time) {
         ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
